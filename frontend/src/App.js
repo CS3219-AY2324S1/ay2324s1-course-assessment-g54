@@ -2,6 +2,7 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { CssBaseline } from "@mui/material";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
+import Example from "./pages/Example";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import Questions from "./pages/Questions";
@@ -20,6 +21,7 @@ function App() {
       <CssBaseline />
       <BrowserRouter>
         <Routes>
+          <Route path="/" element={<Example />} />
           <Route path="/auth/login" element={<Login />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/questions" element={<Questions />} />
