@@ -13,6 +13,8 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
+  const isSamePassword = password === confirmPassword;
+
   return (
     <Box
       height="100vh"
@@ -63,6 +65,8 @@ const Signup = () => {
                   required
                   value={confirmPassword}
                   onChange={(event) => setConfirmPassword(event.target.value)}
+                  error={!isSamePassword}
+                  helperText={!isSamePassword ? "Passwords do not match." : ""}
                 />
                 <Button variant="contained" type="submit">
                   Login
