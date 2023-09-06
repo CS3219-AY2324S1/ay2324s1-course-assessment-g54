@@ -5,4 +5,4 @@ COPY ["package.json", "yarn.lock", "."]
 RUN yarn install --frozen-lockfile
 COPY . .
 EXPOSE 3002
-CMD node index.js
+CMD yarn start
