@@ -10,9 +10,13 @@ Ensure that your current directory is the `frontend` folder of the project. Inst
 ```bash
 yarn install --frozen-lockfile
 ```
-To start the development server on `http://localhost:3000`, run the following command in your terminal.
+To start the development server on `http://localhost:3000`, ensure that you already have docker installed and that your current directory is the `root` folder of the project. Then, start the docker containers by running the following command in your terminal.
 ```bash
-yarn start
+docker compose up
+```
+To directly access the terminal of the frontend container, ensure that your docker containers are already running, then run the following command in your terminal.
+```bash
+docker exec -it frontend sh
 ```
 
 ## Question Microservice
