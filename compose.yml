@@ -1,4 +1,18 @@
 services:
+  frontend:
+    build:
+      context: ./frontend
+    container_name: frontend
+    ports:
+      - 3000:3000
+    depends_on:
+      - users
+    environment:
+      USERS_HOST: users
+    volumes:
+      - ./frontend:/app
+    command: yarn start
+
   users:
     build:
       context: ./users
