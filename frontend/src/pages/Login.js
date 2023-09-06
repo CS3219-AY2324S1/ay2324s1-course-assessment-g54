@@ -1,4 +1,7 @@
+import axios from "axios";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
@@ -8,8 +11,10 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 
 const Login = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   return (
     <Box
@@ -25,8 +30,20 @@ const Login = () => {
               Welcome back, please login to your account.
             </Typography>
             <form
-              onSubmit={(event) => {
+              onSubmit={async (event) => {
                 event.preventDefault();
+                try {
+                  setIsSubmitting(true);
+                  const request = await axios.post(
+                    `${process.env.REACT_APP_USERS_SERVICE_HOST}/login`,
+                    { email, password }
+                  );
+                  if (request.status !== 200) return setIsSubmitting(false);
+                  navigate("/questions");
+                } catch (error) {
+                  console.error(error);
+                  setIsSubmitting(false);
+                }
               }}
             >
               <Stack spacing={3}>
@@ -35,6 +52,7 @@ const Login = () => {
                   variant="outlined"
                   type="email"
                   required
+                  disabled={isSubmitting}
                   value={email}
                   onChange={(event) => setEmail(event.target.value)}
                 />
@@ -43,6 +61,7 @@ const Login = () => {
                   variant="outlined"
                   type="password"
                   required
+                  disabled={isSubmitting}
                   value={password}
                   onChange={(event) => setPassword(event.target.value)}
                 />

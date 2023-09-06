@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
-import { redirect } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -11,6 +11,7 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 
 const Signup = () => {
+  const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -43,7 +44,7 @@ const Signup = () => {
                     { name, email, password }
                   );
                   if (request.status !== 200) return setIsSubmitting(false);
-                  return redirect("/auth/login");
+                  navigate("/auth/login");
                 } catch (error) {
                   console.error(error);
                   setIsSubmitting(false);
