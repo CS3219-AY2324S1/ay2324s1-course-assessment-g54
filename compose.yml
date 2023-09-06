@@ -14,7 +14,9 @@ services:
       DB_USER: postgres
       DB_PASSWORD: postgres
       DB_NAME: postgres
-    command: node index.js
+    volumes:
+      - ./users:/app
+    command: yarn start
 
   postgresql:
     image: postgres:15-alpine

@@ -15,9 +15,10 @@ To start the development server on `http://localhost:3000`, run the following co
 yarn start
 ```
 
-## Users Microservice
-
 ## Question Microservice
+
+### Getting started
+
 First, in the `Security` section of the left navigation, click `Network Access`.
 Then, click `Add IP Address` and add your current IP address so that you will be whitelisted.
 
@@ -33,7 +34,11 @@ To run the Question Service (for now), run
 node index.js
 ```
 
+## Users Microservice
+
 ### Getting started
+
+Copy the contents `.env.example` file into `.env` in the `users` folder of the project and change the necessary environment variables.
 
 Ensure that your current directory is the `users` folder of the project. Install the necessary dependencies if you have not by running the following command in your terminal. 
 ```bash
