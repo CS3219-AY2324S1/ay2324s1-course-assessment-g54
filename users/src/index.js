@@ -7,9 +7,7 @@ const app = express();
 
 app.use(express.json());
 
-app.post("/login", (req, res) => {
-  res.send("Hello from the login endpoint!");
-});
+app.post("/login", handlers.handleLogin);
 
 app.post("/logout", (req, res) => {
   res.send("Hello from the logout endpoint!");
