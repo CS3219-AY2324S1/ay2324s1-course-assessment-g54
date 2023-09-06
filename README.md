@@ -17,6 +17,22 @@ yarn start
 
 ## Users Microservice
 
+## Question Microservice
+First, in the `Security` section of the left navigation, click `Network Access`.
+Then, click `Add IP Address` and add your current IP address so that you will be whitelisted.
+
+To create new database users, in the `Security` section, click `Database Access`. Then, click `Add New Database User` and select the required Authentication Method and User Privileges. Alternatively, you can use the `testuser` has already been created.
+
+Install the necessary dependencies for the Question Service using 
+```bash
+npm install
+```
+
+To run the Question Service (for now), run
+```bash
+node index.js
+```
+
 ### Getting started
 
 Ensure that your current directory is the `users` folder of the project. Install the necessary dependencies if you have not by running the following command in your terminal. 
