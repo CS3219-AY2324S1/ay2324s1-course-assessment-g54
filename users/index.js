@@ -1,7 +1,7 @@
 const express = require("express");
 
 const app = express();
-const PORT = 3001;
+const PORT = 3002;
 
 app.post("/login", (req, res) => {
   res.send("Hello from the login endpoint!");
@@ -16,5 +16,5 @@ app.post("/logout", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Authentication app listening on port ${PORT}`);
+  console.log(`Users app listening on port ${PORT}`);
 });
