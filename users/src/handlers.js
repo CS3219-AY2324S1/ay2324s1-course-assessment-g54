@@ -28,7 +28,8 @@ const handleLogin = async (request, response) => {
     return response.status(400).send();
   }
 
-  return response.status(200).send();
+  const jsonWebToken = utils.signJsonWebToken(user);
+  return response.status(200).send(jsonWebToken);
 };
 
 const handleSignup = async (request, response) => {
