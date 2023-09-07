@@ -1,8 +1,8 @@
-const database = require("./database");
-const schema = require("./schema");
-const utils = require("./utils");
+import database from "./database.js";
+import * as schema from "./schema.js";
+import * as utils from "./utils.js";
 
-const handleLogin = async (request, response) => {
+export const handleLogin = async (request, response) => {
   const { body } = request;
 
   try {
@@ -32,7 +32,7 @@ const handleLogin = async (request, response) => {
   return response.status(200).send(jsonWebToken);
 };
 
-const handleSignup = async (request, response) => {
+export const handleSignup = async (request, response) => {
   const { body } = request;
 
   try {
@@ -54,5 +54,3 @@ const handleSignup = async (request, response) => {
     return response.status(400).send();
   }
 };
-
-module.exports = { handleLogin, handleSignup };

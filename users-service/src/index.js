@@ -1,7 +1,9 @@
-require("dotenv").config();
-const cors = require("cors");
-const express = require("express");
-const handlers = require("./handlers");
+import cors from "cors";
+import dotenv from "dotenv";
+import express from "express";
+import * as handlers from "./handlers.js";
+
+dotenv.config();
 
 const PORT = process.env.PORT;
 
