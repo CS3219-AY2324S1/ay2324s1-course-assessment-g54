@@ -1,17 +1,12 @@
-const yup = require("yup");
+import yup from "yup";
 
-const loginRequestBodySchema = yup.object({
+export const loginRequestBodySchema = yup.object({
   email: yup.string().email().required(),
   password: yup.string().required(),
 });
 
-const signupRequestBodySchema = yup.object({
+export const signupRequestBodySchema = yup.object({
   name: yup.string().required(),
   email: yup.string().email().required(),
   password: yup.string().required(),
 });
-
-module.exports = {
-  loginRequestBodySchema,
-  signupRequestBodySchema,
-};
