@@ -1,7 +1,7 @@
 /**
  * @type { Object.<string, import("knex").Knex.Config> }
  */
-module.exports = {
+export default {
   client: "pg",
   connection: {
     host: "localhost",
