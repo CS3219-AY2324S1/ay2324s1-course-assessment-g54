@@ -52,8 +52,16 @@ To start the development server on `http://localhost:3002`, ensure that you alre
 ```bash
 docker compose up
 ```
-To directly access postgresql database using the terminal of the postgresql container, ensure that your docker containers are already running, then run the following commands in your terminal.
+To run the postgresql migrations in `/users/migrations`, ensure that your current directory is the `users` folder of the project, then run the following command in the terminal.
+```bash
+yarn knex migrate:up
+```
+To directly access the terminal of the users service container, ensure that your docker containers are already running, then run the following command in your terminal.
 ```bash
 docker exec -it users sh
+```
+To directly access postgresql database using the terminal of the postgresql container, ensure that your docker containers are already running, then run the following commands in your terminal.
+```bash
+docker exec -it postgresql sh
 psql -U postgres
 ```
