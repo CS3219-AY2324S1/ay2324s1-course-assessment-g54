@@ -1,7 +1,7 @@
 services:
   frontend:
     build:
-      context: ./frontend
+      context: ./frontend-service
     container_name: frontend
     ports:
       - 3000:3000
@@ -10,12 +10,12 @@ services:
     environment:
       REACT_APP_USERS_SERVICE_HOST: http://localhost:3002
     volumes:
-      - ./frontend:/app
+      - ./frontend-service:/app
     command: yarn start
 
   users:
     build:
-      context: ./users
+      context: ./users-service
     container_name: users
     ports:
       - 3002:3002
@@ -29,7 +29,7 @@ services:
       DB_PASSWORD: postgres
       DB_NAME: postgres
     volumes:
-      - ./users:/app
+      - ./users-service:/app
     command: yarn start
 
   postgresql:
