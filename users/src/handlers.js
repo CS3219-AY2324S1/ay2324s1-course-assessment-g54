@@ -21,7 +21,7 @@ const handleLogin = async (request, response) => {
 
   const isPasswordCorrect = await utils.comparePasswords(
     body.password,
-    user.passwordhash
+    user.passwordHash
   );
   if (!isPasswordCorrect) {
     console.error("Passwords do not match.");
@@ -44,10 +44,10 @@ const handleSignup = async (request, response) => {
 
   const name = body.name;
   const email = body.email.toLowerCase();
-  const passwordhash = await utils.hashPassword(body.password);
+  const passwordHash = await utils.hashPassword(body.password);
 
   try {
-    await database.insert({ name, email, passwordhash }).into("users");
+    await database.insert({ name, email, passwordHash }).into("users");
     return response.status(200).send();
   } catch (error) {
     console.error(error.message);
