@@ -1,12 +1,16 @@
+require("dotenv").config();
+const cors = require("cors");
 const express = require("express");
+const handlers = require("./handlers");
 
 const PORT = process.env.PORT;
 
 const app = express();
 
-app.post("/login", (req, res) => {
-  res.send("Hello from the login endpoint!");
-});
+app.use(cors());
+app.use(express.json());
+
+app.post("/login", handlers.handleLogin);
 
 app.post("/logout", (req, res) => {
   res.send("Hello from the logout endpoint!");
@@ -24,9 +28,7 @@ app.get("/role", (req, res) => {
   res.send("Hello from the role endpoint!");
 });
 
-app.post("/signup", (req, res) => {
-  res.send("Hello from the signup endpoint!");
-});
+app.post("/signup", handlers.handleSignup);
 
 app.listen(PORT, () => {
   console.log(`Users app listening on port ${PORT}`);

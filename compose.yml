@@ -1,4 +1,18 @@
 services:
+  frontend:
+    build:
+      context: ./frontend
+    container_name: frontend
+    ports:
+      - 3000:3000
+    depends_on:
+      - users
+    environment:
+      REACT_APP_USERS_SERVICE_HOST: http://localhost:3002
+    volumes:
+      - ./frontend:/app
+    command: yarn start
+
   users:
     build:
       context: ./users
@@ -14,7 +28,9 @@ services:
       DB_USER: postgres
       DB_PASSWORD: postgres
       DB_NAME: postgres
-    command: node index.js
+    volumes:
+      - ./users:/app
+    command: yarn start
 
   postgresql:
     image: postgres:15-alpine
