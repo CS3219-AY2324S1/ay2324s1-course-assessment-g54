@@ -1,33 +1,15 @@
-require('dotenv').config("./.env")
-const { MongoClient } = require("mongodb");
+import dotenv from "dotenv";
+import express from "express";
+import QuestionRouter from "./routes/questionRoutes.js";
 
-async function run() {
-  const uri = process.env.MONGO_URI;
-  
-  const client = new MongoClient(uri);
-  await client.connect();
+dotenv.config("./.env");
+const app = express();
 
-  const dbName = "peerprep-database";
-  const collectionName = "question-collection";
+const port = process.env.PORT || 3001;
 
-  const database = client.db(dbName);
-  const collection = database.collection(collectionName);
+app.use(express.json());
+app.use('/api/question', QuestionRouter)
 
-  try {
-    const cursor = await collection.find();
-    for await (const document of cursor) {
-        console.log();
-        console.log(`Question ID: ${document.question_id}`);
-        console.log(`Question Title: ${document.question_title}`);
-        console.log(`Question Complexity: ${document.question_complexity}`);
-        console.log(`Question Description: ${document.question_description}`);
-        console.log();
-    };
-  } catch (err) {
-    console.error(`Something went wrong trying to find the documents: ${err}\n`);
-  }
-
-  await client.close();
-}
-
-run().catch(console.dir);
+app.listen(port, () => {
+    console.log(`Question Service is running on port: ${port}`);
+})
