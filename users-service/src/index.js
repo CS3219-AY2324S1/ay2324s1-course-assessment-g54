@@ -20,13 +20,7 @@ app.post("/logout", (req, res) => {
 
 app.get("/profile", handlers.handleGetProfile);
 
-app.post("/profile", (req, res) => {
-  res.send("Hello from the update profile endpoint!");
-});
-
-app.get("/role", (req, res) => {
-  res.send("Hello from the role endpoint!");
-});
+app.post("/profile", handlers.handleUpdateProfile);
 
 app.post("/signup", handlers.handleSignup);
 

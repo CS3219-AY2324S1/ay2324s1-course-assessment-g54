@@ -81,3 +81,38 @@ export const handleSignup = async (request, response) => {
     return response.status(400).send();
   }
 };
+
+/**
+ * @param { import("express").Request } request
+ * @param { import("express").Response } response
+ * @returns { Promise<void> }
+ */
+export const handleUpdateProfile = async (request, response) => {
+  if (!request.headers.authorization) return res.status(401).send();
+  const jsonWebToken = request.headers.authorization;
+  let id;
+  try {
+    const user = utils.verifyJsonWebToken(jsonWebToken);
+    id = user.id;
+  } catch (error) {
+    return response.status(200).json(null).send();
+  }
+
+  const { body } = request;
+  try {
+    await schema.updateProfileRequestBodySchema.validate(body);
+  } catch (error) {
+    console.error(error.message);
+    return response.status(400).send();
+  }
+
+  const name = body.name;
+  try {
+    await database("users").where("id", "=", id).update({ name });
+  } catch (error) {
+    console.error(error.message);
+    return response.status(400).send();
+  }
+
+  return response.status(200).send();
+};
