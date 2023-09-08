@@ -10,13 +10,22 @@ import * as utils from "./utils.js";
 export const handleGetProfile = async (request, response) => {
   if (!request.headers.authorization) return res.status(401).send();
   const jsonWebToken = request.headers.authorization;
+  let id;
   try {
     const user = utils.verifyJsonWebToken(jsonWebToken);
-    const { id, name, email } = user;
-    return response.status(200).json({ id, name, email }).send();
+    id = user.id;
   } catch (error) {
     return response.status(200).json(null).send();
   }
+
+  const user = await database.select().from("users").where({ id }).first();
+  if (!user) {
+    console.error("User with email cannot be found.");
+    return response.status(400).send();
+  }
+
+  const { name, email } = user;
+  return response.status(200).json({ id, name, email }).send();
 };
 
 /**
@@ -50,7 +59,8 @@ export const handleLogin = async (request, response) => {
     return response.status(400).send();
   }
 
-  const jsonWebToken = utils.signJsonWebToken(user);
+  const { id } = user;
+  const jsonWebToken = utils.signJsonWebToken({ id });
   return response.status(200).send(jsonWebToken);
 };
 
