@@ -7,7 +7,7 @@ const initialUser = null;
 const userReducer = (user, action) => {
   switch (action.type) {
     case "set":
-      return user;
+      return action.user;
     default:
       throw Error("Unknown action: " + action.type);
   }
