@@ -18,9 +18,7 @@ app.post("/logout", (req, res) => {
   res.send("Hello from the logout endpoint!");
 });
 
-app.get("/profile", (req, res) => {
-  res.send("Hello from the get profile endpoint!");
-});
+app.get("/profile", handlers.handleGetProfile);
 
 app.post("/profile", (req, res) => {
   res.send("Hello from the update profile endpoint!");
