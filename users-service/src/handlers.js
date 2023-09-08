@@ -2,6 +2,11 @@ import database from "./database.js";
 import * as schema from "./schema.js";
 import * as utils from "./utils.js";
 
+/**
+ * @param { import("express").Request } request
+ * @param { import("express").Response } response
+ * @returns { Promise<void> }
+ */
 export const handleLogin = async (request, response) => {
   const { body } = request;
 
@@ -32,6 +37,11 @@ export const handleLogin = async (request, response) => {
   return response.status(200).send(jsonWebToken);
 };
 
+/**
+ * @param { import("express").Request } request
+ * @param { import("express").Response } response
+ * @returns { Promise<void> }
+ */
 export const handleSignup = async (request, response) => {
   const { body } = request;
 
