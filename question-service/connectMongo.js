@@ -1,33 +1,30 @@
-require('dotenv').config("./.env")
-const { MongoClient } = require("mongodb");
+import dotenv from "dotenv";
+import mongoose from "mongoose";
+import sampleQuestions from "./routes/sampleQuestions.js";
+import { Question } from "./model/question.js";
 
-async function run() {
-  const uri = process.env.MONGO_URI;
-  
-  const client = new MongoClient(uri);
-  await client.connect();
+dotenv.config("./.env");
 
-  const dbName = "peerprep-database";
-  const collectionName = "question-collection";
+const uri = process.env.MONGO_OPTION == "cloud" ? process.env.MONGO_CLOUD_URI : process.env.MONGO_LOCAL_URI;
+const connectionOptions = {dbName: `peerprep-database`};
 
-  const database = client.db(dbName);
-  const collection = database.collection(collectionName);
+mongoose.connect(uri, connectionOptions)
+  .then(() => console.log("Successfully connected to MonogDB!"))
+  .catch(() => console.log("Failed to connect to MongoDB!"));
 
-  try {
-    const cursor = await collection.find();
-    for await (const document of cursor) {
-        console.log();
-        console.log(`Question ID: ${document.question_id}`);
-        console.log(`Question Title: ${document.question_title}`);
-        console.log(`Question Complexity: ${document.question_complexity}`);
-        console.log(`Question Description: ${document.question_description}`);
-        console.log();
-    };
-  } catch (err) {
-    console.error(`Something went wrong trying to find the documents: ${err}\n`);
-  }
 
-  await client.close();
+const question = new Question(sampleQuestions[0]);
+
+async function createSampleQuestion() {
+  await question.save();
 }
 
-run().catch(console.dir);
+async function getQuestions() {
+  return await Question.find(); 
+}
+
+createSampleQuestion()
+  .then(() => {console.log("question saved")})
+  .then(() => getQuestions())
+  .then((q) => console.log(q))
+  .catch(e => console.log(e));
