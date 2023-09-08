@@ -15,7 +15,7 @@ export const handleGetProfile = async (request, response) => {
     const user = utils.verifyJsonWebToken(jsonWebToken);
     id = user.id;
   } catch (error) {
-    return response.status(200).json(null).send();
+    return response.status(200).json(null);
   }
 
   const user = await database.select().from("users").where({ id }).first();
@@ -25,7 +25,7 @@ export const handleGetProfile = async (request, response) => {
   }
 
   const { name, email } = user;
-  return response.status(200).json({ id, name, email }).send();
+  return response.status(200).json({ id, name, email });
 };
 
 /**

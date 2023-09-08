@@ -44,7 +44,7 @@ const Signup = () => {
                     { name, email, password }
                   );
                   if (request.status !== 200) return setIsSubmitting(false);
-                  navigate("/auth/login");
+                  navigate("/login");
                 } catch (error) {
                   console.error(error);
                   setIsSubmitting(false);
