@@ -15,7 +15,7 @@ app.use(express.json());
 app.post("/login", handlers.handleLogin);
 
 app.post("/logout", (req, res) => {
-  res.send("Hello from the logout endpoint!");
+  res.status(200).send();
 });
 
 app.get("/profile", handlers.handleGetProfile);
