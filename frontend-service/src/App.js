@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import { UserProvider } from "./contexts/UserContext";
 
+import AuthGuard from "./components/AuthGuard";
 import Example from "./pages/Example";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
@@ -17,6 +18,8 @@ import "@fontsource/roboto/700.css";
 
 const theme = createTheme();
 
+const useAuthGuard = (component) => <AuthGuard>{component}</AuthGuard>;
+
 function App() {
   return (
     <ThemeProvider theme={theme}>
@@ -26,8 +29,8 @@ function App() {
           <Routes>
             <Route path="/" element={<Example />} />
             <Route path="/auth/login" element={<Login />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/questions" element={<Questions />} />
+            <Route path="/profile" element={useAuthGuard(<Profile />)} />
+            <Route path="/questions" element={useAuthGuard(<Questions />)} />
             <Route path="/auth/signup" element={<Signup />} />
           </Routes>
         </BrowserRouter>

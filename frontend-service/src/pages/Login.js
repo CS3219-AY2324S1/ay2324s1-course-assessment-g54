@@ -39,6 +39,7 @@ const Login = () => {
                     { email, password }
                   );
                   if (request.status !== 200) return setIsSubmitting(false);
+                  window.localStorage.setItem("token", request.data);
                   navigate("/questions");
                 } catch (error) {
                   console.error(error);
