@@ -18,7 +18,16 @@ import "@fontsource/roboto/700.css";
 
 const theme = createTheme();
 
-const useAuthGuard = (component) => <AuthGuard>{component}</AuthGuard>;
+const unprotectedRoutes = [
+  { path: "/", element: <Example /> },
+  { path: "/login", element: <Login /> },
+  { path: "/signup", element: <Signup /> },
+];
+
+const protectedRoutes = [
+  { path: "/profile", element: <Profile /> },
+  { path: "/questions", element: <Questions /> },
+];
 
 function App() {
   return (
@@ -27,11 +36,12 @@ function App() {
       <UserProvider>
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Example />} />
-            <Route path="/auth/login" element={<Login />} />
-            <Route path="/profile" element={useAuthGuard(<Profile />)} />
-            <Route path="/questions" element={useAuthGuard(<Questions />)} />
-            <Route path="/auth/signup" element={<Signup />} />
+            {unprotectedRoutes.map(({ element, path }) => (
+              <Route path={path} element={element} />
+            ))}
+            {protectedRoutes.map(({ element, path }) => (
+              <Route path={path} element={<AuthGuard>{element}</AuthGuard>} />
+            ))}
           </Routes>
         </BrowserRouter>
       </UserProvider>
