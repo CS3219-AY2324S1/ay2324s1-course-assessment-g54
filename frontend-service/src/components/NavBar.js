@@ -68,7 +68,16 @@ function NavBar() {
               >
                 Edit Profile
               </Button>
-              <Button variant="contained" fullWidth size="small" color="error">
+              <Button
+                variant="contained"
+                fullWidth
+                size="small"
+                color="error"
+                onClick={() => {
+                  window.localStorage.removeItem("token");
+                  navigate("/login");
+                }}
+              >
                 Sign Out
               </Button>
             </Stack>
