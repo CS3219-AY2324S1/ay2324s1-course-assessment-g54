@@ -98,7 +98,10 @@ const Question = () => {
               sx={{ height: "100%", width: "100%", overflow: "hidden" }}
               elevation={2}
             >
-              <Editor defaultLanguage="python" />
+              <Editor
+                defaultLanguage="python"
+                defaultValue="# Insert your code here"
+              />
             </Paper>
           </Box>
         </Box>
