@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon index.js"
   },
   "author": "",
   "license": "ISC",
@@ -17,6 +17,7 @@
     "lodash": "^4.17.21",
     "mongoose": "^7.5.0",
     "morgan": "^1.10.0",
+    "nodemon": "^3.0.1",
     "uuid": "^9.0.0"
   }
 }
