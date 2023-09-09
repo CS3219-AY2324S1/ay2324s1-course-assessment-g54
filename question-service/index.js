@@ -13,6 +13,8 @@ const connectionOptions = {dbName: `peerprep-database`};
 
 const app = express();
 
+console.log(uri);
+
 mongoose.connect(uri, connectionOptions)
   .then(() => {
     console.log("Successfully connected to MonogDB!");
