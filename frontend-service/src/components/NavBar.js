@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { useUser } from "../../contexts/UserContext";
+import { useUser } from "../contexts/UserContext";
 
 import AppBar from "@mui/material/AppBar";
 import Avatar from "@mui/material/Avatar";
