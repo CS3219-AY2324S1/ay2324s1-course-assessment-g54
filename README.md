@@ -33,7 +33,7 @@ Install the necessary dependencies for the Question Service using
 yarn install --frozen-lockfile
 ```
 Get the .env file from Juliet and paste it in the `question-service` folder.
-To start the development server on `http://localhost:3001`, ensure that you already have docker installed and that your current directory is the `root` folder of the project. Then, start the docker containers by running the following command in your terminal.
+To start the development server on `http://localhost:3002`, ensure that you already have docker installed and that your current directory is the `root` folder of the project. Then, start the docker containers by running the following command in your terminal.
 ```bash
 docker compose up
 ```
