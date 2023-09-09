@@ -8,6 +8,7 @@ import AuthGuard from "./components/AuthGuard";
 import Example from "./pages/Example";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
+import Question from "./pages/Question";
 import Questions from "./pages/Questions";
 import Signup from "./pages/Signup";
 
@@ -27,6 +28,7 @@ const unprotectedRoutes = [
 const protectedRoutes = [
   { path: "/profile", element: <Profile /> },
   { path: "/questions", element: <Questions /> },
+  { path: "/questions/:id", element: <Question /> },
 ];
 
 function App() {
