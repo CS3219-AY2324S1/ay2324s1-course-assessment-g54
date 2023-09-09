@@ -4,6 +4,8 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import NavBar from "../components/NavBar";
 
+import Editor from "@monaco-editor/react";
+
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
@@ -92,8 +94,11 @@ const Question = () => {
             </Stack>
           </Box>
           <Box width="50%" height="100%" padding={1}>
-            <Paper sx={{ height: "100%", width: "100%" }} elevation={2}>
-              Code editor goes here
+            <Paper
+              sx={{ height: "100%", width: "100%", overflow: "hidden" }}
+              elevation={2}
+            >
+              <Editor defaultLanguage="python" />
             </Paper>
           </Box>
         </Box>
