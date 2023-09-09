@@ -7,7 +7,7 @@ import QuestionRouter from "./routes/questionRoutes.js";
 import { createQuestionCounter, getNextQuestionId } from "./controllers/questionCounter.js";
 
 dotenv.config("./.env");
-const uri = process.env.MONGO_OPTION == "cloud" ? process.env.MONGO_CLOUD_URI : process.env.MONGO_LOCAL_URI;
+const uri = process.env.MONGO_OPTION == "cloud" ? process.env.MONGO_CLOUD_URI : process.env.MONGO_LOCAL_DOCKER_URI;
 const port = process.env.PORT || 3001;
 const connectionOptions = {dbName: `peerprep-database`};
 

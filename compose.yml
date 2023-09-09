@@ -13,19 +13,19 @@ services:
       - ./frontend-service:/app
     command: yarn start
 
-  #question-service:
-  #  build:
-  #    context: ./question-service
-  #  container_name: question-service
-  #  ports:
-  #    - 3001:3001
-  #  depends_on:
-  #    - mongo
-  #  environment:
-  #    QUESTION_SERVICE_HOST: http://localhost:3001
-  #  volumes:
-  #    - ./question-service:/app
-  #  command: yarn start
+  question-service:
+    build:
+      context: ./question-service
+    container_name: question-service
+    ports:
+      - 3001:3001
+    depends_on:
+      - mongo
+    environment:
+      QUESTION_SERVICE_HOST: http://localhost:3001
+    volumes:
+      - ./question-service:/app
+    command: yarn start
 
   users:
     build:
