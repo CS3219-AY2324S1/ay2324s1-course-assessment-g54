@@ -22,7 +22,7 @@ docker exec -it frontend sh
 ## Question Microservice
 
 ### Getting started
-
+If you are using the Atlas Mongo DB, follow the instructions below. Else, you can ignore it.
 First, in the `Security` section of the left navigation, click `Network Access`.
 Then, click `Add IP Address` and add your current IP address so that you will be whitelisted.
 
@@ -30,12 +30,16 @@ To create new database users, in the `Security` section, click `Database Access`
 
 Install the necessary dependencies for the Question Service using 
 ```bash
-npm install
+yarn install --frozen-lockfile
 ```
-
-To run the Question Service (for now), run
+Get the .env file from Juliet and paste it in the `question-service` folder.
+To start the development server on `http://localhost:3001`, ensure that you already have docker installed and that your current directory is the `root` folder of the project. Then, start the docker containers by running the following command in your terminal.
 ```bash
-node index.js
+docker compose up
+```
+If you are only working on the question-service, you can run this:
+```bash
+nodemon index.js
 ```
 
 ## Users Microservice
@@ -56,13 +60,11 @@ To run the postgresql migrations in `/users/migrations`, ensure that your curren
 ```bash
 yarn knex migrate:up
 ```
-
-if you encounter an error to the command above, there may be some other instance of postgres running in the background. try to kill it. for mac, you can try:
+If you encounter an error to the command above, there may be some other instance of postgres running in the background. Please kill that instance to resolve the error. For Mac, you can try:
 ```
 brew services
 launchctl unload   ~/Library/LaunchAgents/homebrew.mxcl.postgresql@15.plist
 ```
-
 To directly access the terminal of the users service container, ensure that your docker containers are already running, then run the following command in your terminal.
 ```bash
 docker exec -it users sh
