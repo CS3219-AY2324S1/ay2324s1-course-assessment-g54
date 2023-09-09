@@ -21,8 +21,6 @@ services:
       - 3001:3001
     depends_on:
       - mongo
-    environment:
-      QUESTION_SERVICE_HOST: http://localhost:3001
     volumes:
       - ./question-service:/app
     command: yarn start
@@ -72,6 +70,7 @@ services:
 
   mongo-express:
     image: mongo-express
+    container_name: mongo-ui
     restart: always
     ports:
       - 8081:8081
