@@ -27,4 +27,4 @@ createSampleQuestion()
   .then(() => {console.log("question saved")})
   .then(() => getQuestions())
   .then((q) => console.log(q))
-  .catch(e => console.log(e));
+  .catch(error => console.log(error));
