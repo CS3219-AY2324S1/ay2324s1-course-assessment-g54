@@ -1,4 +1,5 @@
 import dotenv from "dotenv";
+import cors from "cors";
 import express from "express";
 import morgan from "morgan";
 import mongoose from "mongoose";
@@ -20,6 +21,7 @@ mongoose.connect(uri, connectionOptions)
     throw error;
   });
 
+app.use(cors());
 app.use(express.json());
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('tiny'));
