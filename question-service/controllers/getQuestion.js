@@ -5,14 +5,13 @@ export async function getQuestionsWithQuery(req, res) {
     try {
         const questions = await Question.find(req.query).sort('question_id');
         res.send(filterQuestionsShort(questions));
-    } catch (e) {
-    res.status(400).send(e);
+    } catch (error) {
+        res.status(400).send(error);
     }
 }
 
 export async function getSingleQuestion(req, res) {
     try{
-        console.log("im here somehow");
         const question = await getQuestionById(req, res);
         if (!question) {
             return res.send({});
@@ -27,9 +26,6 @@ export async function getQuestionById(req, res) {
     try{
         const query = {question_id: parseInt(req.params.id)};
         const questions = await Question.find(query);
-        console.log(query);
-
-        console.log(questions);
         if (!questions) {
             return null;
         }

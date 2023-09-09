@@ -27,7 +27,7 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('tiny'));
 };
 
-try{createQuestionCounter()}catch (error) {throw error};
+createQuestionCounter();
 
 app.use('/api/question', QuestionRouter);
 

@@ -11,7 +11,7 @@ export async function createQuestionCounter() {
             const createQCounter = await qCounter.save();
             return createQCounter;
         } catch (error) {
-            return error;
+            throw error;
         }
     }
 }
@@ -25,7 +25,6 @@ export async function getNextQuestionId() {
         console.log(qCounter);
         return qCounter.seq;
     } catch (error) {
-        console.log(error);
         return error;
     }
 }

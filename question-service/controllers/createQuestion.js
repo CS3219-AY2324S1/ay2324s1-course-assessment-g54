@@ -18,7 +18,6 @@ export async function createQuestion(req, res) {
         const createdQuestion = await question.save();
         return res.send(filterQuestion(createdQuestion));
     } catch (error) {
-        console.log(e);
-        return res.status(400).send(error.details);
+        return res.status(400).send(error);
     }
 }

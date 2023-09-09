@@ -16,7 +16,13 @@ export const validateQuestionQuery = (req, res, next) => {
     next();
 }
 
-export const validateUpdateQuestion = validateQuestionQuery;
+export const validateUpdateQuestion = (req, res, next) => {
+    const { error } = validateUpdatedQuestion(req.body); 
+    if (error) {
+        return res.status(400).send(error.details[0].message);
+    }
+    next();
+};
 
 export const validateQuestionId = (req, res, next) => {
     if (isNaN(parseInt(req.params.id))) {
