@@ -15,18 +15,18 @@ const AuthGuard = ({ children }) => {
   useEffect(() => {
     const verifyAndFetchUser = async () => {
       const token = window.localStorage.getItem("token");
-      if (!token) return navigate("/auth/login");
+      if (!token) return navigate("/login");
       try {
         const response = await axios.get(
           `${process.env.REACT_APP_USERS_SERVICE_HOST}/profile`,
           { headers: { Authorization: token } }
         );
-        if (!response.data) return navigate("/auth/login");
+        if (!response.data) return navigate("/login");
         dispatch({ type: "set", user: response.data });
         setIsLoading(false);
       } catch (error) {
         console.error(error.message);
-        navigate("/auth/login");
+        navigate("/login");
       }
     };
 
