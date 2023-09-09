@@ -56,6 +56,13 @@ To run the postgresql migrations in `/users/migrations`, ensure that your curren
 ```bash
 yarn knex migrate:up
 ```
+
+if you encounter an error to the command above, there may be some other instance of postgres running in the background. try to kill it. for mac, you can try:
+```
+brew services
+launchctl unload   ~/Library/LaunchAgents/homebrew.mxcl.postgresql@15.plist
+```
+
 To directly access the terminal of the users service container, ensure that your docker containers are already running, then run the following command in your terminal.
 ```bash
 docker exec -it users sh

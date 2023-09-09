@@ -19,7 +19,7 @@ const Questions = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3001/api/question/getQuestions"
+          "http://localhost:3001/questions/"
         );
 
         if (response.status === 200) {
@@ -58,14 +58,14 @@ const Questions = () => {
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell component="th" scope="row">
-                  {question.question_title}
+                  {question.title}
                 </TableCell>
                 <TableCell>
-                  {question.question_categories.map((cat) => (
+                  {question.categories.map((cat) => (
                     <div>{cat}</div>
                   ))}
                 </TableCell>
-                <TableCell>{question.question_complexity}</TableCell>
+                <TableCell>{question.complexity}</TableCell>
               </TableRow>
             ))}
           </TableBody>
