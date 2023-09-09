@@ -1,8 +1,8 @@
 {
     "question_id": 1,
-    "question_title" : "Reverse a String",
-    "question_categories": ["Strings", "Algorithms"],
-    "question_complexity": "Easy",
+    "title" : "Reverse a String",
+    "categories": ["Strings", "Algorithms"],
+    "complexity": "easy",
     "link": "https://leetcode.com/problems/reverse-string/",
-    "question_description": "Write a function that reverses a string. The input string is given as an array of characters s.\nYou must do this by modifying the input array in-place with O(1) extra memory.\nExample 1:\nInput: s = [\"h\",\"e\",\"l\",\"l\",\"o\"] Output: [\"o\",\"l\",\"l\",\"e\",\"h\"]\nExample 2:\nInput: s = [\"H\",\"a\",\"n\",\"n\",\"a\",\"h\"] Output: [\"h\",\"a\",\"n\",\"n\",\"a\",\"H\"]\nConstraints:\n- 1 <= s.length <= 105\n- s[i] is a printable ascii character."
+    "description": "Write a function that reverses a string. The input string is given as an array of characters s.\nYou must do this by modifying the input array in-place with O(1) extra memory.\nExample 1:\nInput: s = [\"h\",\"e\",\"l\",\"l\",\"o\"] Output: [\"o\",\"l\",\"l\",\"e\",\"h\"]\nExample 2:\nInput: s = [\"H\",\"a\",\"n\",\"n\",\"a\",\"h\"] Output: [\"h\",\"a\",\"n\",\"n\",\"a\",\"H\"]\nConstraints:\n- 1 <= s.length <= 105\n- s[i] is a printable ascii character."
 }
