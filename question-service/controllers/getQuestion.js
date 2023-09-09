@@ -6,7 +6,7 @@ export async function getQuestionsWithQuery(req, res) {
         const questions = await Question.find(req.query).sort('question_id');
         res.send(filterQuestionsShort(questions));
     } catch (error) {
-        res.status(400).send(error);
+        res.status(400).send(error.message);
     }
 }
 
@@ -18,7 +18,7 @@ export async function getSingleQuestion(req, res) {
         }
         res.send(filterQuestion(question));
     } catch (error) {
-        res.status(400).send(error);
+        res.status(400).send(error.message);
     }
 }
 

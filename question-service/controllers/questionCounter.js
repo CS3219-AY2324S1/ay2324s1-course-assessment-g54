@@ -1,4 +1,6 @@
 import { Counter } from "../model/counter.js";
+import { Question } from "../model/question.js";
+import sampleQuestions from "../routes/sampleQuestions.js";
 
 export async function createQuestionCounter() {
     const exist = await Counter.exists({_id: "question"}); 
@@ -9,6 +11,16 @@ export async function createQuestionCounter() {
 
         try {
             const createQCounter = await qCounter.save();
+            // populate the database (for now)
+            async function tempPopulateDatabase(q) {
+                const id = await getNextQuestionId();
+                const newQ = new Question({
+                    question_id: id,
+                    ...q
+                });
+                await newQ.save();
+            }
+            sampleQuestions.forEach(tempPopulateDatabase);
             return createQCounter;
         } catch (error) {
             throw error;
@@ -28,3 +40,4 @@ export async function getNextQuestionId() {
         return error;
     }
 }
+

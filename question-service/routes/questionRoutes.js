@@ -4,9 +4,6 @@ import { getSingleQuestion, getQuestionsWithQuery } from '../controllers/getQues
 import { getQuestions } from '../controllers/getQuestions.js';
 import { updateQuestion } from '../controllers/updateQuestion.js';
 import { validateCreateQuestion, validateUpdateQuestion, validateQuestionId, validateQuestionQuery } from '../middleware/validateQuestions.js';
-import { validateUpdatedQuestion } from './../middleware/validators.js';
-import sampleQuestions from './sampleQuestions.js';
-import SampleQuestions from './sampleQuestions.js'; 
 import express from "express";
 
 const router = express.Router();
@@ -15,16 +12,19 @@ router.get('/', (req, res) => {
     res.send(`Hello from the Question Service listening from port ${process.env.PORT}`);
 });
 
-router.get('/getQuestions', getQuestions);
+// '/getQuestions'
+router.get('/questions', [validateQuestionQuery], getQuestionsWithQuery); // getQuestions);
 
-router.get('/getQuestion', [validateQuestionQuery], getQuestionsWithQuery);
+// '/getQuestion/:id'
+router.get('/questions/:id', [validateQuestionId], getSingleQuestion);
 
-router.get('/getQuestion/:id', [validateQuestionId], getSingleQuestion);
+// '/createQuestion'
+router.post('/questions', [validateCreateQuestion], createQuestion);
 
-router.post('/createQuestion', [validateCreateQuestion], createQuestion);
+// '/updateQuestion/:id'
+router.put('/questions/:id', [validateQuestionId, validateUpdateQuestion], updateQuestion);
 
-router.put('/updateQuestion/:id', [validateQuestionId, validateUpdateQuestion], updateQuestion);
-
-router.delete('/deleteQuestion/:id', [validateQuestionId], deleteQuestion);
+// '/deleteQuestion/:id'
+router.delete('/questions/:id', [validateQuestionId], deleteQuestion);
 
 export default router;

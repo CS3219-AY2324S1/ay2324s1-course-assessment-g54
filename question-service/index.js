@@ -29,7 +29,8 @@ if (process.env.NODE_ENV === 'development') {
 
 createQuestionCounter();
 
-app.use('/api/question', QuestionRouter);
+//app.use('/api/question', QuestionRouter);
+app.use('/', QuestionRouter);
 
 app.listen(port, () => {
     console.log(`Question Service is running on port: ${port}`);

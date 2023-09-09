@@ -12,6 +12,6 @@ export async function deleteQuestion(req, res) {
         await Question.deleteOne({ question_id: question.question_id });
         return res.send(filterQuestion(question));
     } catch (error) {
-        res.status(400).send(error);
+        res.status(400).send(error.message);
     }
 }

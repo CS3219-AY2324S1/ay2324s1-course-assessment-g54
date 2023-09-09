@@ -17,7 +17,7 @@ export async function updateQuestion(req, res) {
         const updatedQuestion = await question.save();
         return res.send(filterQuestion(updatedQuestion));
     } catch (error) {
-        res.status(400).send(error);
+        res.status(400).send(error.message);
     }
 }
 
