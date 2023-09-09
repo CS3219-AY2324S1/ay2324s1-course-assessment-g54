@@ -1,13 +1,14 @@
 services:
-  frontend:
+  frontend-service:
     build:
       context: ./frontend-service
-    container_name: frontend
+    container_name: frontend-service
     ports:
       - 3000:3000
     depends_on:
-      - users
+      - users-service
     environment:
+      REACT_APP_QUESTIONS_SERVICE_HOST: http://localhost:3001
       REACT_APP_USERS_SERVICE_HOST: http://localhost:3002
     volumes:
       - ./frontend-service:/app
@@ -20,15 +21,15 @@ services:
     ports:
       - 3001:3001
     depends_on:
-      - mongo
+      - mongodb
     volumes:
       - ./question-service:/app
     command: yarn start
 
-  users:
+  users-service:
     build:
       context: ./users-service
-    container_name: users
+    container_name: users-service
     ports:
       - 3002:3002
     depends_on:
@@ -57,7 +58,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
 
-  mongo:
+  mongodb:
     image: mongo:7.0.1
     container_name: mongodb
     restart: always
@@ -68,16 +69,18 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: testpw
       MONGO_INITDB_DATABASE: peerprep-database
 
-  mongo-express:
+  mongo-ui:
     image: mongo-express
     container_name: mongo-ui
     restart: always
     ports:
       - 8081:8081
+    depends_on:
+      - mongodb
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: testpw
       ME_CONFIG_MONGODB_ADMINPASSWORD: test
-      ME_CONFIG_MONGODB_URL: mongodb://test:testpw@mongo:27017/
+      ME_CONFIG_MONGODB_URL: mongodb://test:testpw@mongodb:27017/
 
 volumes:
   postgres:
