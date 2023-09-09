@@ -2,26 +2,40 @@
 
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/6BOvYMwN)
 
-## Frontend Microservice
 
 ### Getting started
 
-Ensure that your current directory is the `frontend` folder of the project. Install the necessary dependencies if you have not by running the following command in your terminal. 
+Install the necessary dependencies in all the micro services if you have not by running the following command in your terminal within each of the individual service folders. 
 ```bash
 yarn install --frozen-lockfile
 ```
-To start the development server on `http://localhost:3000`, ensure that you already have docker installed and that your current directory is the `root` folder of the project. Then, start the docker containers by running the following command in your terminal.
+To start the development server, ensure that you already have docker installed and that your current directory is the `root` folder of the project. Then, start the docker containers by running the following command in your terminal.
 ```bash
 docker compose up
 ```
-To directly access the terminal of the frontend container, ensure that your docker containers are already running, then run the following command in your terminal.
+If you have not, or there has been an update to the `postgresql` database migrations, go into the `users-service` folder and run the migrations by using the following commands. If you are facing an issue with the migration, it is quite likely that you previously already have an instance of PostgreSQL running on your device. Kill that instance of PostgreSQL and start the containers again before migrating your database. 
 ```bash
-docker exec -it frontend sh
+cd users-service
+yarn knex migrate:up
+```
+During development, if there is a need to access the terminals of any of the docker containers, the commands are below. 
+```bash
+docker exec -it frontend-service sh
+```
+```bash
+docker exec -it question-service sh
+```
+```bash
+docker exec -it users-service sh
+```
+```bash
+docker exec -it postgresql sh
 ```
 
 ## Question Microservice
 
 ### Getting started
+
 If you are using the Atlas Mongo DB, follow the instructions below. Else, you can ignore it.
 First, in the `Security` section of the left navigation, click `Network Access`.
 Then, click `Add IP Address` and add your current IP address so that you will be whitelisted.
