@@ -39,10 +39,14 @@ function App() {
         <BrowserRouter>
           <Routes>
             {unprotectedRoutes.map(({ element, path }) => (
-              <Route path={path} element={element} />
+              <Route key={path} path={path} element={element} />
             ))}
             {protectedRoutes.map(({ element, path }) => (
-              <Route path={path} element={<AuthGuard>{element}</AuthGuard>} />
+              <Route
+                key={path}
+                path={path}
+                element={<AuthGuard>{element}</AuthGuard>}
+              />
             ))}
           </Routes>
         </BrowserRouter>

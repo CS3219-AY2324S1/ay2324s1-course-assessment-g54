@@ -85,7 +85,12 @@ const Question = () => {
               </Stack>
               <Box>
                 {question.categories.map((category) => (
-                  <Chip label={category} size="small" sx={{ marginRight: 1 }} />
+                  <Chip
+                    key={category}
+                    label={category}
+                    size="small"
+                    sx={{ marginRight: 1 }}
+                  />
                 ))}
               </Box>
               <Typography flexGrow={1} variant="body1">
