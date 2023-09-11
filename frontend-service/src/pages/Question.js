@@ -52,6 +52,8 @@ const Question = () => {
     }
   };
 
+  console.log(question.description);
+
   return (
     <>
       <NavBar />
@@ -94,8 +96,16 @@ const Question = () => {
                   />
                 ))}
               </Box>
-              <Card variant="outlined" sx={{ whiteSpace: 'pre-wrap', overflow:'scroll'}} padding={1} >
-                <CardContent flexGrow={1}>{question.description} </CardContent>
+              <Card
+                variant="outlined"
+                sx={{ flexGrow: 1, overflow: "scroll" }}
+                padding={1}
+              >
+                <CardContent>
+                  <Typography whiteSpace="pre-wrap">
+                    {question.description}
+                  </Typography>
+                </CardContent>
               </Card>
             </Stack>
           </Box>
