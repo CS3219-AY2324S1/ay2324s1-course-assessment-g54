@@ -7,7 +7,7 @@ import SearchBar from "../components/Questions/SearchBar";
 
 import Typography from "@mui/material/Typography";
 
-const Questions = () => {
+const Questions = () => { //test
   const [questions, setQuestions] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [difficultyQuery, setDifficultyQuery] = useState("");
