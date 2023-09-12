@@ -7,11 +7,12 @@ import SearchBar from "../components/Questions/SearchBar";
 
 import Typography from "@mui/material/Typography";
 
-const Questions = () => { //test
+const Questions = () => {
   const [questions, setQuestions] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [difficultyQuery, setDifficultyQuery] = useState("");
-  const [filteredQuestions, setFilteredQuestions] = useState([]);
+  const [filteredQuestionsBySearch, setFilteredQuestionsBySearch] = useState([]);
+  const [filteredQuestionsByDifficulty, setFilteredQuestionsByDifficulty] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -22,7 +23,8 @@ const Questions = () => { //test
 
         if (response.status === 200) {
           setQuestions(response.data);
-          setFilteredQuestions(response.data);
+          setFilteredQuestionsBySearch(response.data);
+          setFilteredQuestionsByDifficulty(response.data);
         } else {
           console.error("Failed to fetch questions.");
         }
@@ -34,22 +36,20 @@ const Questions = () => { //test
     fetchData();
   }, []);
 
-  const handleSearchClick = () => {
-    let filteredQuestions = questions;
+  const handleSearchFilter = () => {
+    const filtered = questions.filter((question) => {
+      if (!searchQuery) return true;
+      return question.title.toLowerCase().includes(searchQuery.toLowerCase())
+    });
+    setFilteredQuestionsBySearch(filtered);
+  };
 
-    if (searchQuery) {
-      filteredQuestions = questions.filter((question) =>
-        question.title.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    }
-
-    if (difficultyQuery) {
-      filteredQuestions = filteredQuestions.filter(
-        (question) => question.complexity === difficultyQuery
-      );
-    }
-
-    setFilteredQuestions(filteredQuestions);
+  const handleDifficultyFilter = () => {
+    const filtered = filteredQuestionsBySearch.filter((question) => {
+      if (!difficultyQuery) return true;
+      return question.complexity === difficultyQuery;
+    });
+    setFilteredQuestionsByDifficulty(filtered);
   };
 
   return (
@@ -61,11 +61,13 @@ const Questions = () => { //test
       <SearchBar
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
-        handleSearchClick={handleSearchClick}
+        handleSearchFilter={handleSearchFilter}
+        difficultyQuery={difficultyQuery}
         setDifficultyQuery={setDifficultyQuery}
+        handleDifficultyFilter={handleDifficultyFilter}
       />
       <QuestionsTable
-        filteredQuestions={filteredQuestions}
+        filteredQuestions={filteredQuestionsByDifficulty}
       />
     </div>
   );

@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import TextField from "@mui/material/TextField";
+import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import InputLabel from '@mui/material/InputLabel';
 import Select from "@mui/material/Select";
@@ -10,10 +11,16 @@ import MenuItem from "@mui/material/MenuItem";
 const SearchBar = ({
   searchQuery,
   setSearchQuery,
-  handleSearchClick,
+  handleSearchFilter,
   difficultyQuery,
   setDifficultyQuery,
+  handleDifficultyFilter
 }) => {
+
+  useEffect(() => {
+    handleDifficultyFilter();
+  }, [setDifficultyQuery, handleDifficultyFilter]);
+  
   return (
     <div style={{ display: "flex", alignItems: "center" }}>
       <TextField
@@ -24,24 +31,29 @@ const SearchBar = ({
         size="small"
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton onClick={handleSearchFilter} aria-label="search">
+                <SearchIcon />
+              </IconButton>
+            </InputAdornment>
+          ),
+        }}
       />
       <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
         <InputLabel id="difficulty-label">Difficulty</InputLabel>
         <Select
           label="Difficulty"
           value={difficultyQuery}
-          onChange={(e) => setDifficultyQuery(e.target.value)}
+          onChange={(e) => { setDifficultyQuery(e.target.value)}}
         >
           <MenuItem value="">All</MenuItem>
           <MenuItem value="easy">Easy</MenuItem>
           <MenuItem value="medium">Medium</MenuItem>
           <MenuItem value="hard">Hard</MenuItem>
         </Select>
-      </FormControl>
-      <IconButton onClick={handleSearchClick} aria-label="search">
-        <SearchIcon />
-      </IconButton>
-      
+      </FormControl>      
     </div>
   );
 };
