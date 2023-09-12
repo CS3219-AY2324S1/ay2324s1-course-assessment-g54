@@ -10,6 +10,7 @@ import Typography from "@mui/material/Typography";
 const Questions = () => {
   const [questions, setQuestions] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [difficultyQuery, setDifficultyQuery] = useState("");
   const [filteredQuestions, setFilteredQuestions] = useState([]);
 
   useEffect(() => {
@@ -34,11 +35,21 @@ const Questions = () => {
   }, []);
 
   const handleSearchClick = () => {
-    const filtered = questions.filter((question) =>
-      question.title.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    let filteredQuestions = questions;
 
-    setFilteredQuestions(filtered);
+    if (searchQuery) {
+      filteredQuestions = questions.filter((question) =>
+        question.title.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    if (difficultyQuery) {
+      filteredQuestions = filteredQuestions.filter(
+        (question) => question.complexity === difficultyQuery
+      );
+    }
+
+    setFilteredQuestions(filteredQuestions);
   };
 
   return (
@@ -51,6 +62,7 @@ const Questions = () => {
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
         handleSearchClick={handleSearchClick}
+        setDifficultyQuery={setDifficultyQuery}
       />
       <QuestionsTable
         filteredQuestions={filteredQuestions}
