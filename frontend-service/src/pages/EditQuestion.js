@@ -4,21 +4,22 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import CategoryChips from "../components/CategoryChips";
+import MarkDownEditor from "../components/MarkdownEditor";
 import NavBar from "../components/NavBar";
 import SelectChip from "../components/SelectChip";
 
-import Editor from "@monaco-editor/react";
+
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import { Card, CardContent } from "@mui/material";
+import { Card, CardContent} from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import LinearProgress from "@mui/material/LinearProgress";
 import TextField from "@mui/material/TextField";
 import Tooltip from "@mui/material/Tooltip";
-import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
+
 
 
 const EditQuestion = () => {
@@ -39,7 +40,7 @@ const EditQuestion = () => {
       setIsLoading(false);
     };
 
-    getQuestion();  
+    getQuestion();
   }, [id, navigate]);
 
   if (isLoading) return <LinearProgress variant="indeterminate" />;
@@ -64,7 +65,7 @@ const EditQuestion = () => {
       <NavBar />
       <Box height="calc(100vh - 64px)" width="100vw" bgcolor="whitesmoke">
         <Box height="100%" display="flex">
-          <Stack height="100%" width="100vw" spacing={1} border="1px dashed green">
+          <Stack height="100%" width="100%" spacing={1} border="1px dashed green">
             <Stack direction="row" alignItems="center" justifyContent="space-between">
               <Tooltip title="Back to questions" placement="top" arrow>
                 <IconButton onClick={() => navigate("/questions")}>
@@ -80,14 +81,14 @@ const EditQuestion = () => {
             <Stack height="100%" width="100%" direction="row" spacing={1} alignItems="center" border="1px dashed red">
               <Box width="50%" height="100%" padding={1}>
                 <Stack spacing={1}>
-                <Card
+                  <Card
                     variant="outlined"
                     textOverflow="ellipsis"
                     sx={{ flexGrow: 1 }}
                     padding={1}
                   >
                     <CardContent>
-                    <TextField fullWidth id="outlined-basic" label="title" defaultValue={questionTitle} variant="outlined" onChange={(e) => setQuestionTitle(e.target.value)}/>
+                      <TextField fullWidth id="outlined-basic" label="title" defaultValue={questionTitle} variant="outlined" onChange={(e) => setQuestionTitle(e.target.value)} />
                     </CardContent>
                   </Card>
                   <Card
@@ -97,7 +98,7 @@ const EditQuestion = () => {
                     padding={1}
                   >
                     <CardContent>
-                      <SelectChip currentComplexity={question.complexity}/>
+                      <SelectChip currentComplexity={question.complexity} />
                     </CardContent>
                   </Card>
                   <Card
@@ -107,21 +108,13 @@ const EditQuestion = () => {
                     padding={1}
                   >
                     <CardContent>
-                      <CategoryChips categories={question.categories} complexityColor={getDifficultyChipColor(question.complexity)}/>
+                      <CategoryChips categories={question.categories} complexityColor={getDifficultyChipColor(question.complexity)} />
                     </CardContent>
                   </Card>
                 </Stack>
               </Box>
-              <Box width="50%" height="100%" padding={1}>
-                <Paper
-                  sx={{ height: "100%", width: "100%", overflow: "hidden" }}
-                  elevation={2}
-                >
-                  <Editor
-                    defaultLanguage="python"
-                    defaultValue="# Insert your code here"
-                  />
-                </Paper>
+              <Box width="50%" height="100%" padding={1} overflow="scroll">
+                <MarkDownEditor description={question.description} />
               </Box>
             </Stack>
           </Stack>
