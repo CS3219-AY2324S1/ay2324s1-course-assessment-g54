@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
+
 import SimpleMde from 'react-simplemde-editor';
+
 import 'easymde/dist/easymde.min.css';
 
 function MarkdownEditor(props) {

@@ -6,9 +6,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import CategoryChips from "../components/CategoryChips";
 import MarkDownEditor from "../components/MarkdownEditor";
 import NavBar from "../components/NavBar";
-import SelectChip from "../components/SelectChip";
-
-
+import SaveBar from "../components/SaveBar";
+import SelectComplexity from "../components/SelectComplexity";
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Box from "@mui/material/Box";
@@ -19,7 +18,7 @@ import LinearProgress from "@mui/material/LinearProgress";
 import TextField from "@mui/material/TextField";
 import Tooltip from "@mui/material/Tooltip";
 import Stack from "@mui/material/Stack";
-import SaveBar from "../components/SaveBar";
+
 
 
 
@@ -136,7 +135,7 @@ const EditQuestion = () => {
                     padding={1}
                   >
                     <CardContent>
-                      <SelectChip currentComplexity={question.complexity} onSave={handleSaveComplexity} />
+                      <SelectComplexity currentComplexity={question.complexity} onSave={handleSaveComplexity} />
                     </CardContent>
                   </Card>
                   <Card

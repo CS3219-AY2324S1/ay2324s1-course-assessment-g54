@@ -36,7 +36,7 @@ function getStyles(complex, complexity, theme) {
   };
 }
 
-const SelectChip = (props) => {
+const SelectComplexity = (props) => {
   const theme = useTheme();
   const [complexity, setComplexity] = useState(props.currentComplexity);
 
@@ -87,4 +87,4 @@ const SelectChip = (props) => {
   );
 }
 
-export default SelectChip;
+export default SelectComplexity;
