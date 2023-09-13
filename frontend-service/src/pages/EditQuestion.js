@@ -12,14 +12,12 @@ import SelectComplexity from "../components/SelectComplexity";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import { Card, CardContent} from "@mui/material";
+import { Card, CardContent } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import LinearProgress from "@mui/material/LinearProgress";
+import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Tooltip from "@mui/material/Tooltip";
-import Stack from "@mui/material/Stack";
-
-
 
 
 const EditQuestion = () => {
@@ -29,6 +27,7 @@ const EditQuestion = () => {
   const [question, setQuestion] = useState(null);
   const [questionTitle, setQuestionTitle] = useState("");
   const [questionComplexity, setQuestionComplexity] = useState("");
+  const [questionCategory, setQuestionCategory] = useState("");
   const [questionDescription, setQuestionDescription] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
@@ -41,6 +40,7 @@ const EditQuestion = () => {
       setQuestion(question);
       setQuestionTitle(question.title);
       setQuestionComplexity(question.complexity);
+      setQuestionCategory(question.categories);
       setQuestionDescription(question.description);
       setIsLoading(false);
     };
@@ -75,14 +75,23 @@ const EditQuestion = () => {
     setIsOpen(data);
   };
 
+  const handleAddClick = (data) => {
+    setQuestionCategory((prevData) => {
+      const newData = [...prevData, data];
+      return newData;
+    });
+  };
+
   const handleSave = async () => {
     try {
       const url = `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions/${id}`;
       console.log(url);
-      const updatedQuestion = {...question, 
-        question_id : undefined,
+      const updatedQuestion = {
+        ...question,
+        question_id: undefined,
         title: questionTitle,
         complexity: questionComplexity,
+        categories: questionCategory,
         description: questionDescription
       }
       const saveResponse = await axios.put(url, updatedQuestion);
@@ -91,7 +100,7 @@ const EditQuestion = () => {
     } catch (err) {
       console.log(err);
     }
-    
+
   }
 
   //console.log(question.description);
@@ -108,7 +117,7 @@ const EditQuestion = () => {
                   <ArrowBackIcon />
                 </IconButton>
               </Tooltip>
-              <SaveBar onOpen={isOpen} onClose={handleSaveClose}/>
+              <SaveBar onOpen={isOpen} onClose={handleSaveClose} />
               <Tooltip title="Save question" placement="top" arrow>
                 <Button variant="contained" onClick={handleSave} >
                   Save
@@ -135,7 +144,7 @@ const EditQuestion = () => {
                     padding={1}
                   >
                     <CardContent>
-                      <SelectComplexity currentComplexity={question.complexity} onSave={handleSaveComplexity} />
+                      <SelectComplexity currentComplexity={questionComplexity} onSave={handleSaveComplexity} />
                     </CardContent>
                   </Card>
                   <Card
@@ -145,13 +154,13 @@ const EditQuestion = () => {
                     padding={1}
                   >
                     <CardContent>
-                      <CategoryChips categories={question.categories} complexityColor={getDifficultyChipColor(question.complexity)} />
+                      <CategoryChips categories={questionCategory} complexityColor={getDifficultyChipColor(question.complexity)} onSave={handleAddClick}/>
                     </CardContent>
                   </Card>
                 </Stack>
               </Box>
               <Box width="50%" height="100%" padding={1} overflow="scroll">
-                <MarkDownEditor description={question.description} onSave={handleSaveDescription} />
+                <MarkDownEditor description={questionDescription} onSave={handleSaveDescription} />
               </Box>
             </Stack>
           </Stack>
