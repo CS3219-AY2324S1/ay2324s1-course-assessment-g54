@@ -26,7 +26,6 @@ const unprotectedRoutes = [
 ];
 
 const protectedRoutes = [
-  { path: "/profile", element: <Profile /> },
   { path: "/questions", element: <Questions /> },
   { path: "/questions/:id", element: <Question /> },
 ];
