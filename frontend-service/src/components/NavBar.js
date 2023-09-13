@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { useUser } from "../contexts/UserContext";
+import { useUser, useUserDispatch } from "../contexts/UserContext";
 
+import axios from "axios";
 import AppBar from "@mui/material/AppBar";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
@@ -20,6 +21,8 @@ import TextField from '@mui/material/TextField';
 const NavBar = () => {
   const navigate = useNavigate();
   const user = useUser();
+  const dispatch = useUserDispatch();
+
   const [anchorElement, setAnchorElement] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userName, setUserName] = useState(user.name);
@@ -29,8 +32,21 @@ const NavBar = () => {
   const handleCloseUserMenu = () => setAnchorElement(null);
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
-  const handleUpdateName = (event) => {
+  const handleUpdateName = async (event) => {
     event.preventDefault();
+    // const token = window.localStorage.getItem("token");
+    // try {
+    //     const response = await axios.put(
+    //       `${process.env.REACT_APP_USERS_SERVICE_HOST}/profile`,
+    //       {...user, name: inputName},
+    //       { headers: { Authorization: token } }
+    //     );
+    //   } catch (error) {
+    //     console.error(error.message);
+    //     navigate("/login");
+    //   }
+
+    dispatch({type: "set", user: {...user, name: inputName }})
     setUserName(inputName);
     setIsModalOpen(false);
   }
