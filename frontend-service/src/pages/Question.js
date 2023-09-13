@@ -16,6 +16,7 @@ import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
+import { Card, CardContent } from "@mui/material";
 
 const Question = () => {
   const navigate = useNavigate();
@@ -50,6 +51,8 @@ const Question = () => {
         return "primary";
     }
   };
+
+  console.log(question.description);
 
   return (
     <>
@@ -93,9 +96,17 @@ const Question = () => {
                   />
                 ))}
               </Box>
-              <Typography flexGrow={1} variant="body1">
-                {question.description}
-              </Typography>
+              <Card
+                variant="outlined"
+                sx={{ flexGrow: 1, overflow: "scroll" }}
+                padding={1}
+              >
+                <CardContent>
+                  <Typography whiteSpace="pre-wrap">
+                    {question.description}
+                  </Typography>
+                </CardContent>
+              </Card>
             </Stack>
           </Box>
           <Box width="50%" height="100%" padding={1}>

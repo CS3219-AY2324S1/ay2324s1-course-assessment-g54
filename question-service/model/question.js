@@ -9,8 +9,8 @@ const questionSchema = new mongoose.Schema({
   },
   title: {
     type: String,
-    //required: true,
-    //unique: true,
+    required: true,
+    unique: true,
     trim: true,
     minlength: 3,
   },
@@ -20,6 +20,7 @@ const questionSchema = new mongoose.Schema({
   }],
   complexity: {
     type: String,
+    required: true,
     enum: COMPLEXITIES_ARR,
   },
   link: {
@@ -28,8 +29,8 @@ const questionSchema = new mongoose.Schema({
   },
   description: {
     type: String,
-    //required: true,
-    //unique: true,
+    required: true,
+    unique: true,
     trim: true,
     minlength: 3
   },
