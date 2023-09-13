@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
+
 import { useTheme } from '@mui/material/styles';
 
-import OutlinedInput from '@mui/material/OutlinedInput';
+import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
+import OutlinedInput from '@mui/material/OutlinedInput';
 import Select from '@mui/material/Select';
-import Chip from '@mui/material/Chip';
+import Typography from "@mui/material/Typography";
+
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -25,18 +27,6 @@ const complexities = [
   'hard',
 ];
 
-const getDifficultyChipColor = (difficulty) => {
-  switch (difficulty) {
-    case "easy":
-      return "success";
-    case "medium":
-      return "warning";
-    case "hard":
-      return "error";
-    default:
-      return "primary";
-  }
-};
 function getStyles(complex, complexity, theme) {
   return {
     fontWeight:
@@ -66,16 +56,23 @@ const SelectChip = (props) => {
 
 return (
   <div>
-    <FormControl fullWidth sx={{ m: 1}}>
-      <InputLabel id="complexity-chip-label">lvl</InputLabel>
+    <FormControl fullWidth >
+      <InputLabel id="complexity-chip-label">level</InputLabel>
       <Select
         labelId="complexity-chip-label"
         id="complexity-chip"
         value={complexity}
         onChange={handleChange}
-        input={<OutlinedInput id="select-chip" label="Chip" />}
+        input={<OutlinedInput id="select-chip" label="Level" />}
         renderValue={(selected) => (
-          <Chip key={selected} label={selected} color={getDifficultyChipColor(selected)}/>
+          <Typography
+                  variant="body1"
+                  flexGrow={1}
+                  noWrap
+                  textOverflow="ellipsis"
+                >
+                  {selected}
+                </Typography>
         )}
         MenuProps={MenuProps}
       >

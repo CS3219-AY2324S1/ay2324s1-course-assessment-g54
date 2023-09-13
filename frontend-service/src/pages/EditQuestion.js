@@ -1,30 +1,32 @@
 import axios from "axios";
+
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
+import CategoryChips from "../components/CategoryChips";
 import NavBar from "../components/NavBar";
+import SelectChip from "../components/SelectChip";
 
 import Editor from "@monaco-editor/react";
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Chip from "@mui/material/Chip";
-import EditIcon from "@mui/icons-material/Edit";
+import { Card, CardContent } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import LinearProgress from "@mui/material/LinearProgress";
+import TextField from "@mui/material/TextField";
+import Tooltip from "@mui/material/Tooltip";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
-import Tooltip from "@mui/material/Tooltip";
-import Typography from "@mui/material/Typography";
-import { Card, CardContent } from "@mui/material";
-import SelectChip from "../components/SelectChip";
+
 
 const EditQuestion = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [isLoading, setIsLoading] = useState(true);
   const [question, setQuestion] = useState(null);
+  const [questionTitle, setQuestionTitle] = useState("  ");
 
   useEffect(() => {
     const getQuestion = async () => {
@@ -33,10 +35,11 @@ const EditQuestion = () => {
       const question = response.data;
       if (!question.question_id) return navigate("/questions");
       setQuestion(question);
+      setQuestionTitle(question.title);
       setIsLoading(false);
     };
 
-    getQuestion();
+    getQuestion();  
   }, [id, navigate]);
 
   if (isLoading) return <LinearProgress variant="indeterminate" />;
@@ -77,16 +80,14 @@ const EditQuestion = () => {
             <Stack height="100%" width="100%" direction="row" spacing={1} alignItems="center" border="1px dashed red">
               <Box width="50%" height="100%" padding={1}>
                 <Stack spacing={1}>
-                  <Card
+                <Card
                     variant="outlined"
                     textOverflow="ellipsis"
                     sx={{ flexGrow: 1 }}
                     padding={1}
                   >
                     <CardContent>
-                      <Typography whiteSpace="pre-wrap">
-                        {question.title}
-                      </Typography>
+                    <TextField fullWidth id="outlined-basic" label="title" defaultValue={questionTitle} variant="outlined" onChange={(e) => setQuestionTitle(e.target.value)}/>
                     </CardContent>
                   </Card>
                   <Card
@@ -106,17 +107,7 @@ const EditQuestion = () => {
                     padding={1}
                   >
                     <CardContent>
-                      <Typography whiteSpace="pre-wrap">
-                        {question.categories.map((category) => (
-                          <Chip
-                            key={category}
-                            label={category}
-                            color={getDifficultyChipColor(question.complexity)}
-                            size="medium"
-                            sx={{ marginRight: 1 }}
-                          />
-                        ))}
-                      </Typography>
+                      <CategoryChips categories={question.categories} complexityColor={getDifficultyChipColor(question.complexity)}/>
                     </CardContent>
                   </Card>
                 </Stack>
