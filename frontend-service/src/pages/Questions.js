@@ -54,14 +54,14 @@ const Questions = () => {
   return (
     <div>
       <NavBar />
-      <Typography variant="h3" color="initial">
-        Questions
-      </Typography>
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
         <Stack
           spacing={2}
           style={{ width: "80%" }}
         >
+          <Typography variant="h3" color="initial">
+            Questions
+          </Typography>
           <SearchBar
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}

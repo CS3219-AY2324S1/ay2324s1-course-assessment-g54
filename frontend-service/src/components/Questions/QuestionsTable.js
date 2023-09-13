@@ -118,7 +118,7 @@ const QuestionsTable = ({ filteredQuestions }) => {
                       color="primary"
                       aria-label="edit"
                       size="large"
-                      onClick={() => navigate(`/questions/${question.question_id}`)}
+                      onClick={() => navigate(`/questions/${question.question_id}/edit`)}
                     >
                       <EditIcon fontSize="inherit"/>
                     </IconButton>
