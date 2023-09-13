@@ -75,9 +75,16 @@ const EditQuestion = () => {
     setIsOpen(data);
   };
 
-  const handleAddClick = (data) => {
+  const handleAddClick = (dataToAdd) => {
     setQuestionCategory((prevData) => {
-      const newData = [...prevData, data];
+      const newData = [...prevData, dataToAdd];
+      return newData;
+    });
+  };
+
+  const handleDeleteClick = (dataToDelete) => {
+    setQuestionCategory((prevData) => {
+      const newData = prevData.filter((item) => item !== dataToDelete);
       return newData;
     });
   };
@@ -154,7 +161,7 @@ const EditQuestion = () => {
                     padding={1}
                   >
                     <CardContent>
-                      <CategoryChips categories={questionCategory} complexityColor={getDifficultyChipColor(question.complexity)} onSave={handleAddClick}/>
+                      <CategoryChips categories={questionCategory} complexityColor={getDifficultyChipColor(question.complexity)} onSave={handleAddClick} onDelete={handleDeleteClick}/>
                     </CardContent>
                   </Card>
                 </Stack>

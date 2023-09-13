@@ -25,6 +25,7 @@ const CategoryChips = (props) => {
 
   const handleDelete = (chipToDelete) => () => {
     setChipData((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
+    props.onDelete(chipToDelete.key);
   };
 
   const handleAddClick = () => {
