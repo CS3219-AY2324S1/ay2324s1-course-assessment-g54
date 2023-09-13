@@ -7,7 +7,6 @@ import { UserProvider } from "./contexts/UserContext";
 import AuthGuard from "./components/AuthGuard";
 import Example from "./pages/Example";
 import Login from "./pages/Login";
-import Profile from "./pages/Profile";
 import Question from "./pages/Question";
 import Questions from "./pages/Questions";
 import Signup from "./pages/Signup";
