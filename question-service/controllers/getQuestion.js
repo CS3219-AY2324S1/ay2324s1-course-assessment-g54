@@ -1,9 +1,27 @@
 import { Question } from "../model/question.js";
 import { filterQuestion, filterQuestions, filterQuestionsShort } from "./common.js";
 
+function queryBuilder(query) {
+    const finalQuery = {};
+    if (query.title) {
+        finalQuery.title = { $regex: query.title, $options: 'i' };
+    }
+    if (query.complexity) {
+        finalQuery.complexity = query.complexity;
+    }
+    if (query.description) {
+        finalQuery.description = { $regex: query.description, $options: 'i' };
+    }
+
+    if (query.categories) {
+        finalQuery.categories = { "$in" : query.categories }; 
+    }
+}
+
 export async function getQuestionsWithQuery(req, res) {
     try {
-        const questions = await Question.find(req.query).sort('question_id');
+        const finalQuery = queryBuilder(req.query);
+        const questions = await Question.find(finalQuery).sort('question_id');
         res.send(filterQuestionsShort(questions));
     } catch (error) {
         res.status(400).send(error.message);
