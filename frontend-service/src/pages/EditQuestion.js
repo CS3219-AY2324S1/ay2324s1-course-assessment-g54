@@ -18,6 +18,7 @@ import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { Card, CardContent } from "@mui/material";
+import SelectChip from "../components/SelectChip";
 
 const EditQuestion = () => {
   const navigate = useNavigate();
@@ -53,7 +54,7 @@ const EditQuestion = () => {
     }
   };
 
-  console.log(question.description);
+  //console.log(question.description);
 
   return (
     <>
@@ -95,9 +96,7 @@ const EditQuestion = () => {
                     padding={1}
                   >
                     <CardContent>
-                      <Typography whiteSpace="pre-wrap">
-                        {question.complexity}
-                      </Typography>
+                      <SelectChip currentComplexity={question.complexity}/>
                     </CardContent>
                   </Card>
                   <Card
@@ -112,7 +111,8 @@ const EditQuestion = () => {
                           <Chip
                             key={category}
                             label={category}
-                            size="small"
+                            color={getDifficultyChipColor(question.complexity)}
+                            size="medium"
                             sx={{ marginRight: 1 }}
                           />
                         ))}
