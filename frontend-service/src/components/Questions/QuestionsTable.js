@@ -20,7 +20,7 @@ const QuestionsTable = ({ filteredQuestions }) => {
 
   const getComplexityStyle = (complexity) => {
     const colorMap = {
-      easy: "primary",
+      easy: "success",
       medium: "warning",
       hard: "error",
     };
@@ -54,7 +54,7 @@ const QuestionsTable = ({ filteredQuestions }) => {
 
   return (
     <div style={{ display: "flex", justifyContent: "center", height: "auto" }}>
-      <TableContainer component={Paper} style={{ width: "80%", marginTop: "20px", maxHeight: 700 }}>
+      <TableContainer component={Paper} style={{ marginTop: "20px", maxHeight: 700 }}>
         <Table sx={{ minWidth: 650 }} stickyHeader aria-label="simple table" >
           <TableHead>
             <TableRow>
@@ -95,7 +95,7 @@ const QuestionsTable = ({ filteredQuestions }) => {
                   <Box display="flex" gap={1}>
                       <IconButton
                         color="primary"
-                        aria-label="delete"
+                        aria-label="edit"
                         size="large"
                         onClick={() => navigate(`/question/${question.question_id}`)}
                       >

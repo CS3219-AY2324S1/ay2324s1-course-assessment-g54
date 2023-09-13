@@ -6,6 +6,7 @@ import QuestionsTable from "../components/Questions/QuestionsTable";
 import SearchBar from "../components/Questions/SearchBar";
 
 import Typography from "@mui/material/Typography";
+import Stack from "@mui/material/Stack";
 
 const Questions = () => {
   const [questions, setQuestions] = useState([]);
@@ -58,17 +59,26 @@ const Questions = () => {
       <Typography variant="h3" color="initial">
         Questions
       </Typography>
-      <SearchBar
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-        handleSearchFilter={handleSearchFilter}
-        difficultyQuery={difficultyQuery}
-        setDifficultyQuery={setDifficultyQuery}
-        handleDifficultyFilter={handleDifficultyFilter}
-      />
-      <QuestionsTable
-        filteredQuestions={filteredQuestionsByDifficulty}
-      />
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+        <Stack
+          spacing={2}
+          style={{ width: "80%" }}
+        >
+          <SearchBar
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            handleSearchFilter={handleSearchFilter}
+            difficultyQuery={difficultyQuery}
+            setDifficultyQuery={setDifficultyQuery}
+            handleDifficultyFilter={handleDifficultyFilter}
+          />
+          <div>
+            <QuestionsTable
+              filteredQuestions={filteredQuestionsByDifficulty}
+            />
+          </div>
+      </Stack>
+      </div>
     </div>
   );
 };

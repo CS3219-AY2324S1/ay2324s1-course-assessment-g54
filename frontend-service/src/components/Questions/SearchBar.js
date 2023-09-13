@@ -7,6 +7,7 @@ import Select from "@mui/material/Select";
 import SearchIcon from "@mui/icons-material/Search";
 import FormControl from '@mui/material/FormControl';
 import MenuItem from "@mui/material/MenuItem";
+import Stack from "@mui/material/Stack";
 
 const SearchBar = ({
   searchQuery,
@@ -22,7 +23,11 @@ const SearchBar = ({
   }, [setDifficultyQuery, handleDifficultyFilter]);
   
   return (
-    <div style={{ display: "flex", alignItems: "center" }}>
+    <Stack
+      direction="row"
+      spacing={1}
+      alignItems="center"
+    >
       <TextField
         id="filled-search"
         label="Search Questions"
@@ -41,7 +46,7 @@ const SearchBar = ({
           ),
         }}
       />
-      <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+      <FormControl sx={{ minWidth: 120 }} size="small">
         <InputLabel id="difficulty-label">Difficulty</InputLabel>
         <Select
           label="Difficulty"
@@ -54,7 +59,7 @@ const SearchBar = ({
           <MenuItem value="hard">Hard</MenuItem>
         </Select>
       </FormControl>      
-    </div>
+    </Stack>
   );
 };
 
