@@ -19,6 +19,7 @@ import LinearProgress from "@mui/material/LinearProgress";
 import TextField from "@mui/material/TextField";
 import Tooltip from "@mui/material/Tooltip";
 import Stack from "@mui/material/Stack";
+import SaveBar from "../components/SaveBar";
 
 
 
@@ -30,6 +31,7 @@ const EditQuestion = () => {
   const [questionTitle, setQuestionTitle] = useState("");
   const [questionComplexity, setQuestionComplexity] = useState("");
   const [questionDescription, setQuestionDescription] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const getQuestion = async () => {
@@ -70,6 +72,10 @@ const EditQuestion = () => {
     setQuestionComplexity(data);
   };
 
+  const handleSaveClose = (data) => {
+    setIsOpen(data);
+  };
+
   const handleSave = async () => {
     try {
       const url = `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions/${id}`;
@@ -81,7 +87,8 @@ const EditQuestion = () => {
         description: questionDescription
       }
       const saveResponse = await axios.put(url, updatedQuestion);
-      navigate(`/questions/${id}`);
+      setIsOpen(true);
+      //navigate(`/questions/${id}`);
     } catch (err) {
       console.log(err);
     }
@@ -102,6 +109,7 @@ const EditQuestion = () => {
                   <ArrowBackIcon />
                 </IconButton>
               </Tooltip>
+              <SaveBar onOpen={isOpen} onClose={handleSaveClose}/>
               <Tooltip title="Save question" placement="top" arrow>
                 <Button variant="contained" onClick={handleSave} >
                   Save
