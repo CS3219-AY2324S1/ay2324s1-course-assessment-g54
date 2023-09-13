@@ -3,14 +3,11 @@ import SimpleMde from 'react-simplemde-editor';
 import 'easymde/dist/easymde.min.css';
 
 function MarkdownEditor(props) {
-  const [value, setValue] = useState("Initial value");
+  const [value, setValue] = useState(props.description);
 
   useEffect(() => {
-    const getDescription = () => {
       setValue(props.description);
-    };
-    getDescription();
-  }, []);
+  }, [props.description]);
 
   const onChange = useCallback((value) => {
     setValue(value);

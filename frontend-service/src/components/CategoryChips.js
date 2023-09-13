@@ -10,18 +10,12 @@ const ListItem = styled('li')(({ theme }) => ({
 }));
 
 const CategoryChips = (props) => {
-  const [chipData, setChipData] = useState([]);
+  const [chipData, setChipData] = useState(props.categories);
 
   useEffect(() => {
-    const getCategories = () => {
-      const catArray = props.categories;
-      const newArray = catArray.map((cat) => ({key: cat, label: cat}));
-      
-      setChipData(newArray);
-    };
-
-    getCategories();
-  }, []);
+    const newArray = props.categories.map((cat) => ({ key: cat, label: cat }));
+    setChipData(newArray);
+  }, [props.categories]);
 
   const handleDelete = (chipToDelete) => () => {
     setChipData((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));

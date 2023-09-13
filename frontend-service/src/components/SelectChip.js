@@ -38,57 +38,51 @@ function getStyles(complex, complexity, theme) {
 
 const SelectChip = (props) => {
   const theme = useTheme();
-  const [complexity, setComplexity] = useState("");
+  const [complexity, setComplexity] = useState(props.currentComplexity);
 
   const handleChange = (event) => {
     setComplexity(event.target.value);
   };
 
   useEffect(() => {
-    const getComplexity = () => {
-      const comp = props.currentComplexity;
-      //console.log(comp);
-      setComplexity(comp);
-    };
+    setComplexity(props.currentComplexity);
+  }, [props.currentComplexity]);
 
-    getComplexity();
-  }, []);
-
-return (
-  <div>
-    <FormControl fullWidth >
-      <InputLabel id="complexity-chip-label">level</InputLabel>
-      <Select
-        labelId="complexity-chip-label"
-        id="complexity-chip"
-        value={complexity}
-        onChange={handleChange}
-        input={<OutlinedInput id="select-chip" label="Level" />}
-        renderValue={(selected) => (
-          <Typography
-                  variant="body1"
-                  flexGrow={1}
-                  noWrap
-                  textOverflow="ellipsis"
-                >
-                  {selected}
-                </Typography>
-        )}
-        MenuProps={MenuProps}
-      >
-        {complexities.map((complex) => (
-          <MenuItem
-            key={complex}
-            value={complex}
-            style={getStyles(complex, complexity, theme)}
-          >
-            {complex}
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
-  </div>
-);
+  return (
+    <div>
+      <FormControl fullWidth >
+        <InputLabel id="complexity-chip-label">level</InputLabel>
+        <Select
+          labelId="complexity-chip-label"
+          id="complexity-chip"
+          value={complexity}
+          onChange={handleChange}
+          input={<OutlinedInput id="select-chip" label="Level" />}
+          renderValue={(selected) => (
+            <Typography
+              variant="body1"
+              flexGrow={1}
+              noWrap
+              textOverflow="ellipsis"
+            >
+              {selected}
+            </Typography>
+          )}
+          MenuProps={MenuProps}
+        >
+          {complexities.map((complex) => (
+            <MenuItem
+              key={complex}
+              value={complex}
+              style={getStyles(complex, complexity, theme)}
+            >
+              {complex}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+    </div>
+  );
 }
 
 export default SelectChip;
