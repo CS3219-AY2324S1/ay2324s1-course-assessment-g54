@@ -61,6 +61,7 @@ export const handleLogin = async (request, response) => {
 
   const { id } = user;
   const jsonWebToken = utils.signJsonWebToken({ id });
+  console.log(jsonWebToken);
   return response.status(200).send(jsonWebToken);
 };
 
