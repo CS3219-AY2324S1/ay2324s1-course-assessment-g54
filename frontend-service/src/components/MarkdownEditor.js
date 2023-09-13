@@ -11,6 +11,7 @@ function MarkdownEditor(props) {
 
   const onChange = useCallback((value) => {
     setValue(value);
+    props.onSave(value);
   }, []);
 
   return <SimpleMde value={value} onChange={onChange}  />;

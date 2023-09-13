@@ -44,6 +44,7 @@ const CategoryChips = (props) => {
               icon={icon}
               label={data.label}
               onDelete={handleDelete(data)}
+              
             />
           </ListItem>
         );

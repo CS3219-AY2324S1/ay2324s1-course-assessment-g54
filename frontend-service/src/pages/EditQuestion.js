@@ -27,7 +27,9 @@ const EditQuestion = () => {
   const { id } = useParams();
   const [isLoading, setIsLoading] = useState(true);
   const [question, setQuestion] = useState(null);
-  const [questionTitle, setQuestionTitle] = useState("  ");
+  const [questionTitle, setQuestionTitle] = useState("");
+  const [questionComplexity, setQuestionComplexity] = useState("");
+  const [questionDescription, setQuestionDescription] = useState("");
 
   useEffect(() => {
     const getQuestion = async () => {
@@ -37,6 +39,8 @@ const EditQuestion = () => {
       if (!question.question_id) return navigate("/questions");
       setQuestion(question);
       setQuestionTitle(question.title);
+      setQuestionComplexity(question.complexity);
+      setQuestionDescription(question.description);
       setIsLoading(false);
     };
 
@@ -58,14 +62,40 @@ const EditQuestion = () => {
     }
   };
 
+  const handleSaveDescription = (data) => {
+    setQuestionDescription(data);
+  };
+
+  const handleSaveComplexity = (data) => {
+    setQuestionComplexity(data);
+  };
+
+  const handleSave = async () => {
+    try {
+      const url = `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions/${id}`;
+      console.log(url);
+      const updatedQuestion = {...question, 
+        question_id : undefined,
+        title: questionTitle,
+        complexity: questionComplexity,
+        description: questionDescription
+      }
+      const saveResponse = await axios.put(url, updatedQuestion);
+      navigate(`/questions/${id}`);
+    } catch (err) {
+      console.log(err);
+    }
+    
+  }
+
   //console.log(question.description);
 
   return (
     <>
       <NavBar />
-      <Box height="calc(100vh - 64px)" width="100vw" bgcolor="whitesmoke">
+      <Box height="calc(100vh - 64px)" width="100%" bgcolor="whitesmoke">
         <Box height="100%" display="flex">
-          <Stack height="100%" width="100%" spacing={1} border="1px dashed green">
+          <Stack height="100%" width="100%" spacing={1}>
             <Stack direction="row" alignItems="center" justifyContent="space-between">
               <Tooltip title="Back to questions" placement="top" arrow>
                 <IconButton onClick={() => navigate(`/questions/${id}`)}>
@@ -73,12 +103,12 @@ const EditQuestion = () => {
                 </IconButton>
               </Tooltip>
               <Tooltip title="Save question" placement="top" arrow>
-                <Button variant="contained" >
+                <Button variant="contained" onClick={handleSave} >
                   Save
                 </Button>
               </Tooltip>
             </Stack>
-            <Stack height="100%" width="100%" direction="row" spacing={1} alignItems="center" border="1px dashed red">
+            <Stack height="100%" width="100%" direction="row" spacing={1} alignItems="center">
               <Box width="50%" height="100%" padding={1}>
                 <Stack spacing={1}>
                   <Card
@@ -98,7 +128,7 @@ const EditQuestion = () => {
                     padding={1}
                   >
                     <CardContent>
-                      <SelectChip currentComplexity={question.complexity} />
+                      <SelectChip currentComplexity={question.complexity} onSave={handleSaveComplexity} />
                     </CardContent>
                   </Card>
                   <Card
@@ -114,7 +144,7 @@ const EditQuestion = () => {
                 </Stack>
               </Box>
               <Box width="50%" height="100%" padding={1} overflow="scroll">
-                <MarkDownEditor description={question.description} />
+                <MarkDownEditor description={question.description} onSave={handleSaveDescription} />
               </Box>
             </Stack>
           </Stack>

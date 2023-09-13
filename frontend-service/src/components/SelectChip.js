@@ -42,6 +42,7 @@ const SelectChip = (props) => {
 
   const handleChange = (event) => {
     setComplexity(event.target.value);
+    props.onSave(event.target.value);
   };
 
   useEffect(() => {
@@ -59,6 +60,7 @@ const SelectChip = (props) => {
           onChange={handleChange}
           input={<OutlinedInput id="select-chip" label="Level" />}
           renderValue={(selected) => (
+            
             <Typography
               variant="body1"
               flexGrow={1}
