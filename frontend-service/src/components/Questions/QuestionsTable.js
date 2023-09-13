@@ -118,54 +118,6 @@ const QuestionsTable = ({ filteredQuestions }) => {
                       color="primary"
                       aria-label="edit"
                       size="large"
-                      onClick={() => navigate(`/question/${question.question_id}`)}
-                    >
-                      <EditIcon fontSize="inherit"/>
-                    </IconButton>
-                    <IconButton
-                      color="error"
-                      aria-label="delete"
-                      size="large" 
-                      onClick={() => handleDeleteClick(question)}
-                    >
-                      <DeleteIcon fontSize="inherit"/>
-                    </IconButton>
-                  </Stack>
-                </TableCell>
-              </StyledTableRow>
-            ))}
-            {filteredQuestions.map((question) => (
-              <StyledTableRow
-                key={question.question_id}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              >
-                <StyledTableCell>
-                  <Chip
-                    color={getComplexityStyle(question.complexity)}
-                    style={{ textTransform: "capitalize" }}
-                    label={question.complexity}
-                  />
-                </StyledTableCell>
-                <StyledTableCell component="th" scope="row">
-                  {question.title}
-                </StyledTableCell>
-                <StyledTableCell>
-                  <Stack direction="row" spacing={1}>
-                    {question.categories.map((cat) => (
-                      <Chip
-                        key={cat}
-                        label={cat}
-                        variant="outlined"
-                      />
-                    ))}
-                  </Stack>
-                </StyledTableCell>
-                <StyledTableCell>
-                  <Stack direction="row" spacing={1}>
-                    <IconButton
-                      color="primary"
-                      aria-label="edit"
-                      size="large"
                       onClick={() => navigate(`/questions/${question.question_id}`)}
                     >
                       <EditIcon fontSize="inherit"/>
@@ -179,7 +131,7 @@ const QuestionsTable = ({ filteredQuestions }) => {
                       <DeleteIcon fontSize="inherit"/>
                     </IconButton>
                   </Stack>
-                </StyledTableCell>
+                </TableCell>
               </StyledTableRow>
             ))}
           </TableBody>
