@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { styled } from '@mui/material/styles';
 import Chip from '@mui/material/Chip';
@@ -13,10 +13,14 @@ import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+
+import DeleteConfirmationModal from "./DeleteConfirmationModal";
 
 const QuestionsTable = ({ filteredQuestions }) => {
   const navigate = useNavigate();
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [questionToDelete, setQuestionToDelete] = useState(null);
 
   const getComplexityStyle = (complexity) => {
     const colorMap = {
@@ -52,9 +56,28 @@ const QuestionsTable = ({ filteredQuestions }) => {
     return <Typography>No matching results</Typography>;
   }
 
+  const handleDeleteClick = (question) => {
+    setQuestionToDelete(question);
+    setDeleteModalOpen(true);
+    
+    console.log("action cancelled")
+  };
+
+  const handleConfirmDelete = () => {
+    // Add your delete logic here
+    // Once the delete operation is successful, close the modal and reset the questionToDelete state
+    setDeleteModalOpen(false);
+    setQuestionToDelete(null);
+  };
+
+  const handleCancelDelete = () => {
+    setDeleteModalOpen(false);
+    setQuestionToDelete(null);
+  };
+
   return (
     <div style={{ display: "flex", justifyContent: "center", height: "auto" }}>
-      <TableContainer component={Paper} style={{ marginTop: "20px", maxHeight: 700 }}>
+      <TableContainer component={Paper} style={{ marginTop: "5px", maxHeight: 700 }}>
         <Table sx={{ minWidth: 650 }} stickyHeader aria-label="simple table" >
           <TableHead>
             <TableRow>
@@ -81,7 +104,7 @@ const QuestionsTable = ({ filteredQuestions }) => {
                   {question.title}
                 </StyledTableCell>
                 <StyledTableCell>
-                  <Box display="flex" gap={1}>
+                  <Stack direction="row" spacing={1}>
                     {question.categories.map((cat) => (
                       <Chip
                         key={cat}
@@ -89,28 +112,38 @@ const QuestionsTable = ({ filteredQuestions }) => {
                         variant="outlined"
                       />
                     ))}
-                  </Box>
+                  </Stack>
                 </StyledTableCell>
                 <StyledTableCell>
-                  <Box display="flex" gap={1}>
-                      <IconButton
-                        color="primary"
-                        aria-label="edit"
-                        size="large"
-                        onClick={() => navigate(`/question/${question.question_id}`)}
-                      >
-                        <EditIcon fontSize="inherit"/>
-                      </IconButton>
-                      <IconButton color="error" aria-label="delete" size="large">
-                        <DeleteIcon fontSize="inherit"/>
-                      </IconButton>
-                  </Box>
+                  <Stack direction="row" spacing={1}>
+                    <IconButton
+                      color="primary"
+                      aria-label="edit"
+                      size="large"
+                      onClick={() => navigate(`/question/${question.question_id}`)}
+                    >
+                      <EditIcon fontSize="inherit"/>
+                    </IconButton>
+                    <IconButton
+                      color="error"
+                      aria-label="delete"
+                      size="large" 
+                      onClick={() => handleDeleteClick(question)}
+                    >
+                      <DeleteIcon fontSize="inherit"/>
+                    </IconButton>
+                  </Stack>
                 </StyledTableCell>
               </StyledTableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
+      <DeleteConfirmationModal
+        open={deleteModalOpen}
+        onClose={handleCancelDelete}
+        onConfirmDelete={handleConfirmDelete}
+      />
     </div>
   );
 };
