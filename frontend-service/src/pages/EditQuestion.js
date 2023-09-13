@@ -68,7 +68,7 @@ const EditQuestion = () => {
           <Stack height="100%" width="100%" spacing={1} border="1px dashed green">
             <Stack direction="row" alignItems="center" justifyContent="space-between">
               <Tooltip title="Back to questions" placement="top" arrow>
-                <IconButton onClick={() => navigate("/questions")}>
+                <IconButton onClick={() => navigate(`/questions/${id}`)}>
                   <ArrowBackIcon />
                 </IconButton>
               </Tooltip>
