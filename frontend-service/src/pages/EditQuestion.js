@@ -75,7 +75,7 @@ const EditQuestion = () => {
             </Stack>
             <Stack height="100%" width="100%" direction="row" spacing={1} alignItems="center" border="1px dashed red">
               <Box width="50%" height="100%" padding={1}>
-                <Stack height="100%" spacing={1}>
+                <Stack spacing={1}>
                   <Card
                     variant="outlined"
                     textOverflow="ellipsis"
@@ -108,7 +108,14 @@ const EditQuestion = () => {
                   >
                     <CardContent>
                       <Typography whiteSpace="pre-wrap">
-                        {question.categories}
+                        {question.categories.map((category) => (
+                          <Chip
+                            key={category}
+                            label={category}
+                            size="small"
+                            sx={{ marginRight: 1 }}
+                          />
+                        ))}
                       </Typography>
                     </CardContent>
                   </Card>
