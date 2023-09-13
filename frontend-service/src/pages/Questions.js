@@ -18,9 +18,7 @@ const Questions = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:3001/questions/"
-        );
+        const response = await axios.get(`${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions/`);
 
         if (response.status === 200) {
           setQuestions(response.data);
