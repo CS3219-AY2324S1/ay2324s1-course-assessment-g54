@@ -28,7 +28,6 @@ const EditProfileModal = ({isModalOpen, setIsModalOpen}) => {
         );
       } catch (error) {
         console.error(error.message);
-        navigate("/login");
       }
 
     dispatch({type: "set", user: {...user, name: inputName }})
