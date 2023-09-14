@@ -1,4 +1,6 @@
 import axios from "axios";
+import * as DOMPurify from "dompurify";
+import * as marked from "marked";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -17,6 +19,8 @@ import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { Card, CardContent } from "@mui/material";
+
+marked.use({ breaks: true, gfm: true, silent: true });
 
 const Question = () => {
   const navigate = useNavigate();
@@ -96,15 +100,23 @@ const Question = () => {
                   />
                 ))}
               </Box>
-              <Card
-                variant="outlined"
-                sx={{ flexGrow: 1, overflow: "scroll" }}
-                padding={1}
-              >
-                <CardContent>
-                  <Typography whiteSpace="pre-wrap">
-                    {question.description}
-                  </Typography>
+              <Card variant="outlined" sx={{ flexGrow: 1, overflow: "scroll" }}>
+                <CardContent
+                  sx={{
+                    height: "100%",
+                    width: "100%",
+                  }}
+                >
+                  <iframe
+                    height="100%"
+                    width="100%"
+                    style={{ border: "none" }}
+                    sandbox=""
+                    title="Question Description"
+                    srcDoc={DOMPurify.sanitize(
+                      marked.parse(question.description)
+                    )}
+                  />
                 </CardContent>
               </Card>
             </Stack>
