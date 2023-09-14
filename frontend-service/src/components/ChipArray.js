@@ -1,18 +1,8 @@
 import { useState } from "react";
 
-import { styled } from "@mui/material/styles";
-
-import AddCircleIcon from "@mui/icons-material/AddCircle";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
-import IconButton from "@mui/material/IconButton";
-import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
-import Tooltip from "@mui/material/Tooltip";
-
-const ListItem = styled("li")(({ theme }) => ({
-  margin: theme.spacing(0.5),
-}));
 
 const ChipArray = (props) => {
   const { chips, helperText, label, onAddChip, onDeleteChip } = props;
