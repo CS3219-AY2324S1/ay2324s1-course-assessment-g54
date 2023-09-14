@@ -20,7 +20,7 @@ app.post("/logout", (req, res) => {
 
 app.get("/profile", handlers.handleGetProfile);
 
-app.post("/profile", handlers.handleUpdateProfile);
+app.put("/profile", handlers.handleUpdateProfile);
 
 app.post("/signup", handlers.handleSignup);
 
