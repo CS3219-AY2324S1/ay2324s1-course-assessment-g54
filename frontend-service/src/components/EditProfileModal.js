@@ -21,7 +21,7 @@ const EditProfileModal = ({isModalOpen, setIsModalOpen}) => {
     event.preventDefault();
     const token = window.localStorage.getItem("token");
     try {
-        const response = await axios.put(
+        await axios.put(
           `${process.env.REACT_APP_USERS_SERVICE_HOST}/profile`,
           {...user, name: inputName},
           { headers: { Authorization: token } }
