@@ -5,7 +5,7 @@ import SimpleMde from "react-simplemde-editor";
 
 import "easymde/dist/easymde.min.css";
 
-import CategoryChips from "../components/CategoryChips";
+import ChipArray from "../components/ChipArray";
 import NavBar from "../components/NavBar";
 import SaveBar from "../components/SaveBar";
 import Selector from "../components/Selector";
@@ -50,20 +50,6 @@ const EditQuestion = () => {
 
   const handleSaveClose = (data) => {
     setIsOpen(data);
-  };
-
-  const handleAddClick = (dataToAdd) => {
-    setCategories((prevData) => {
-      const newData = [...prevData, dataToAdd];
-      return newData;
-    });
-  };
-
-  const handleDeleteClick = (dataToDelete) => {
-    setCategories((prevData) => {
-      const newData = prevData.filter((item) => item !== dataToDelete);
-      return newData;
-    });
   };
 
   const handleSave = async () => {
@@ -123,11 +109,23 @@ const EditQuestion = () => {
                     />
                   </Card>
                   <Card variant="outlined" sx={{ padding: 1 }}>
-                    <CategoryChips
-                      categories={categories}
-                      complexityColor={"primary"}
-                      onSave={handleAddClick}
-                      onDelete={handleDeleteClick}
+                    <ChipArray
+                      chips={categories}
+                      helperText="Press enter to add a new category..."
+                      label="Categories"
+                      onAddChip={(newCategory) =>
+                        setCategories((prevCategories) => [
+                          ...prevCategories,
+                          newCategory,
+                        ])
+                      }
+                      onDeleteChip={(deletedCategory) =>
+                        setCategories((prevCategories) =>
+                          prevCategories.filter(
+                            (category) => category !== deletedCategory
+                          )
+                        )
+                      }
                     />
                   </Card>
                 </Stack>
@@ -135,7 +133,6 @@ const EditQuestion = () => {
               <Box width="50%" height="100%">
                 <Card sx={{ height: "100%", width: "100%", overflow: "auto" }}>
                   <SimpleMde
-                    style={{}}
                     value={description}
                     onChange={(value) => setDescription(value)}
                   />
