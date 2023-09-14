@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
@@ -21,6 +22,12 @@ const SearchBar = ({
   useEffect(() => {
     handleDifficultyFilter();
   }, [setDifficultyQuery, handleDifficultyFilter]);
+
+  const handleSearchOnEnter = (event) => {
+    if (event.key === 'Enter') {
+      handleSearchFilter()
+    }
+  };
   
   return (
     <Stack
@@ -36,6 +43,7 @@ const SearchBar = ({
         size="small"
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
+        onKeyUp={handleSearchOnEnter}
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
