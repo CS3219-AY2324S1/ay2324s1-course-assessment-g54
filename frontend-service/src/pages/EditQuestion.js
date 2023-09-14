@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import SimpleMde from "react-simplemde-editor";
 
+import "easymde/dist/easymde.min.css";
+
 import CategoryChips from "../components/CategoryChips";
 import NavBar from "../components/NavBar";
 import SaveBar from "../components/SaveBar";
