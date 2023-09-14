@@ -1,10 +1,9 @@
 import axios from "axios";
-
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import SimpleMde from "react-simplemde-editor";
 
 import CategoryChips from "../components/CategoryChips";
-import MarkDownEditor from "../components/MarkdownEditor";
 import NavBar from "../components/NavBar";
 import SaveBar from "../components/SaveBar";
 import SelectComplexity from "../components/SelectComplexity";
@@ -13,7 +12,6 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
 import IconButton from "@mui/material/IconButton";
 import LinearProgress from "@mui/material/LinearProgress";
 import Stack from "@mui/material/Stack";
@@ -101,9 +99,8 @@ const EditQuestion = () => {
         categories: questionCategory,
         description: questionDescription,
       };
-      const saveResponse = await axios.put(url, updatedQuestion);
+      await axios.put(url, updatedQuestion);
       setIsOpen(true);
-      //navigate(`/questions/${id}`);
     } catch (err) {
       console.log(err);
     }
@@ -112,89 +109,61 @@ const EditQuestion = () => {
   return (
     <>
       <NavBar />
+      <SaveBar onOpen={isOpen} onClose={handleSaveClose} />
       <Box height="calc(100vh - 64px)" width="100%" bgcolor="whitesmoke">
-        <Box height="100%" display="flex" padding={1}>
-          <Stack height="100%" width="100%" spacing={1}>
-            <Stack
-              direction="row"
-              alignItems="center"
-              justifyContent="space-between"
-            >
+        <Box height="100%" display="flex">
+          <Stack height="100%" width="100%" spacing={1} padding={1}>
+            <Box display="flex">
               <Tooltip title="Back to questions" placement="top" arrow>
                 <IconButton onClick={() => navigate(`/questions/${id}`)}>
                   <ArrowBackIcon />
                 </IconButton>
               </Tooltip>
-              <SaveBar onOpen={isOpen} onClose={handleSaveClose} />
+              <Box flexGrow={1} />
               <Tooltip title="Save question" placement="top" arrow>
                 <Button variant="contained" onClick={handleSave}>
                   Save
                 </Button>
               </Tooltip>
-            </Stack>
-            <Stack
-              height="100%"
-              width="100%"
-              direction="row"
-              spacing={1}
-              alignItems="center"
-            >
-              <Box width="50%" height="100%" padding={1}>
-                <Stack spacing={1}>
-                  <Card
-                    variant="outlined"
-                    textOverflow="ellipsis"
-                    sx={{ flexGrow: 1 }}
-                    padding={1}
-                  >
-                    <CardContent>
-                      <TextField
-                        fullWidth
-                        id="outlined-basic"
-                        label="title"
-                        defaultValue={questionTitle}
-                        variant="outlined"
-                        onChange={(e) => setQuestionTitle(e.target.value)}
-                      />
-                    </CardContent>
+            </Box>
+            <Stack height="calc(100% - 48px)" direction="row" spacing={1}>
+              <Box width="50%" height="100%">
+                <Stack width="100%" spacing={1}>
+                  <Card variant="outlined" sx={{ padding: 1 }}>
+                    <TextField
+                      fullWidth
+                      variant="outlined"
+                      label="Question Title"
+                      defaultValue={questionTitle}
+                      onChange={(e) => setQuestionTitle(e.target.value)}
+                    />
                   </Card>
-                  <Card
-                    variant="outlined"
-                    textOverflow="ellipsis"
-                    sx={{ flexGrow: 1 }}
-                    padding={1}
-                  >
-                    <CardContent>
-                      <SelectComplexity
-                        currentComplexity={questionComplexity}
-                        onSave={handleSaveComplexity}
-                      />
-                    </CardContent>
+                  <Card variant="outlined" sx={{ padding: 1 }}>
+                    <SelectComplexity
+                      currentComplexity={questionComplexity}
+                      onSave={handleSaveComplexity}
+                    />
                   </Card>
-                  <Card
-                    variant="outlined"
-                    textOverflow="ellipsis"
-                    sx={{ flexGrow: 1 }}
-                    padding={1}
-                  >
-                    <CardContent>
-                      <CategoryChips
-                        categories={questionCategory}
-                        complexityColor={getDifficultyChipColor(
-                          question.complexity
-                        )}
-                        onSave={handleAddClick}
-                        onDelete={handleDeleteClick}
-                      />
-                    </CardContent>
+                  <Card variant="outlined" sx={{ padding: 1 }}>
+                    <CategoryChips
+                      categories={questionCategory}
+                      complexityColor={getDifficultyChipColor(
+                        question.complexity
+                      )}
+                      onSave={handleAddClick}
+                      onDelete={handleDeleteClick}
+                    />
                   </Card>
                 </Stack>
               </Box>
-              <Box width="50%" height="100%" padding={1} overflow="scroll">
-                <MarkDownEditor
-                  description={questionDescription}
-                  onSave={handleSaveDescription}
-                />
+              <Box width="50%" height="100%">
+                <Card sx={{ height: "100%", width: "100%", overflow: "auto" }}>
+                  <SimpleMde
+                    style={{}}
+                    value={questionDescription}
+                    onChange={() => setQuestionDescription(questionDescription)}
+                  />
+                </Card>
               </Box>
             </Stack>
           </Stack>
