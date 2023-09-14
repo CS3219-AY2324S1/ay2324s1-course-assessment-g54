@@ -25,7 +25,6 @@ const NavBar = () => {
 
   const [anchorElement, setAnchorElement] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [userName, setUserName] = useState(user.name);
   const [inputName, setInputName] = useState(user.name);
 
   const handleOpenUserMenu = (event) => setAnchorElement(event.currentTarget);
@@ -34,20 +33,19 @@ const NavBar = () => {
   const handleCloseModal = () => setIsModalOpen(false);
   const handleUpdateName = async (event) => {
     event.preventDefault();
-    // const token = window.localStorage.getItem("token");
-    // try {
-    //     const response = await axios.put(
-    //       `${process.env.REACT_APP_USERS_SERVICE_HOST}/profile`,
-    //       {...user, name: inputName},
-    //       { headers: { Authorization: token } }
-    //     );
-    //   } catch (error) {
-    //     console.error(error.message);
-    //     navigate("/login");
-    //   }
+    const token = window.localStorage.getItem("token");
+    try {
+        const response = await axios.put(
+          `${process.env.REACT_APP_USERS_SERVICE_HOST}/profile`,
+          {...user, name: inputName},
+          { headers: { Authorization: token } }
+        );
+      } catch (error) {
+        console.error(error.message);
+        navigate("/login");
+      }
 
     dispatch({type: "set", user: {...user, name: inputName }})
-    setUserName(inputName);
     setIsModalOpen(false);
   }
 
@@ -66,7 +64,7 @@ const NavBar = () => {
             </Stack>
             <Stack direction="row" alignItems="center" >
               <Typography variant="body1" sx={{ fontWeight: 600, mr: 2 }}>Name</Typography>
-              <TextField defaultValue={userName} sx={{ flex: '1 1 auto' }} variant="outlined" onChange={(e) => setInputName(e.target.value)} />
+              <TextField defaultValue={user.name} sx={{ flex: '1 1 auto' }} variant="outlined" onChange={(e) => setInputName(e.target.value)} />
             </Stack>
             <Stack direction="row" alignItems="center" >
               <Typography variant="body1" sx={{ fontWeight: 600, mr: '18px' }}>Email</Typography>
