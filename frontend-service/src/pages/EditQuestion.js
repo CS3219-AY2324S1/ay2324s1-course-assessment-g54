@@ -24,7 +24,10 @@ const EditQuestion = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [isLoading, setIsLoading] = useState(true);
+
   const [isAlertOpen, setIsAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertSeverity, setAlertSeverity] = useState("");
 
   const [title, setTitle] = useState("");
   const [complexity, setComplexity] = useState("");
@@ -52,22 +55,36 @@ const EditQuestion = () => {
   const handleSave = async () => {
     try {
       const url = `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions/${id}`;
-      await axios.put(url, {
+      const response = await axios.put(url, {
         title: title,
         complexity: complexity,
         categories: categories,
         description: description,
       });
+      setAlertMessage(
+        response.status === 200
+          ? "The question has been saved."
+          : "There was an error when trying to save question."
+      );
+      setAlertSeverity(response.status === 200 ? "success" : "error");
       setIsAlertOpen(true);
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      console.error(error);
+      setAlertMessage("There was an error when trying to save question.");
+      setAlertSeverity("error");
+      setIsAlertOpen(true);
     }
   };
 
   return (
     <>
       <NavBar />
-      <SaveBar onOpen={isAlertOpen} onClose={() => setIsAlertOpen(false)} />
+      <SaveBar
+        isOpen={isAlertOpen}
+        messsage={alertMessage}
+        severity={alertSeverity}
+        onClose={() => setIsAlertOpen(false)}
+      />
       <Box height="calc(100vh - 64px)" width="100%" bgcolor="whitesmoke">
         <Box height="100%" display="flex">
           <Stack height="100%" width="100%" spacing={1} padding={1}>
