@@ -2,6 +2,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 import * as handlers from "./handlers.js";
+import morgan from "morgan";
 
 dotenv.config();
 
@@ -11,6 +12,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+if (process.env.NODE_ENV === "development") app.use(morgan("tiny"));
 
 app.post("/login", handlers.handleLogin);
 
@@ -20,7 +22,7 @@ app.post("/logout", (req, res) => {
 
 app.get("/profile", handlers.handleGetProfile);
 
-app.post("/profile", handlers.handleUpdateProfile);
+app.put("/profile", handlers.handleUpdateProfile);
 
 app.post("/signup", handlers.handleSignup);
 

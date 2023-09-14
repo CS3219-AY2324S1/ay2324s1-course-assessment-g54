@@ -13,22 +13,22 @@ import Stack from "@mui/material/Stack";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
+import EditProfileModal from "./EditProfileModal";
 
-function NavBar() {
+const NavBar = () => {
   const navigate = useNavigate();
   const user = useUser();
+
   const [anchorElement, setAnchorElement] = useState(null);
+  const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState(false);
 
-  const handleOpenUserMenu = (event) => {
-    setAnchorElement(event.currentTarget);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElement(null);
-  };
+  const handleOpenUserMenu = (event) => setAnchorElement(event.currentTarget);
+  const handleCloseUserMenu = () => setAnchorElement(null);
+  const handleOpenModal = () => setIsEditProfileModalOpen(true);
 
   return (
     <AppBar position="static">
+      <EditProfileModal isModalOpen={isEditProfileModalOpen} setIsModalOpen={setIsEditProfileModalOpen}/>
       <Toolbar disableGutters sx={{ paddingX: 1.5 }}>
         <Box sx={{ flexGrow: 1 }} />
         <Box sx={{ flexGrow: 0 }}>
@@ -64,7 +64,7 @@ function NavBar() {
                 variant="contained"
                 fullWidth
                 size="small"
-                onClick={() => navigate("/profile")}
+                onClick={handleOpenModal}
               >
                 Edit Profile
               </Button>
