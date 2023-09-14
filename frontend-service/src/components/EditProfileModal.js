@@ -23,13 +23,12 @@ const EditProfileModal = ({isModalOpen, setIsModalOpen}) => {
     try {
         await axios.put(
           `${process.env.REACT_APP_USERS_SERVICE_HOST}/profile`,
-          {...user, name: inputName},
+          {name: inputName},
           { headers: { Authorization: token } }
         );
       } catch (error) {
         console.error(error.message);
       }
-
     dispatch({type: "set", user: {...user, name: inputName }})
     setIsModalOpen(false);
   }
