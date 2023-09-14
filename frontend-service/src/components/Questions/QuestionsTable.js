@@ -20,7 +20,7 @@ import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 
 import DeleteConfirmationModal from "./DeleteConfirmationModal";
-import SuccessErrorToast from "../SuccessErrorToast";
+import AcknowledgementToast from "../AcknowledgementToast";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -169,7 +169,7 @@ const QuestionsTable = ({ filteredQuestions, setFilteredQuestions }) => {
         onClose={handleCancelDelete}
         onConfirmDelete={handleConfirmDelete}
       />
-      <SuccessErrorToast
+      <AcknowledgementToast
         open={successAlertOpen}
         message={successAlertMessage}
         onClose={() => setSuccessAlertOpen(false)}

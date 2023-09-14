@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 
-const SuccessErrorToast = ({ open, message, onClose, severity }) => {
+const AcknowledgementToast = ({ open, message, onClose, severity }) => {
   return (
     <Snackbar
       open={open}
@@ -21,4 +21,4 @@ const SuccessErrorToast = ({ open, message, onClose, severity }) => {
   );
 };
 
-export default SuccessErrorToast;
+export default AcknowledgementToast;
