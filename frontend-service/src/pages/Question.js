@@ -10,6 +10,7 @@ import Editor from "@monaco-editor/react";
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
 import Chip from "@mui/material/Chip";
 import EditIcon from "@mui/icons-material/Edit";
 import IconButton from "@mui/material/IconButton";
@@ -18,7 +19,6 @@ import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import { Card, CardContent } from "@mui/material";
 
 marked.use({ breaks: true, gfm: true, silent: true });
 
@@ -55,8 +55,6 @@ const Question = () => {
         return "primary";
     }
   };
-
-  console.log(question.description);
 
   return (
     <>
@@ -100,24 +98,17 @@ const Question = () => {
                   />
                 ))}
               </Box>
-              <Card variant="outlined" sx={{ flexGrow: 1, overflow: "scroll" }}>
-                <CardContent
-                  sx={{
-                    height: "100%",
-                    width: "100%",
-                  }}
-                >
-                  <iframe
-                    height="100%"
-                    width="100%"
-                    style={{ border: "none" }}
-                    sandbox=""
-                    title="Question Description"
-                    srcDoc={DOMPurify.sanitize(
-                      marked.parse(question.description)
-                    )}
-                  />
-                </CardContent>
+              <Card variant="outlined" sx={{ flexGrow: 1, padding: 1 }}>
+                <iframe
+                  height="100%"
+                  width="100%"
+                  style={{ border: "none" }}
+                  sandbox=""
+                  title="Question Description"
+                  srcDoc={DOMPurify.sanitize(
+                    marked.parse(question.description)
+                  )}
+                />
               </Card>
             </Stack>
           </Box>
