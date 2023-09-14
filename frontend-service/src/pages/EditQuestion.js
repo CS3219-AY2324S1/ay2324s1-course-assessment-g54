@@ -6,7 +6,7 @@ import SimpleMde from "react-simplemde-editor";
 import CategoryChips from "../components/CategoryChips";
 import NavBar from "../components/NavBar";
 import SaveBar from "../components/SaveBar";
-import SelectComplexity from "../components/SelectComplexity";
+import Selector from "../components/Selector";
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Box from "@mui/material/Box";
@@ -22,24 +22,22 @@ const EditQuestion = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [isLoading, setIsLoading] = useState(true);
-  const [question, setQuestion] = useState(null);
-  const [questionTitle, setQuestionTitle] = useState("");
-  const [questionComplexity, setQuestionComplexity] = useState("");
-  const [questionCategory, setQuestionCategory] = useState("");
-  const [questionDescription, setQuestionDescription] = useState("");
+  const [title, setTitle] = useState("");
+  const [complexity, setComplexity] = useState("");
+  const [categories, setCategories] = useState([]);
+  const [description, setDescription] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const getQuestion = async () => {
       const url = `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions/${id}`;
       const response = await axios.get(url);
-      const question = response.data;
-      if (!question.question_id) return navigate("/questions");
-      setQuestion(question);
-      setQuestionTitle(question.title);
-      setQuestionComplexity(question.complexity);
-      setQuestionCategory(question.categories);
-      setQuestionDescription(question.description);
+      if (response.status !== 200) return navigate("/questions");
+      const { categories, complexity, description, title } = response.data;
+      setTitle(title);
+      setComplexity(complexity);
+      setCategories(categories);
+      setDescription(description);
       setIsLoading(false);
     };
 
@@ -48,36 +46,19 @@ const EditQuestion = () => {
 
   if (isLoading) return <LinearProgress variant="indeterminate" />;
 
-  const getDifficultyChipColor = (difficulty) => {
-    switch (difficulty) {
-      case "easy":
-        return "success";
-      case "medium":
-        return "warning";
-      case "hard":
-        return "error";
-      default:
-        return "primary";
-    }
-  };
-
-  const handleSaveComplexity = (data) => {
-    setQuestionComplexity(data);
-  };
-
   const handleSaveClose = (data) => {
     setIsOpen(data);
   };
 
   const handleAddClick = (dataToAdd) => {
-    setQuestionCategory((prevData) => {
+    setCategories((prevData) => {
       const newData = [...prevData, dataToAdd];
       return newData;
     });
   };
 
   const handleDeleteClick = (dataToDelete) => {
-    setQuestionCategory((prevData) => {
+    setCategories((prevData) => {
       const newData = prevData.filter((item) => item !== dataToDelete);
       return newData;
     });
@@ -86,16 +67,12 @@ const EditQuestion = () => {
   const handleSave = async () => {
     try {
       const url = `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions/${id}`;
-      console.log(url);
-      const updatedQuestion = {
-        ...question,
-        question_id: undefined,
-        title: questionTitle,
-        complexity: questionComplexity,
-        categories: questionCategory,
-        description: questionDescription,
-      };
-      await axios.put(url, updatedQuestion);
+      await axios.put(url, {
+        title: title,
+        complexity: complexity,
+        categories: categories,
+        description: description,
+      });
       setIsOpen(true);
     } catch (err) {
       console.log(err);
@@ -130,22 +107,23 @@ const EditQuestion = () => {
                       fullWidth
                       variant="outlined"
                       label="Question Title"
-                      defaultValue={questionTitle}
-                      onChange={(e) => setQuestionTitle(e.target.value)}
+                      defaultValue={title}
+                      onChange={(e) => setTitle(e.target.value)}
                     />
                   </Card>
                   <Card variant="outlined" sx={{ padding: 1 }}>
-                    <SelectComplexity
-                      currentComplexity={questionComplexity}
-                      onSave={handleSaveComplexity}
+                    <Selector
+                      id="question-complexity"
+                      label="Question Complexity"
+                      options={["easy", "medium", "hard"]}
+                      value={complexity}
+                      onChange={(event) => setComplexity(event.target.value)}
                     />
                   </Card>
                   <Card variant="outlined" sx={{ padding: 1 }}>
                     <CategoryChips
-                      categories={questionCategory}
-                      complexityColor={getDifficultyChipColor(
-                        question.complexity
-                      )}
+                      categories={categories}
+                      complexityColor={"primary"}
                       onSave={handleAddClick}
                       onDelete={handleDeleteClick}
                     />
@@ -156,8 +134,8 @@ const EditQuestion = () => {
                 <Card sx={{ height: "100%", width: "100%", overflow: "auto" }}>
                   <SimpleMde
                     style={{}}
-                    value={questionDescription}
-                    onChange={(value) => setQuestionDescription(value)}
+                    value={description}
+                    onChange={(value) => setDescription(value)}
                   />
                 </Card>
               </Box>
