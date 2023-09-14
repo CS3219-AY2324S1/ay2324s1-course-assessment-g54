@@ -54,12 +54,18 @@ const EditQuestion = () => {
 
   const handleSave = async () => {
     try {
+      if (title.trim() === "") {
+        setAlertMessage("The question must have a title.");
+        setAlertSeverity("error");
+        setIsAlertOpen(true);
+        return;
+      }
       const url = `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions/${id}`;
       const response = await axios.put(url, {
-        title: title,
-        complexity: complexity,
-        categories: categories,
-        description: description,
+        title,
+        complexity,
+        categories,
+        description,
       });
       setAlertMessage(
         response.status === 200
@@ -90,7 +96,7 @@ const EditQuestion = () => {
           <Stack height="100%" width="100%" spacing={1} padding={1}>
             <Box display="flex">
               <Tooltip title="Back to questions" placement="top" arrow>
-                <IconButton onClick={() => navigate(`/questions/${id}`)}>
+                <IconButton onClick={() => navigate(-1)}>
                   <ArrowBackIcon />
                 </IconButton>
               </Tooltip>
