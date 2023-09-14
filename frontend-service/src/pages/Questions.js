@@ -73,6 +73,7 @@ const Questions = () => {
           <div>
             <QuestionsTable
               filteredQuestions={filteredQuestionsByDifficulty}
+              setFilteredQuestions={setFilteredQuestionsByDifficulty}
             />
           </div>
       </Stack>

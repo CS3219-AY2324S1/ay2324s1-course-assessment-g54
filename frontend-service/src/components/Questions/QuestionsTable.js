@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { styled } from '@mui/material/styles';
@@ -20,6 +20,7 @@ import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 
 import DeleteConfirmationModal from "./DeleteConfirmationModal";
+import SuccessErrorToast from "../SuccessErrorToast";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -35,16 +36,23 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:nth-of-type(odd)': {
     backgroundColor: theme.palette.action.hover,
   },
-  // hide last border
+  
   '&:last-child td, &:last-child th': {
     border: 0,
   },
 }));
 
-const QuestionsTable = ({ filteredQuestions }) => {
+const QuestionsTable = ({ filteredQuestions, setFilteredQuestions }) => {
   const navigate = useNavigate();
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [questionToDelete, setQuestionToDelete] = useState(null);
+  const [questionIdToDelete, setQuestionIdToDelete] = useState(null);
+  const [successAlertOpen, setSuccessAlertOpen] = useState(false);
+  const [successAlertMessage, setSuccessAlertMessage] = useState("");
+
+
+  useEffect(() => {
+    setFilteredQuestions(filteredQuestions);
+  }, [filteredQuestions, setFilteredQuestions]);
 
   const getComplexityStyle = (complexity) => {
     const colorMap = {
@@ -61,18 +69,22 @@ const QuestionsTable = ({ filteredQuestions }) => {
     return <Typography>No matching results</Typography>;
   }
 
-  const handleDeleteClick = (question) => {
-    setQuestionToDelete(question);
+  const handleDeleteClick = (questionId) => {
+    setQuestionIdToDelete(questionId);
     setDeleteModalOpen(true);
   };
 
   const handleConfirmDelete = async () => {
     try {
-      const url = `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions/${questionToDelete.question_id}`;
+      const url = `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions/${questionIdToDelete}`;
       const response = await axios.delete(url);
       
-      setDeleteModalOpen(false);
-      setQuestionToDelete(null);
+      const filtered = filteredQuestions.filter(q => q.question_id !== questionIdToDelete)
+      setFilteredQuestions(filtered)
+      handleCancelDelete()
+
+      setSuccessAlertMessage("Question deleted successfully!");
+      setSuccessAlertOpen(true);
     } catch (err) {
       console.log(err);
     }
@@ -80,8 +92,9 @@ const QuestionsTable = ({ filteredQuestions }) => {
 
   const handleCancelDelete = () => {
     setDeleteModalOpen(false);
-    setQuestionToDelete(null);
+    setQuestionIdToDelete(null);
   };
+  
 
   return (
     <div style={{ display: "flex", justifyContent: "center", height: "auto" }}>
@@ -139,7 +152,7 @@ const QuestionsTable = ({ filteredQuestions }) => {
                         color="error"
                         aria-label="delete"
                         size="large" 
-                        onClick={() => handleDeleteClick(question)}
+                        onClick={() => handleDeleteClick(question.question_id)}
                       >
                         <DeleteIcon fontSize="inherit"/>
                       </IconButton>
@@ -155,6 +168,12 @@ const QuestionsTable = ({ filteredQuestions }) => {
         open={deleteModalOpen}
         onClose={handleCancelDelete}
         onConfirmDelete={handleConfirmDelete}
+      />
+      <SuccessErrorToast
+        open={successAlertOpen}
+        message={successAlertMessage}
+        onClose={() => setSuccessAlertOpen(false)}
+        severity={"success"}
       />
     </div>
   );
