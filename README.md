@@ -55,6 +55,7 @@ If you are only working on the question-service, you can run this:
 ```bash
 nodemon index.js
 ```
+For debuging, to get the GUI of the mongo-db, go to `http://localhost:8081/`
 
 ## Users Microservice
 
@@ -88,3 +89,18 @@ To directly access postgresql database using the terminal of the postgresql cont
 docker exec -it postgresql sh
 psql -U postgres
 ```
+
+For debugging, to get the GUI of the PostgreSQL server, go to `http://localhost:8082`.
+On the left panel, click `Servers` > `Register` > `Server`.
+
+Under `General`:
+- Name = `docker-sql`
+
+Under `Connection`:
+- Hostname = `postgresql`
+- Port = `5432`
+- Maintainence-Databaee = `postgres`
+- Username = `postgres`
+- Postgres = `postgres`
+
+Then click save and you can run queries on the postgres server!
