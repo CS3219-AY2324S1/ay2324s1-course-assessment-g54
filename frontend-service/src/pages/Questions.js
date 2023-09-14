@@ -59,7 +59,7 @@ const Questions = () => {
           spacing={2}
           style={{ width: "80%" }}
         >
-          <Typography variant="h3" color="initial">
+          <Typography variant="h3" color="initial" style={{ marginTop: "10px" }}>
             Questions
           </Typography>
           <SearchBar

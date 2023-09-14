@@ -1,5 +1,8 @@
+import axios from "axios";
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import { styled } from '@mui/material/styles';
 import Chip from '@mui/material/Chip';
 import IconButton from "@mui/material/IconButton";
@@ -14,6 +17,7 @@ import Typography from "@mui/material/Typography";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import Stack from "@mui/material/Stack";
+import Tooltip from "@mui/material/Tooltip";
 
 import DeleteConfirmationModal from "./DeleteConfirmationModal";
 
@@ -49,7 +53,7 @@ const QuestionsTable = ({ filteredQuestions }) => {
       hard: "error",
     };
   
-    return colorMap[complexity] || ""
+    return colorMap[complexity] || "primary"
   };
 
 
@@ -62,10 +66,16 @@ const QuestionsTable = ({ filteredQuestions }) => {
     setDeleteModalOpen(true);
   };
 
-  const handleConfirmDelete = () => {
-    // Add delete logic here
-    setDeleteModalOpen(false);
-    setQuestionToDelete(null);
+  const handleConfirmDelete = async () => {
+    try {
+      const url = `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions/${questionToDelete.question_id}`;
+      const response = await axios.delete(url);
+      
+      setDeleteModalOpen(false);
+      setQuestionToDelete(null);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const handleCancelDelete = () => {
@@ -75,7 +85,7 @@ const QuestionsTable = ({ filteredQuestions }) => {
 
   return (
     <div style={{ display: "flex", justifyContent: "center", height: "auto" }}>
-      <TableContainer component={Paper} style={{ marginTop: "5px", maxHeight: 700 }}>
+      <TableContainer component={Paper} style={{ marginTop: "5px", maxHeight: 500 }}>
         <Table sx={{ minWidth: 650 }} stickyHeader aria-label="simple table" >
           <TableHead>
             <TableRow>
@@ -114,22 +124,26 @@ const QuestionsTable = ({ filteredQuestions }) => {
                 </StyledTableCell>
                 <TableCell>
                   <Stack direction="row" spacing={1}>
-                    <IconButton
-                      color="primary"
-                      aria-label="edit"
-                      size="large"
-                      onClick={() => navigate(`/questions/${question.question_id}/edit`)}
-                    >
-                      <EditIcon fontSize="inherit"/>
+                    <Tooltip title="Edit">
+                      <IconButton
+                        color="primary"
+                        aria-label="edit"
+                        size="large"
+                        onClick={() => navigate(`/questions/${question.question_id}/edit`)}
+                      >
+                        <EditIcon fontSize="inherit"/>
                     </IconButton>
-                    <IconButton
-                      color="error"
-                      aria-label="delete"
-                      size="large" 
-                      onClick={() => handleDeleteClick(question)}
-                    >
-                      <DeleteIcon fontSize="inherit"/>
-                    </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Delete">
+                      <IconButton
+                        color="error"
+                        aria-label="delete"
+                        size="large" 
+                        onClick={() => handleDeleteClick(question)}
+                      >
+                        <DeleteIcon fontSize="inherit"/>
+                      </IconButton>
+                    </Tooltip>
                   </Stack>
                 </TableCell>
               </StyledTableRow>
