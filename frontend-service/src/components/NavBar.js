@@ -20,15 +20,15 @@ const NavBar = () => {
   const user = useUser();
 
   const [anchorElement, setAnchorElement] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState(false);
 
   const handleOpenUserMenu = (event) => setAnchorElement(event.currentTarget);
   const handleCloseUserMenu = () => setAnchorElement(null);
-  const handleOpenModal = () => setIsModalOpen(true);
+  const handleOpenModal = () => setIsEditProfileModalOpen(true);
 
   return (
     <AppBar position="static">
-      <EditProfileModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/>
+      <EditProfileModal isModalOpen={isEditProfileModalOpen} setIsModalOpen={setIsEditProfileModalOpen}/>
       <Toolbar disableGutters sx={{ paddingX: 1.5 }}>
         <Box sx={{ flexGrow: 1 }} />
         <Box sx={{ flexGrow: 0 }}>
