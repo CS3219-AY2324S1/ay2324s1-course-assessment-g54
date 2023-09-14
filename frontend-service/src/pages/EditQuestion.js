@@ -24,11 +24,12 @@ const EditQuestion = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [isLoading, setIsLoading] = useState(true);
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
+
   const [title, setTitle] = useState("");
   const [complexity, setComplexity] = useState("");
   const [categories, setCategories] = useState([]);
   const [description, setDescription] = useState("");
-  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const getQuestion = async () => {
@@ -48,10 +49,6 @@ const EditQuestion = () => {
 
   if (isLoading) return <LinearProgress variant="indeterminate" />;
 
-  const handleSaveClose = (data) => {
-    setIsOpen(data);
-  };
-
   const handleSave = async () => {
     try {
       const url = `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions/${id}`;
@@ -61,7 +58,7 @@ const EditQuestion = () => {
         categories: categories,
         description: description,
       });
-      setIsOpen(true);
+      setIsAlertOpen(true);
     } catch (err) {
       console.log(err);
     }
@@ -70,7 +67,7 @@ const EditQuestion = () => {
   return (
     <>
       <NavBar />
-      <SaveBar onOpen={isOpen} onClose={handleSaveClose} />
+      <SaveBar onOpen={isAlertOpen} onClose={() => setIsAlertOpen(false)} />
       <Box height="calc(100vh - 64px)" width="100%" bgcolor="whitesmoke">
         <Box height="100%" display="flex">
           <Stack height="100%" width="100%" spacing={1} padding={1}>
