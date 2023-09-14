@@ -44,7 +44,7 @@ const EditProfileModal = ({isModalOpen, setIsModalOpen}) => {
               <Typography variant="h4" sx={{ fontSize: '30px', fontWeight: 400 }}>Edit Profile</Typography>
               <Avatar
                 sx={{ width: 70, height: 70 }}
-                alt="a"
+                alt={user.name}
                 src="/static/images/avatar/2.jpg"
               />
             </Stack>
