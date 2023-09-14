@@ -19,7 +19,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 
-import DeleteConfirmationModal from "./DeleteConfirmationModal";
+import ConfirmationModal from "../ConfirmationModal";
 import AcknowledgementToast from "../AcknowledgementToast";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -46,8 +46,9 @@ const QuestionsTable = ({ filteredQuestions, setFilteredQuestions }) => {
   const navigate = useNavigate();
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [questionIdToDelete, setQuestionIdToDelete] = useState(null);
-  const [successAlertOpen, setSuccessAlertOpen] = useState(false);
-  const [successAlertMessage, setSuccessAlertMessage] = useState("");
+  const [toastOpen, setToastOpen] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastType, setToastType] = useState("");
 
 
   useEffect(() => {
@@ -74,6 +75,12 @@ const QuestionsTable = ({ filteredQuestions, setFilteredQuestions }) => {
     setDeleteModalOpen(true);
   };
 
+  const showToast = (message, type) => {
+    setToastMessage(message);
+    setToastType(type);
+    setToastOpen(true);
+  };
+
   const handleConfirmDelete = async () => {
     try {
       const url = `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions/${questionIdToDelete}`;
@@ -83,9 +90,9 @@ const QuestionsTable = ({ filteredQuestions, setFilteredQuestions }) => {
       setFilteredQuestions(filtered)
       handleCancelDelete()
 
-      setSuccessAlertMessage("Question deleted successfully!");
-      setSuccessAlertOpen(true);
+      showToast("Question deleted successfully!", "success");
     } catch (err) {
+      showToast("Question deleted unsuccessful!", "error");
       console.log(err);
     }
   };
@@ -98,7 +105,7 @@ const QuestionsTable = ({ filteredQuestions, setFilteredQuestions }) => {
 
   return (
     <div style={{ display: "flex", justifyContent: "center", height: "auto" }}>
-      <TableContainer component={Paper} style={{ marginTop: "5px", maxHeight: 500 }}>
+      <TableContainer component={Paper} style={{ marginTop: "5px", maxHeight: 700 }}>
         <Table sx={{ minWidth: 650 }} stickyHeader aria-label="simple table" >
           <TableHead>
             <TableRow>
@@ -164,16 +171,18 @@ const QuestionsTable = ({ filteredQuestions, setFilteredQuestions }) => {
           </TableBody>
         </Table>
       </TableContainer>
-      <DeleteConfirmationModal
+      <ConfirmationModal
         open={deleteModalOpen}
         onClose={handleCancelDelete}
         onConfirmDelete={handleConfirmDelete}
+        title="Confirm Delete"
+        message="Are you sure you want to delete this question?"
       />
       <AcknowledgementToast
-        open={successAlertOpen}
-        message={successAlertMessage}
-        onClose={() => setSuccessAlertOpen(false)}
-        severity={"success"}
+        open={toastOpen}
+        message={toastMessage}
+        onClose={() => setToastOpen(false)}
+        severity={toastType}
       />
     </div>
   );

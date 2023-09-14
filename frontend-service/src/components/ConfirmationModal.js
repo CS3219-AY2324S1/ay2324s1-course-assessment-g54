@@ -6,7 +6,7 @@ import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 
-const DeleteConfirmationModal = ({ open, onClose, onConfirmDelete }) => {
+const ConfirmationModal = ({ open, onClose, onConfirmDelete, title, message }) => {
   return (
     <Dialog
       open={open}
@@ -14,22 +14,16 @@ const DeleteConfirmationModal = ({ open, onClose, onConfirmDelete }) => {
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle id="alert-dialog-title">Confirm Delete</DialogTitle>
+      <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
       <DialogContent>
-        <Typography>
-          Are you sure you want to delete this question?
-        </Typography>
+        <Typography>{message}</Typography>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="primary">
-          Cancel
-        </Button>
-        <Button onClick={onConfirmDelete} color="error">
-          Delete
-        </Button>
+        <Button onClick={onClose} color="primary">Cancel</Button>
+        <Button onClick={onConfirmDelete} color="error">Delete</Button>
       </DialogActions>
     </Dialog>
   );
 };
 
-export default DeleteConfirmationModal;
+export default ConfirmationModal;
