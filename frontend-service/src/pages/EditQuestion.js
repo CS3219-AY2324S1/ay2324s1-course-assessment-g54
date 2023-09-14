@@ -12,13 +12,13 @@ import SelectComplexity from "../components/SelectComplexity";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import { Card, CardContent } from "@mui/material";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
 import IconButton from "@mui/material/IconButton";
 import LinearProgress from "@mui/material/LinearProgress";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Tooltip from "@mui/material/Tooltip";
-
 
 const EditQuestion = () => {
   const navigate = useNavigate();
@@ -99,26 +99,27 @@ const EditQuestion = () => {
         title: questionTitle,
         complexity: questionComplexity,
         categories: questionCategory,
-        description: questionDescription
-      }
+        description: questionDescription,
+      };
       const saveResponse = await axios.put(url, updatedQuestion);
       setIsOpen(true);
       //navigate(`/questions/${id}`);
     } catch (err) {
       console.log(err);
     }
-
-  }
-
-  //console.log(question.description);
+  };
 
   return (
     <>
       <NavBar />
       <Box height="calc(100vh - 64px)" width="100%" bgcolor="whitesmoke">
-        <Box height="100%" display="flex">
+        <Box height="100%" display="flex" padding={1}>
           <Stack height="100%" width="100%" spacing={1}>
-            <Stack direction="row" alignItems="center" justifyContent="space-between">
+            <Stack
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+            >
               <Tooltip title="Back to questions" placement="top" arrow>
                 <IconButton onClick={() => navigate(`/questions/${id}`)}>
                   <ArrowBackIcon />
@@ -126,12 +127,18 @@ const EditQuestion = () => {
               </Tooltip>
               <SaveBar onOpen={isOpen} onClose={handleSaveClose} />
               <Tooltip title="Save question" placement="top" arrow>
-                <Button variant="contained" onClick={handleSave} >
+                <Button variant="contained" onClick={handleSave}>
                   Save
                 </Button>
               </Tooltip>
             </Stack>
-            <Stack height="100%" width="100%" direction="row" spacing={1} alignItems="center">
+            <Stack
+              height="100%"
+              width="100%"
+              direction="row"
+              spacing={1}
+              alignItems="center"
+            >
               <Box width="50%" height="100%" padding={1}>
                 <Stack spacing={1}>
                   <Card
@@ -141,7 +148,14 @@ const EditQuestion = () => {
                     padding={1}
                   >
                     <CardContent>
-                      <TextField fullWidth id="outlined-basic" label="title" defaultValue={questionTitle} variant="outlined" onChange={(e) => setQuestionTitle(e.target.value)} />
+                      <TextField
+                        fullWidth
+                        id="outlined-basic"
+                        label="title"
+                        defaultValue={questionTitle}
+                        variant="outlined"
+                        onChange={(e) => setQuestionTitle(e.target.value)}
+                      />
                     </CardContent>
                   </Card>
                   <Card
@@ -151,7 +165,10 @@ const EditQuestion = () => {
                     padding={1}
                   >
                     <CardContent>
-                      <SelectComplexity currentComplexity={questionComplexity} onSave={handleSaveComplexity} />
+                      <SelectComplexity
+                        currentComplexity={questionComplexity}
+                        onSave={handleSaveComplexity}
+                      />
                     </CardContent>
                   </Card>
                   <Card
@@ -161,13 +178,23 @@ const EditQuestion = () => {
                     padding={1}
                   >
                     <CardContent>
-                      <CategoryChips categories={questionCategory} complexityColor={getDifficultyChipColor(question.complexity)} onSave={handleAddClick} onDelete={handleDeleteClick}/>
+                      <CategoryChips
+                        categories={questionCategory}
+                        complexityColor={getDifficultyChipColor(
+                          question.complexity
+                        )}
+                        onSave={handleAddClick}
+                        onDelete={handleDeleteClick}
+                      />
                     </CardContent>
                   </Card>
                 </Stack>
               </Box>
               <Box width="50%" height="100%" padding={1} overflow="scroll">
-                <MarkDownEditor description={questionDescription} onSave={handleSaveDescription} />
+                <MarkDownEditor
+                  description={questionDescription}
+                  onSave={handleSaveDescription}
+                />
               </Box>
             </Stack>
           </Stack>
