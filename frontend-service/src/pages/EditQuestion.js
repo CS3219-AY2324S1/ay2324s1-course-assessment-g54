@@ -61,10 +61,6 @@ const EditQuestion = () => {
     }
   };
 
-  const handleSaveDescription = (data) => {
-    setQuestionDescription(data);
-  };
-
   const handleSaveComplexity = (data) => {
     setQuestionComplexity(data);
   };
@@ -161,7 +157,7 @@ const EditQuestion = () => {
                   <SimpleMde
                     style={{}}
                     value={questionDescription}
-                    onChange={() => setQuestionDescription(questionDescription)}
+                    onChange={(value) => setQuestionDescription(value)}
                   />
                 </Card>
               </Box>
