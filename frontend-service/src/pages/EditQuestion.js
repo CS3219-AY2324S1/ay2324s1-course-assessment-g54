@@ -1,47 +1,49 @@
 import axios from "axios";
-
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import SimpleMde from "react-simplemde-editor";
 
-import CategoryChips from "../components/CategoryChips";
-import MarkDownEditor from "../components/MarkdownEditor";
+import "easymde/dist/easymde.min.css";
+
+import ChipArray from "../components/ChipArray";
 import NavBar from "../components/NavBar";
 import SaveBar from "../components/SaveBar";
-import SelectComplexity from "../components/SelectComplexity";
+import Selector from "../components/Selector";
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import { Card, CardContent } from "@mui/material";
+import Card from "@mui/material/Card";
 import IconButton from "@mui/material/IconButton";
 import LinearProgress from "@mui/material/LinearProgress";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Tooltip from "@mui/material/Tooltip";
 
-
 const EditQuestion = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [isLoading, setIsLoading] = useState(true);
-  const [question, setQuestion] = useState(null);
-  const [questionTitle, setQuestionTitle] = useState("");
-  const [questionComplexity, setQuestionComplexity] = useState("");
-  const [questionCategory, setQuestionCategory] = useState("");
-  const [questionDescription, setQuestionDescription] = useState("");
-  const [isOpen, setIsOpen] = useState(false);
+
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertSeverity, setAlertSeverity] = useState("");
+
+  const [title, setTitle] = useState("");
+  const [complexity, setComplexity] = useState("");
+  const [categories, setCategories] = useState([]);
+  const [description, setDescription] = useState("");
 
   useEffect(() => {
     const getQuestion = async () => {
       const url = `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions/${id}`;
       const response = await axios.get(url);
-      const question = response.data;
-      if (!question.question_id) return navigate("/questions");
-      setQuestion(question);
-      setQuestionTitle(question.title);
-      setQuestionComplexity(question.complexity);
-      setQuestionCategory(question.categories);
-      setQuestionDescription(question.description);
+      if (response.status !== 200) return navigate("/questions");
+      const { categories, complexity, description, title } = response.data;
+      setTitle(title);
+      setComplexity(complexity);
+      setCategories(categories);
+      setDescription(description);
       setIsLoading(false);
     };
 
@@ -50,124 +52,105 @@ const EditQuestion = () => {
 
   if (isLoading) return <LinearProgress variant="indeterminate" />;
 
-  const getDifficultyChipColor = (difficulty) => {
-    switch (difficulty) {
-      case "easy":
-        return "success";
-      case "medium":
-        return "warning";
-      case "hard":
-        return "error";
-      default:
-        return "primary";
-    }
-  };
-
-  const handleSaveDescription = (data) => {
-    setQuestionDescription(data);
-  };
-
-  const handleSaveComplexity = (data) => {
-    setQuestionComplexity(data);
-  };
-
-  const handleSaveClose = (data) => {
-    setIsOpen(data);
-  };
-
-  const handleAddClick = (dataToAdd) => {
-    setQuestionCategory((prevData) => {
-      const newData = [...prevData, dataToAdd];
-      return newData;
-    });
-  };
-
-  const handleDeleteClick = (dataToDelete) => {
-    setQuestionCategory((prevData) => {
-      const newData = prevData.filter((item) => item !== dataToDelete);
-      return newData;
-    });
-  };
-
   const handleSave = async () => {
     try {
       const url = `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions/${id}`;
-      console.log(url);
-      const updatedQuestion = {
-        ...question,
-        question_id: undefined,
-        title: questionTitle,
-        complexity: questionComplexity,
-        categories: questionCategory,
-        description: questionDescription
-      }
-      const saveResponse = await axios.put(url, updatedQuestion);
-      setIsOpen(true);
-      //navigate(`/questions/${id}`);
-    } catch (err) {
-      console.log(err);
+      const response = await axios.put(url, {
+        title: title,
+        complexity: complexity,
+        categories: categories,
+        description: description,
+      });
+      setAlertMessage(
+        response.status === 200
+          ? "The question has been saved."
+          : "There was an error when trying to save question."
+      );
+      setAlertSeverity(response.status === 200 ? "success" : "error");
+      setIsAlertOpen(true);
+    } catch (error) {
+      console.error(error);
+      setAlertMessage("There was an error when trying to save question.");
+      setAlertSeverity("error");
+      setIsAlertOpen(true);
     }
-
-  }
-
-  //console.log(question.description);
+  };
 
   return (
     <>
       <NavBar />
+      <SaveBar
+        isOpen={isAlertOpen}
+        messsage={alertMessage}
+        severity={alertSeverity}
+        onClose={() => setIsAlertOpen(false)}
+      />
       <Box height="calc(100vh - 64px)" width="100%" bgcolor="whitesmoke">
         <Box height="100%" display="flex">
-          <Stack height="100%" width="100%" spacing={1}>
-            <Stack direction="row" alignItems="center" justifyContent="space-between">
+          <Stack height="100%" width="100%" spacing={1} padding={1}>
+            <Box display="flex">
               <Tooltip title="Back to questions" placement="top" arrow>
                 <IconButton onClick={() => navigate(`/questions/${id}`)}>
                   <ArrowBackIcon />
                 </IconButton>
               </Tooltip>
-              <SaveBar onOpen={isOpen} onClose={handleSaveClose} />
+              <Box flexGrow={1} />
               <Tooltip title="Save question" placement="top" arrow>
-                <Button variant="contained" onClick={handleSave} >
+                <Button variant="contained" onClick={handleSave}>
                   Save
                 </Button>
               </Tooltip>
-            </Stack>
-            <Stack height="100%" width="100%" direction="row" spacing={1} alignItems="center">
-              <Box width="50%" height="100%" padding={1}>
-                <Stack spacing={1}>
-                  <Card
-                    variant="outlined"
-                    textOverflow="ellipsis"
-                    sx={{ flexGrow: 1 }}
-                    padding={1}
-                  >
-                    <CardContent>
-                      <TextField fullWidth id="outlined-basic" label="title" defaultValue={questionTitle} variant="outlined" onChange={(e) => setQuestionTitle(e.target.value)} />
-                    </CardContent>
+            </Box>
+            <Stack height="calc(100% - 48px)" direction="row" spacing={1}>
+              <Box width="50%" height="100%">
+                <Stack width="100%" spacing={1}>
+                  <Card variant="outlined" sx={{ padding: 1 }}>
+                    <TextField
+                      fullWidth
+                      variant="outlined"
+                      label="Question Title"
+                      defaultValue={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                    />
                   </Card>
-                  <Card
-                    variant="outlined"
-                    textOverflow="ellipsis"
-                    sx={{ flexGrow: 1 }}
-                    padding={1}
-                  >
-                    <CardContent>
-                      <SelectComplexity currentComplexity={questionComplexity} onSave={handleSaveComplexity} />
-                    </CardContent>
+                  <Card variant="outlined" sx={{ padding: 1 }}>
+                    <Selector
+                      id="question-complexity"
+                      label="Question Complexity"
+                      options={["easy", "medium", "hard"]}
+                      value={complexity}
+                      onChange={(event) => setComplexity(event.target.value)}
+                    />
                   </Card>
-                  <Card
-                    variant="outlined"
-                    textOverflow="ellipsis"
-                    sx={{ flexGrow: 1 }}
-                    padding={1}
-                  >
-                    <CardContent>
-                      <CategoryChips categories={questionCategory} complexityColor={getDifficultyChipColor(question.complexity)} onSave={handleAddClick} onDelete={handleDeleteClick}/>
-                    </CardContent>
+                  <Card variant="outlined" sx={{ padding: 1 }}>
+                    <ChipArray
+                      chips={categories}
+                      helperText="Press enter to add a new category..."
+                      label="Categories"
+                      onAddChip={(newCategory) =>
+                        setCategories((prevCategories) => [
+                          ...prevCategories,
+                          newCategory,
+                        ])
+                      }
+                      onDeleteChip={(deletedCategory) =>
+                        setCategories((prevCategories) =>
+                          prevCategories.filter(
+                            (category) => category !== deletedCategory
+                          )
+                        )
+                      }
+                    />
                   </Card>
                 </Stack>
               </Box>
-              <Box width="50%" height="100%" padding={1} overflow="scroll">
-                <MarkDownEditor description={questionDescription} onSave={handleSaveDescription} />
+              <Box width="50%" height="100%">
+                <Card sx={{ height: "100%", width: "100%", overflow: "auto" }}>
+                  <SimpleMde
+                    value={description}
+                    onChange={(value) => setDescription(value)}
+                  />
+                </Card>
               </Box>
             </Stack>
           </Stack>
