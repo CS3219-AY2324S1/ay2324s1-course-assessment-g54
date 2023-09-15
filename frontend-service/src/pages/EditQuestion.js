@@ -10,6 +10,8 @@ import NavBar from "../components/NavBar";
 import SaveBar from "../components/SaveBar";
 import Selector from "../components/Selector";
 
+import { useUser } from "../contexts/UserContext";
+
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -23,6 +25,7 @@ import Tooltip from "@mui/material/Tooltip";
 const EditQuestion = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const user = useUser();
   const [isLoading, setIsLoading] = useState(true);
 
   const [isAlertOpen, setIsAlertOpen] = useState(false);
@@ -35,9 +38,14 @@ const EditQuestion = () => {
   const [description, setDescription] = useState("");
 
   useEffect(() => {
+    if (!user.isMaintainer) navigate("/questions");
+
     const getQuestion = async () => {
       const url = `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions/${id}`;
-      const response = await axios.get(url);
+      const token = window.localStorage.getItem("token");
+      const response = await axios.get(url, {
+        headers: { Authorization: token },
+      });
       if (response.status !== 200) return navigate("/questions");
       const { categories, complexity, description, title } = response.data;
       setTitle(title);
@@ -48,7 +56,7 @@ const EditQuestion = () => {
     };
 
     getQuestion();
-  }, [id, navigate]);
+  }, [id, navigate, user.isMaintainer]);
 
   if (isLoading) return <LinearProgress variant="indeterminate" />;
 

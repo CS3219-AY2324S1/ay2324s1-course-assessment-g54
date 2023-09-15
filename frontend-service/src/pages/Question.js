@@ -1,12 +1,13 @@
 import axios from "axios";
 import * as DOMPurify from "dompurify";
 import * as marked from "marked";
+import Editor from "@monaco-editor/react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import NavBar from "../components/NavBar";
 
-import Editor from "@monaco-editor/react";
+import { useUser } from "../contexts/UserContext";
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Box from "@mui/material/Box";
@@ -25,13 +26,18 @@ marked.use({ breaks: true, gfm: true, silent: true });
 const Question = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const user = useUser();
+
   const [isLoading, setIsLoading] = useState(true);
   const [question, setQuestion] = useState(null);
 
   useEffect(() => {
     const getQuestion = async () => {
       const url = `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions/${id}`;
-      const response = await axios.get(url);
+      const token = window.localStorage.getItem("token");
+      const response = await axios.get(url, {
+        headers: { Authorization: token },
+      });
       const question = response.data;
       if (!question.question_id) return navigate("/questions");
       setQuestion(question);
@@ -82,11 +88,15 @@ const Question = () => {
                   color={getDifficultyChipColor(question.complexity)}
                   size="small"
                 />
-                <Tooltip title="Edit question" placement="top" arrow>
-                  <IconButton onClick={() => navigate(`/questions/${id}/edit`)}>
-                    <EditIcon />
-                  </IconButton>
-                </Tooltip>
+                {user.isMaintainer && (
+                  <Tooltip title="Edit question" placement="top" arrow>
+                    <IconButton
+                      onClick={() => navigate(`/questions/${id}/edit`)}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                  </Tooltip>
+                )}
               </Stack>
               <Box>
                 {question.categories.map((category) => (
