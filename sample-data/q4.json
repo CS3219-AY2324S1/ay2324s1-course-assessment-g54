@@ -1,8 +1,8 @@
 {
     "question_id": 4,
-    "title" : "Add Binary",
-    "categories": ["Bit Manipulation", "Algorithms"],
+    "title": "Add Binary",
     "complexity": "easy",
+    "categories": ["Math", "String", "Bit Manipulation", "Simulation", "Algorithms"],
     "link": "https://leetcode.com/problems/add-binary/",
-    "description": "Given two binary strings a and b, return their sum as a binary string.\n\nExample 1:\nInput: a = \"11\", b = \"1\"\nOutput: \"100\"\n\nExample 2:\nInput: a = \"1010\", b = \"1011\"\nOutput: \"10101\"\n\nConstraints:\n1 <= a.length, b.length <= 104\na and b consist only of '0' or '1' characters.\nEach string does not contain leading zeros except for the zero itself."
+    "description": "Given two binary strings `a` and `b`, return *their sum as a binary string*.<br><br><br><br>**Example 1:** <br>**Input:**  a = \"11\", b = \"1\"<br>**Output:**  \"100\"<br><br>**Example 2:** <br>**Input:**  a = \"1010\", b = \"1011\"<br>**Output:**  \"10101\"<br><br><br>**Constraints:** <br>* `1 <= a.length, b.length <= 104`<br>* `a` and `b` consistonly of `'0'` or `'1'` characters.<br>* Each string does not contain leading zeros except for the zero itself.<br><br>"
 }
