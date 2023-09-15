@@ -21,6 +21,7 @@ import Tooltip from "@mui/material/Tooltip";
 
 import ConfirmationModal from "../ConfirmationModal";
 import AcknowledgementToast from "../AcknowledgementToast";
+import { pink } from "@mui/material/colors";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -40,6 +41,13 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:last-child td, &:last-child th': {
     border: 0,
   },
+
+  cursor: 'pointer',
+
+  "&:hover": {
+    backgroundColor: '#fae9e8'
+  }
+
 }));
 
 const QuestionsTable = ({ filteredQuestions, setFilteredQuestions }) => {
@@ -54,6 +62,15 @@ const QuestionsTable = ({ filteredQuestions, setFilteredQuestions }) => {
   useEffect(() => {
     setFilteredQuestions(filteredQuestions);
   }, [filteredQuestions, setFilteredQuestions]);
+
+  const navigateToQuestion = (e, question) => {
+    const isEditIcon = e.target.closest(".edit-icon");
+    const isDeleteIcon = e.target.closest(".delete-icon");
+    
+    if (!isEditIcon && !isDeleteIcon) {
+      navigate(`/questions/${question.question_id}/`);
+    }
+  }
 
   const getComplexityStyle = (complexity) => {
     const colorMap = {
@@ -120,6 +137,7 @@ const QuestionsTable = ({ filteredQuestions, setFilteredQuestions }) => {
               <StyledTableRow
                 key={question.question_id}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                onClick={(e) => navigateToQuestion(e, question)}
               >
                 <StyledTableCell>
                   <Chip
@@ -146,6 +164,7 @@ const QuestionsTable = ({ filteredQuestions, setFilteredQuestions }) => {
                   <Stack direction="row" spacing={1}>
                     <Tooltip title="Edit">
                       <IconButton
+                        className="edit-icon"
                         color="primary"
                         aria-label="edit"
                         size="large"
@@ -156,6 +175,7 @@ const QuestionsTable = ({ filteredQuestions, setFilteredQuestions }) => {
                     </Tooltip>
                     <Tooltip title="Delete">
                       <IconButton
+                      className="delete-icon"
                         color="error"
                         aria-label="delete"
                         size="large" 
