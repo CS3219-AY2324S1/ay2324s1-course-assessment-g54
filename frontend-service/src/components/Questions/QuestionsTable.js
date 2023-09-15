@@ -21,7 +21,6 @@ import Tooltip from "@mui/material/Tooltip";
 
 import ConfirmationModal from "../ConfirmationModal";
 import AcknowledgementToast from "../AcknowledgementToast";
-import { pink } from "@mui/material/colors";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -56,7 +55,7 @@ const QuestionsTable = ({ filteredQuestions, setFilteredQuestions }) => {
   const [questionIdToDelete, setQuestionIdToDelete] = useState(null);
   const [toastOpen, setToastOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
-  const [toastType, setToastType] = useState("");
+  const [toastType, setToastType] = useState("info");
 
 
   useEffect(() => {
