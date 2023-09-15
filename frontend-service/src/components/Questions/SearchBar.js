@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -17,12 +17,25 @@ const SearchBar = ({
   difficultyQuery,
   setDifficultyQuery
 }) => {
+  const [difficultyChanged, setDifficultyChanged] = useState(false);
 
   const handleSearchOnEnter = (event) => {
     if (event.key === 'Enter') {
       filterData()
     }
   };
+
+  const handleDifficultyChange = (event) => {
+    setDifficultyQuery(event.target.value);
+    setDifficultyChanged(true);
+  };
+
+  useEffect(() => {
+    if (difficultyChanged) {
+      filterData();
+      setDifficultyChanged(false);
+    }
+  }, [difficultyQuery, difficultyChanged, filterData]);
   
   return (
     <Stack
@@ -55,8 +68,7 @@ const SearchBar = ({
         <Select
           label="Difficulty"
           value={difficultyQuery}
-          onChange={(e) => { setDifficultyQuery(e.target.value)}}
-          onBlur={filterData}
+          onChange={handleDifficultyChange}
         >
           <MenuItem value="">All</MenuItem>
           <MenuItem value="easy">Easy</MenuItem>
