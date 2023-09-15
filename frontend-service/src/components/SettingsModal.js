@@ -13,7 +13,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import EditProfileCard from "./EditProfileCard";
 import DeleteAccountCard from "./DeleteAccountCard";
 
-const SettingsModal = ({isModalOpen, setIsModalOpen}) => {
+const SettingsModal = ({ isModalOpen, setIsModalOpen }) => {
 
   const handleCloseModal = () => setIsModalOpen(false);
   const [value, setValue] = useState("0");
@@ -22,12 +22,12 @@ const SettingsModal = ({isModalOpen, setIsModalOpen}) => {
   };
 
   return (
-    <Modal open={isModalOpen} onClose={handleCloseModal} sx={{ display: "grid", placeContent: "center"}}>
-      <Card sx={{width: 700}}>
+    <Modal open={isModalOpen} onClose={handleCloseModal} sx={{ display: "grid", placeContent: "center" }}>
+      <Card sx={{ width: 700 }}>
         <Stack direction="row" justifyContent="space-between">
-          <Typography variant="h4" sx={{py: 3, pl: 4}}>Settings</Typography>
-          <IconButton onClick={handleCloseModal} sx={{alignSelf:"flex-start", pt: 1}}>
-            <CloseIcon fontSize="large"/>
+          <Typography variant="h4" sx={{ py: 3, pl: 4 }}>Settings</Typography>
+          <IconButton onClick={handleCloseModal} sx={{ alignSelf: "flex-start", pt: 1 }}>
+            <CloseIcon fontSize="large" />
           </IconButton>
         </Stack>
         <Box display='flex'>
@@ -35,14 +35,14 @@ const SettingsModal = ({isModalOpen, setIsModalOpen}) => {
             orientation="vertical"
             value={value}
             onChange={handleChange}
-            sx={{ borderRight: 1, borderColor: 'divider'}}
+            sx={{ borderRight: 1, borderColor: 'divider' }}
           >
-            <Tab label="Edit Profile" value="0" icon={<EditIcon/>} iconPosition="start"/>
-            <Tab label="Delete Account" value="1" icon={<DeleteIcon/>} iconPosition="start"/>
+            <Tab label="Edit Profile" value="0" icon={<EditIcon />} iconPosition="start" />
+            <Tab label="Delete Account" value="1" icon={<DeleteIcon />} iconPosition="start" />
           </Tabs>
-          <Box sx={{mx: "auto", maxWidth: 400, height: 500}}>
-            {value == "0" && <EditProfileCard/>}
-            {value == "1" && <DeleteAccountCard/>}
+          <Box sx={{ mx: "auto", maxWidth: 400, height: 500 }}>
+            {value == "0" && <EditProfileCard />}
+            {value == "1" && <DeleteAccountCard />}
           </Box>
         </Box>
       </Card>
