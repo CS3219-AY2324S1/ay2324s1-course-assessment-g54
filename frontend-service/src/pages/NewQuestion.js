@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SimpleMde from "react-simplemde-editor";
 
@@ -9,6 +9,8 @@ import ChipArray from "../components/ChipArray";
 import NavBar from "../components/NavBar";
 import SaveBar from "../components/SaveBar";
 import Selector from "../components/Selector";
+
+import { useUser } from "../contexts/UserContext";
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Box from "@mui/material/Box";
@@ -21,6 +23,7 @@ import Tooltip from "@mui/material/Tooltip";
 
 const NewQuestion = () => {
   const navigate = useNavigate();
+  const user = useUser();
 
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
@@ -30,6 +33,10 @@ const NewQuestion = () => {
   const [complexity, setComplexity] = useState("easy");
   const [categories, setCategories] = useState([]);
   const [description, setDescription] = useState("");
+
+  useEffect(() => {
+    if (!user.isMaintainer) navigate("/questions");
+  }, [navigate, user.isMaintainer]);
 
   const handleSave = async () => {
     try {
