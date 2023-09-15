@@ -26,3 +26,16 @@ export const validateUpdatedQuestion = (question) => {
   );
   return validationSchema.validate(question);
 };
+
+export const validateQuery = (question) => {
+  const validationSchema = Joi.object(
+    {
+      title: Joi.string(),
+      categories: Joi.array().items(Joi.string()),
+      complexity: Joi.string().valid(...Object.values(COMPLEXITIES)),
+      link: Joi.string(),
+      description: Joi.string(),
+    }
+  );
+  return validationSchema.validate(question);
+};
