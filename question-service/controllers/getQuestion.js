@@ -14,8 +14,9 @@ function queryBuilder(query) {
     }
 
     if (query.categories) {
-        finalQuery.categories = { "$in" : query.categories }; 
+        finalQuery.categories = { "$all" : query.categories.map(t => new RegExp(t))}; 
     }
+    return finalQuery;
 }
 
 export async function getQuestionsWithQuery(req, res) {

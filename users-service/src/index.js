@@ -24,6 +24,8 @@ app.get("/profile", handlers.handleGetProfile);
 
 app.put("/profile", handlers.handleUpdateProfile);
 
+app.delete("/profile", handlers.handleDeleteProfile);
+
 app.post("/signup", handlers.handleSignup);
 
 app.listen(PORT, () => {

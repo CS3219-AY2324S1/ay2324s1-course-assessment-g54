@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import SimpleMde from "react-simplemde-editor";
 
 import "easymde/dist/easymde.min.css";
@@ -17,48 +17,26 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import IconButton from "@mui/material/IconButton";
-import LinearProgress from "@mui/material/LinearProgress";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Tooltip from "@mui/material/Tooltip";
 
-const EditQuestion = () => {
+const NewQuestion = () => {
   const navigate = useNavigate();
-  const { id } = useParams();
   const user = useUser();
-  const [isLoading, setIsLoading] = useState(true);
 
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
   const [alertSeverity, setAlertSeverity] = useState("");
 
   const [title, setTitle] = useState("");
-  const [complexity, setComplexity] = useState("");
+  const [complexity, setComplexity] = useState("easy");
   const [categories, setCategories] = useState([]);
   const [description, setDescription] = useState("");
 
   useEffect(() => {
     if (!user.isMaintainer) navigate("/questions");
-
-    const getQuestion = async () => {
-      const url = `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions/${id}`;
-      const token = window.localStorage.getItem("token");
-      const response = await axios.get(url, {
-        headers: { Authorization: token },
-      });
-      if (response.status !== 200) return navigate("/questions");
-      const { categories, complexity, description, title } = response.data;
-      setTitle(title);
-      setComplexity(complexity);
-      setCategories(categories);
-      setDescription(description);
-      setIsLoading(false);
-    };
-
-    getQuestion();
-  }, [id, navigate, user.isMaintainer]);
-
-  if (isLoading) return <LinearProgress variant="indeterminate" />;
+  }, [navigate, user.isMaintainer]);
 
   const handleSave = async () => {
     try {
@@ -68,13 +46,18 @@ const EditQuestion = () => {
         setIsAlertOpen(true);
         return;
       }
-      const url = `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions/${id}`;
-      const response = await axios.put(url, {
-        title,
-        complexity,
-        categories,
-        description,
-      });
+      const url = `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions`;
+      const token = window.localStorage.getItem("token");
+      const response = await axios.post(
+        url,
+        {
+          title,
+          complexity,
+          categories,
+          description,
+        },
+        { headers: { Authorization: token } }
+      );
       setAlertMessage(
         response.status === 200
           ? "The question has been saved."
@@ -104,7 +87,7 @@ const EditQuestion = () => {
           <Stack height="100%" width="100%" spacing={1} padding={1}>
             <Box display="flex">
               <Tooltip title="Back to questions" placement="top" arrow>
-                <IconButton onClick={() => navigate(-1)}>
+                <IconButton onClick={() => navigate(`/questions`)}>
                   <ArrowBackIcon />
                 </IconButton>
               </Tooltip>
@@ -174,4 +157,4 @@ const EditQuestion = () => {
   );
 };
 
-export default EditQuestion;
+export default NewQuestion;

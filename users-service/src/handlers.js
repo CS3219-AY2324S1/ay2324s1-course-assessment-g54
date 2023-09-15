@@ -7,6 +7,32 @@ import * as utils from "./utils.js";
  * @param { import("express").Response } response
  * @returns { Promise<void> }
  */
+export const handleDeleteProfile = async (request, response) => {
+  if (!request.headers.authorization) return res.status(401).send();
+  const jsonWebToken = request.headers.authorization;
+  let id;
+  try {
+    const user = utils.verifyJsonWebToken(jsonWebToken);
+    id = user.id;
+  } catch (error) {
+    console.error(error);
+    return response.status(200).json(null);
+  }
+
+  try {
+    await database.delete().from("users").where({ id });
+    return response.status(200).send();
+  } catch (error) {
+    console.error(error);
+    return response.status(500).send();
+  }
+};
+
+/**
+ * @param { import("express").Request } request
+ * @param { import("express").Response } response
+ * @returns { Promise<void> }
+ */
 export const handleGetProfile = async (request, response) => {
   if (!request.headers.authorization) return res.status(401).send();
   const jsonWebToken = request.headers.authorization;
@@ -24,8 +50,8 @@ export const handleGetProfile = async (request, response) => {
     return response.status(400).send();
   }
 
-  const { name, email } = user;
-  return response.status(200).json({ id, name, email });
+  const { name, email, isMaintainer } = user;
+  return response.status(200).json({ id, name, email, isMaintainer });
 };
 
 /**
@@ -59,10 +85,12 @@ export const handleLogin = async (request, response) => {
     return response.status(400).send();
   }
 
-  const { id } = user;
-  const jsonWebToken = utils.signJsonWebToken({ id });
-  console.log(jsonWebToken);
-  return response.status(200).send(jsonWebToken);
+  const { id, name, isMaintainer } = user;
+  const token = utils.signJsonWebToken({ id });
+  console.log(`Token for ${user.name} is ${token}`);
+  return response
+    .status(200)
+    .send({ user: { name, email, isMaintainer }, token });
 };
 
 /**
