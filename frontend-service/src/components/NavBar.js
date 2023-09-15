@@ -13,7 +13,9 @@ import Stack from "@mui/material/Stack";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import EditProfileModal from "./EditProfileModal";
+import SettingsModal from "./EditProfileModal";
+import SettingsIcon from '@mui/icons-material/Settings';
+import LogoutIcon from '@mui/icons-material/ExitToApp';
 
 const NavBar = () => {
   const navigate = useNavigate();
@@ -28,7 +30,7 @@ const NavBar = () => {
 
   return (
     <AppBar position="static">
-      <EditProfileModal isModalOpen={isEditProfileModalOpen} setIsModalOpen={setIsEditProfileModalOpen}/>
+      <SettingsModal isModalOpen={isEditProfileModalOpen} setIsModalOpen={setIsEditProfileModalOpen}/>
       <Toolbar disableGutters sx={{ paddingX: 1.5 }}>
         <Box sx={{ flexGrow: 1 }} />
         <Box sx={{ flexGrow: 0 }}>
@@ -65,8 +67,9 @@ const NavBar = () => {
                 fullWidth
                 size="small"
                 onClick={handleOpenModal}
+                startIcon={<SettingsIcon/>}
               >
-                Edit Profile
+                Settings
               </Button>
               <Button
                 variant="contained"
@@ -77,6 +80,7 @@ const NavBar = () => {
                   window.localStorage.removeItem("token");
                   navigate("/login");
                 }}
+                startIcon={<LogoutIcon/>}
               >
                 Sign Out
               </Button>
