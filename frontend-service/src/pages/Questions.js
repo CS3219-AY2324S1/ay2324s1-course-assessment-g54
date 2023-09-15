@@ -10,6 +10,7 @@ import Stack from "@mui/material/Stack";
 
 const Questions = () => {
   const [questions, setQuestions] = useState([]);
+  const [query, setQuery] = useState({});
   const [searchQuery, setSearchQuery] = useState("");
   const [difficultyQuery, setDifficultyQuery] = useState("");
   const [filteredQuestionsBySearch, setFilteredQuestionsBySearch] = useState([]);
@@ -35,20 +36,35 @@ const Questions = () => {
     fetchData();
   }, []);
 
-  const handleSearchFilter = () => {
-    const filtered = questions.filter((question) => {
-      if (!searchQuery) return true;
-      return question.title.toLowerCase().includes(searchQuery.toLowerCase())
-    });
-    setFilteredQuestionsBySearch(filtered);
+  const handleSearchFilter = async () => {
+    try {
+      const url = `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions/`;
+      const response = await axios.get(url, {
+        params: { title: searchQuery },
+      });
+      setFilteredQuestionsBySearch(response.data);
+      console.log(url)
+    } catch (err) {
+      console.log(err);
+    }
   };
 
-  const handleDifficultyFilter = () => {
-    const filtered = filteredQuestionsBySearch.filter((question) => {
-      if (!difficultyQuery) return true;
-      return question.complexity === difficultyQuery;
-    });
-    setFilteredQuestionsByDifficulty(filtered);
+  const handleDifficultyFilter = async () => {
+    // const filtered = filteredQuestionsBySearch.filter((question) => {
+    //   if (!difficultyQuery) return true;
+    //   return question.complexity === difficultyQuery;
+    // });
+    // setFilteredQuestionsByDifficulty(filtered);
+    try {
+      const url = `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions/`;
+      const response = await axios.get(url, {
+        params: { complexity: difficultyQuery }
+      });
+      setFilteredQuestionsBySearch(response.data);
+      console.log(response)
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
