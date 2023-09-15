@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useUser, useUserDispatch } from "../contexts/UserContext";
 import Avatar from "@mui/material/Avatar";
 import Stack from "@mui/material/Stack";
@@ -11,6 +12,7 @@ import Modal from "@mui/material/Modal";
 
 const EditProfileModal = ({isModalOpen, setIsModalOpen}) => {
   const user = useUser();
+  const navigate = useNavigate();
   const dispatch = useUserDispatch();
 
   const [inputName, setInputName] = useState(user.name);
@@ -30,6 +32,21 @@ const EditProfileModal = ({isModalOpen, setIsModalOpen}) => {
     dispatch({type: "set", user: {...user, name: inputName }})
     setIsModalOpen(false);
   }
+
+  const handleDeleteAccount = async () => {
+    const token = window.localStorage.getItem("token");
+    try {
+      await axios.delete(
+        `${ process.env.REACT_APP_USERS_SERVICE_HOST}/profile`,
+        { headers: { Authorization: token } }
+      );
+      window.localStorage.removeItem("token");
+      navigate("/login");
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
+ 
 
   return (
     <Modal open={isModalOpen} onClose={handleCloseModal} sx={{ display: "grid", placeContent: "center" }}>
@@ -54,6 +71,7 @@ const EditProfileModal = ({isModalOpen, setIsModalOpen}) => {
             </Stack>
           </Stack>
           <Stack direction="row" justifyContent="flex-end" pt={4} spacing={2}>
+            <Button variant="outlined" onClick={handleDeleteAccount} sx={{ minWidth: 100 }}> Delete </Button>
             <Button variant="outlined" onClick={handleCloseModal} sx={{ minWidth: 100 }}> Cancel </Button>
             <Button variant="contained" type='submit' sx={{ minWidth: 100 }}> Save</Button>
           </Stack>
