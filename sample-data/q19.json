@@ -1,0 +1,14 @@
+{
+    "title": "Chalkboard XOR Game",
+    "complexity": "hard",
+    "categories": [
+        "Array",
+        "Math",
+        "Bit Manipulation",
+        "Brainteaser",
+        "Game Theory",
+        "Algorithms"
+    ],
+    "link": "https://leetcode.com/problems/chalkboard-xor-game/",
+    "description": "You are given an array of integers `nums` represents the numbers written on a chalkboard.\n\nAlice and Bob take turns erasing exactly one number from the chalkboard, with Alice starting first. If erasing a number causes the bitwise XOR of all the elements of the chalkboard to become `0`, then that player loses. The bitwise XOR of one element is that element itself, and the bitwise XOR of no elements is `0`.\n\nAlso, if any player starts their turn with the bitwise XOR of all the elements of the chalkboard equal to `0`, then that player wins.\n\nReturn `true` *if and only if Alice wins the game, assuming both players play optimally*.\n\n**Example 1:**\n**Input:** nums = [1,1,2]\n**Output:** false\n**Explanation:** \nAlice has two choices: erase 1 or erase 2. \nIf she erases 1, the nums array becomes [1, 2]. The bitwise XOR of all the elements of the chalkboard is 1 XOR 2 = 3. Now Bob can remove any element he wants, because Alice will be the one to erase the last element and she will lose. \nIf Alice erases 2 first, now nums become [1, 1]. The bitwise XOR of all the elements of the chalkboard is 1 XOR 1 = 0. Alice will lose.\n\n**Example 2:**\n**Input:** nums = [0,1]\n**Output:** true\n\n**Example 3:**\n**Input:** nums = [1,2,3]\n**Output:** true\n\n**Constraints:**\n* `1 <= nums.length <= 1000`\n* `0 <= nums[i] < 216`\n\n"
+}
