@@ -9,12 +9,9 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 
 const Questions = () => {
-  const [questions, setQuestions] = useState([]);
-  const [query, setQuery] = useState({});
+  const [filteredData, setFilteredData] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [difficultyQuery, setDifficultyQuery] = useState("");
-  const [filteredQuestionsBySearch, setFilteredQuestionsBySearch] = useState([]);
-  const [filteredQuestionsByDifficulty, setFilteredQuestionsByDifficulty] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -22,9 +19,7 @@ const Questions = () => {
         const response = await axios.get(`${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions/`);
 
         if (response.status === 200) {
-          setQuestions(response.data);
-          setFilteredQuestionsBySearch(response.data);
-          setFilteredQuestionsByDifficulty(response.data);
+          setFilteredData(response.data)
         } else {
           console.error("Failed to fetch questions.");
         }
@@ -36,36 +31,23 @@ const Questions = () => {
     fetchData();
   }, []);
 
-  const handleSearchFilter = async () => {
+  const filterData = async () => {
     try {
       const url = `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions/`;
-      const response = await axios.get(url, {
-        params: { title: searchQuery },
-      });
-      setFilteredQuestionsBySearch(response.data);
-      console.log(url)
-    } catch (err) {
-      console.log(err);
-    }
-  };
+      const params = {};
+      if (searchQuery) {
+        params.title = searchQuery;
+      }
+      if (difficultyQuery) {
+        params.complexity = difficultyQuery;
+      }
 
-  const handleDifficultyFilter = async () => {
-    // const filtered = filteredQuestionsBySearch.filter((question) => {
-    //   if (!difficultyQuery) return true;
-    //   return question.complexity === difficultyQuery;
-    // });
-    // setFilteredQuestionsByDifficulty(filtered);
-    try {
-      const url = `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions/`;
-      const response = await axios.get(url, {
-        params: { complexity: difficultyQuery }
-      });
-      setFilteredQuestionsBySearch(response.data);
-      console.log(response)
+      const response = await axios.get(url, { params: params });
+      setFilteredData(response.data);
     } catch (err) {
       console.log(err);
     }
-  };
+  }
 
   return (
     <div>
@@ -81,15 +63,14 @@ const Questions = () => {
           <SearchBar
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
-            handleSearchFilter={handleSearchFilter}
+            filterData={filterData}
             difficultyQuery={difficultyQuery}
             setDifficultyQuery={setDifficultyQuery}
-            handleDifficultyFilter={handleDifficultyFilter}
           />
           <div>
             <QuestionsTable
-              filteredQuestions={filteredQuestionsByDifficulty}
-              setFilteredQuestions={setFilteredQuestionsByDifficulty}
+              filteredQuestions={filteredData}
+              setFilteredQuestions={setFilteredData}
             />
           </div>
       </Stack>

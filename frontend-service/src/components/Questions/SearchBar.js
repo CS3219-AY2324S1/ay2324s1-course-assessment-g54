@@ -13,19 +13,14 @@ import Stack from "@mui/material/Stack";
 const SearchBar = ({
   searchQuery,
   setSearchQuery,
-  handleSearchFilter,
+  filterData,
   difficultyQuery,
-  setDifficultyQuery,
-  handleDifficultyFilter
+  setDifficultyQuery
 }) => {
-
-  useEffect(() => {
-    handleDifficultyFilter();
-  }, [setDifficultyQuery, handleDifficultyFilter]);
 
   const handleSearchOnEnter = (event) => {
     if (event.key === 'Enter') {
-      handleSearchFilter()
+      filterData()
     }
   };
   
@@ -44,10 +39,11 @@ const SearchBar = ({
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
         onKeyUp={handleSearchOnEnter}
+        onBlur={filterData}
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
-              <IconButton onClick={handleSearchFilter} aria-label="search">
+              <IconButton onClick={filterData} aria-label="search">
                 <SearchIcon />
               </IconButton>
             </InputAdornment>
@@ -60,6 +56,7 @@ const SearchBar = ({
           label="Difficulty"
           value={difficultyQuery}
           onChange={(e) => { setDifficultyQuery(e.target.value)}}
+          onBlur={filterData}
         >
           <MenuItem value="">All</MenuItem>
           <MenuItem value="easy">Easy</MenuItem>
