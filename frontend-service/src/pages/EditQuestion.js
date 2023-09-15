@@ -42,7 +42,10 @@ const EditQuestion = () => {
 
     const getQuestion = async () => {
       const url = `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions/${id}`;
-      const response = await axios.get(url);
+      const token = window.localStorage.getItem("token");
+      const response = await axios.get(url, {
+        headers: { Authorization: token },
+      });
       if (response.status !== 200) return navigate("/questions");
       const { categories, complexity, description, title } = response.data;
       setTitle(title);

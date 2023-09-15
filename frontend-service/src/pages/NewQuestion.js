@@ -47,12 +47,17 @@ const NewQuestion = () => {
         return;
       }
       const url = `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions`;
-      const response = await axios.post(url, {
-        title,
-        complexity,
-        categories,
-        description,
-      });
+      const token = window.localStorage.getItem("token");
+      const response = await axios.post(
+        url,
+        {
+          title,
+          complexity,
+          categories,
+          description,
+        },
+        { headers: { Authorization: token } }
+      );
       setAlertMessage(
         response.status === 200
           ? "The question has been saved."

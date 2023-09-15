@@ -31,7 +31,10 @@ const Question = () => {
   useEffect(() => {
     const getQuestion = async () => {
       const url = `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions/${id}`;
-      const response = await axios.get(url);
+      const token = window.localStorage.getItem("token");
+      const response = await axios.get(url, {
+        headers: { Authorization: token },
+      });
       const question = response.data;
       if (!question.question_id) return navigate("/questions");
       setQuestion(question);
