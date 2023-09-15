@@ -1,0 +1,13 @@
+{
+    "title": "Wildcard Matching",
+    "complexity": "hard",
+    "categories": [
+        "String",
+        "Dynamic Programming",
+        "Greedy",
+        "Recursion",
+        "Algorithms"
+    ],
+    "link": "https://leetcode.com/problems/wildcard-matching/",
+    "description": "Given an input string (`s`) and a pattern (`p`), implement wildcard pattern matching with support for `'?'` and `'*'` where:\n\n* `'?'` Matches any single character.\n* `'*'` Matches any sequence of characters (including the empty sequence).\n\nThe matching should cover the **entire** input string (not partial).\n\n**Example 1:**\n**Input:** s = \"aa\", p = \"a\"\n**Output:** false\n**Explanation:** \"a\" does not match the entire string \"aa\".\n\n**Example 2:**\n**Input:** s = \"aa\", p = \"*\"\n**Output:** true\n**Explanation:**'*' matches any sequence.\n\n**Example 3:**\n**Input:** s = \"cb\", p = \"?a\"\n**Output:** false\n**Explanation:**'?' matches 'c', but the second letter is 'a', which does not match 'b'.\n\n**Constraints:**\n* `0 <= s.length, p.length <= 2000`\n* `s` contains only lowercase English letters.\n* `p` contains only lowercase English letters, `'?'` or `'*'`.\n\n"
+}
