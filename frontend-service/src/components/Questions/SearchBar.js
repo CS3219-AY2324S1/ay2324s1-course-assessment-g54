@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import ChipArray from "../ChipArray";
-
-import Card from "@mui/material/Card";
+import Chip from "@mui/material/Chip";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
@@ -24,6 +22,7 @@ const SearchBar = ({
 }) => {
   const [difficultyChanged, setDifficultyChanged] = useState(false);
   const [categoriesChanged, setCategoriesChanged] = useState(false);
+  const [categoryChipValue, setCategoryChipValue] = useState("");
 
   const handleSearchOnEnter = (event) => {
     if (event.key === 'Enter') {
@@ -51,6 +50,17 @@ const SearchBar = ({
     setCategoriesChanged(true)
   };
 
+  const handleAddChip = () => {
+    const valueToBeAdded = categoryChipValue.trim();
+    if (valueToBeAdded === "") return;
+    const isValueAlreadyAdded = categoriesQuery
+      .map((chip) => chip.toLowerCase())
+      .includes(categoryChipValue.toLowerCase());
+    if (isValueAlreadyAdded) return;
+    handleCategoriesAdded(valueToBeAdded);
+    setCategoryChipValue("");
+  };
+
   useEffect(() => {
     if (difficultyChanged) {
       filterData();
@@ -66,56 +76,79 @@ const SearchBar = ({
   }, [categoriesQuery, categoriesChanged, filterData]);
   
   return (
-    <div style={{ height: "200px" }}>
-    <Stack
-      direction="row"
-      spacing={1}
-      alignItems="flex-start"
-    >
-      <TextField
-        id="filled-search"
-        label="Search Questions"
-        type="search"
-        variant="outlined"
-        size="small"
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        onKeyUp={handleSearchOnEnter}
-        onBlur={filterData}
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position="end">
-              <IconButton onClick={filterData} aria-label="search">
-                <SearchIcon />
-              </IconButton>
-            </InputAdornment>
-          ),
-        }}
-      />
-      <FormControl sx={{ minWidth: 120 }} size="small">
-        <InputLabel id="difficulty-label">Difficulty</InputLabel>
-        <Select
-          label="Difficulty"
-          value={difficultyQuery}
-          onChange={handleDifficultyChange}
-        >
-          <MenuItem value="">All</MenuItem>
-          <MenuItem value="easy">Easy</MenuItem>
-          <MenuItem value="medium">Medium</MenuItem>
-          <MenuItem value="hard">Hard</MenuItem>
-        </Select>
-      </FormControl>
-      
-      <Card variant="outlined" sx={{ padding: 1, width: "100%" }}>
-        <ChipArray
-          chips={categoriesQuery}
-          helperText="Press enter to add a new category..."
-          label="Categories"
-          onAddChip={handleCategoriesAdded}
-          onDeleteChip={handleDeleteChip}
+    <div style={{ width: "70%" }}>
+      <Stack
+        direction="row"
+        spacing={1}
+        alignItems="flex-start"
+      >
+        <TextField
+          id="Search"
+          label="Search Questions"
+          helperText={"Press enter to search by title"}
+          type="search"
+          variant="outlined"
+          size="small"
+          style={{ width: "100%" }}
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          onKeyUp={handleSearchOnEnter}
+          onBlur={filterData}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton onClick={filterData} aria-label="search">
+                  <SearchIcon />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
         />
-      </Card>   
-    </Stack>
+        <FormControl sx={{ minWidth: 120 }} size="small">
+          <InputLabel id="difficulty-label">Difficulty</InputLabel>
+          <Select
+            label="Difficulty"
+            value={difficultyQuery}
+            onChange={handleDifficultyChange}
+          >
+            <MenuItem value="">All</MenuItem>
+            <MenuItem value="easy">Easy</MenuItem>
+            <MenuItem value="medium">Medium</MenuItem>
+            <MenuItem value="hard">Hard</MenuItem>
+          </Select>
+        </FormControl>
+        <TextField
+          fullWidth
+          variant="outlined"
+          size="small"
+          style={{ width: "50%" }}
+          label={"Categories"}
+          value={categoryChipValue}
+          helperText={"Press enter to add a new category..."}
+          onChange={(event) => setCategoryChipValue(event.target.value)}
+          onKeyUp={(event) => {
+            if (event.key !== "Enter") return;
+            handleAddChip();
+          }}
+        />
+      </Stack>
+      <div
+        style={{
+          maxHeight: "50px",
+          overflowY: "auto",
+          wordWrap: "break-word",
+        }}
+      >
+        {categoriesQuery.map((chip) => (
+          <Chip
+            key={chip}
+            label={chip}
+            onDelete={() => handleDeleteChip(chip)}
+            sx={{ marginRight: 1, marginTop: 1 }}
+            color="secondary"
+          />
+        ))}
+      </div>
     </div>
   );
 };
