@@ -13,7 +13,7 @@ import Stack from "@mui/material/Stack";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import SettingsModal from "./EditProfileModal";
+import SettingsModal from "./SettingsModal";
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/ExitToApp';
 
@@ -22,15 +22,15 @@ const NavBar = () => {
   const user = useUser();
 
   const [anchorElement, setAnchorElement] = useState(null);
-  const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState(false);
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
 
   const handleOpenUserMenu = (event) => setAnchorElement(event.currentTarget);
   const handleCloseUserMenu = () => setAnchorElement(null);
-  const handleOpenModal = () => setIsEditProfileModalOpen(true);
+  const handleOpenModal = () => setIsSettingsModalOpen(true);
 
   return (
     <AppBar position="static">
-      <SettingsModal isModalOpen={isEditProfileModalOpen} setIsModalOpen={setIsEditProfileModalOpen}/>
+      <SettingsModal isModalOpen={isSettingsModalOpen} setIsModalOpen={setIsSettingsModalOpen}/>
       <Toolbar disableGutters sx={{ paddingX: 1.5 }}>
         <Box sx={{ flexGrow: 1 }} />
         <Box sx={{ flexGrow: 0 }}>
