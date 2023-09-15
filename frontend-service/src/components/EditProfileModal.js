@@ -1,6 +1,5 @@
 import axios from "axios";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useUser, useUserDispatch } from "../contexts/UserContext";
 import Avatar from "@mui/material/Avatar";
 import Stack from "@mui/material/Stack";
@@ -11,7 +10,6 @@ import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 
 const EditProfileModal = ({isModalOpen, setIsModalOpen}) => {
-  const navigate = useNavigate();
   const user = useUser();
   const dispatch = useUserDispatch();
 
