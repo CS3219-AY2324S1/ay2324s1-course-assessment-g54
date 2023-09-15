@@ -1,4 +1,4 @@
-import { validateNewQuestion, validateUpdatedQuestion } from "./validators.js";
+import { validateNewQuestion, validateQuery, validateUpdatedQuestion } from "./validators.js";
 
 export const validateCreateQuestion = (req, res, next) => {
     const { error } = validateNewQuestion(req.body); 
@@ -9,7 +9,7 @@ export const validateCreateQuestion = (req, res, next) => {
 };
 
 export const validateQuestionQuery = (req, res, next) => {
-    const { error } = validateUpdatedQuestion(req.query);
+    const { error } = validateQuery(req.query);
     if (error) {
         return res.status(400).send(error.details[0].message);
     }
