@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 
+import ChipArray from "../ChipArray";
+
+import Card from "@mui/material/Card";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
@@ -15,9 +18,12 @@ const SearchBar = ({
   setSearchQuery,
   filterData,
   difficultyQuery,
-  setDifficultyQuery
+  setDifficultyQuery,
+  categoriesQuery,
+  setCategoriesQuery
 }) => {
   const [difficultyChanged, setDifficultyChanged] = useState(false);
+  const [categoriesChanged, setCategoriesChanged] = useState(false);
 
   const handleSearchOnEnter = (event) => {
     if (event.key === 'Enter') {
@@ -30,18 +36,41 @@ const SearchBar = ({
     setDifficultyChanged(true);
   };
 
+  const handleCategoriesAdded = (newCategory) => {
+    setCategoriesQuery((prevCategories) => [
+      ...prevCategories,
+      newCategory,
+    ]);
+    setCategoriesChanged(true);
+  };
+
+  const handleDeleteChip = (deletedCategory) => {
+    setCategoriesQuery((prevCategories) =>
+      prevCategories.filter((category) => category !== deletedCategory)
+    );
+    setCategoriesChanged(true)
+  };
+
   useEffect(() => {
     if (difficultyChanged) {
       filterData();
       setDifficultyChanged(false);
     }
   }, [difficultyQuery, difficultyChanged, filterData]);
+
+  useEffect(() => {
+    if (categoriesChanged) {
+      filterData();
+      setCategoriesChanged(false);
+    }
+  }, [categoriesQuery, categoriesChanged, filterData]);
   
   return (
+    <div style={{ height: "200px" }}>
     <Stack
       direction="row"
       spacing={1}
-      alignItems="center"
+      alignItems="flex-start"
     >
       <TextField
         id="filled-search"
@@ -75,8 +104,19 @@ const SearchBar = ({
           <MenuItem value="medium">Medium</MenuItem>
           <MenuItem value="hard">Hard</MenuItem>
         </Select>
-      </FormControl>      
+      </FormControl>
+      
+      <Card variant="outlined" sx={{ padding: 1, width: "100%" }}>
+        <ChipArray
+          chips={categoriesQuery}
+          helperText="Press enter to add a new category..."
+          label="Categories"
+          onAddChip={handleCategoriesAdded}
+          onDeleteChip={handleDeleteChip}
+        />
+      </Card>   
     </Stack>
+    </div>
   );
 };
 

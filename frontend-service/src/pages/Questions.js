@@ -12,6 +12,7 @@ const Questions = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [difficultyQuery, setDifficultyQuery] = useState("");
+  const [categoriesQuery, setCategoriesQuery] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -38,8 +39,15 @@ const Questions = () => {
       if (searchQuery) {
         params.title = searchQuery;
       }
+
       if (difficultyQuery) {
         params.complexity = difficultyQuery;
+      }
+
+      if (categoriesQuery && categoriesQuery.length > 0) {
+        categoriesQuery.forEach((category, index) => {
+          params[`categories[${index}]`] = category;
+        });
       }
 
       const response = await axios.get(url, { params: params });
@@ -66,6 +74,8 @@ const Questions = () => {
             filterData={filterData}
             difficultyQuery={difficultyQuery}
             setDifficultyQuery={setDifficultyQuery}
+            categoriesQuery={categoriesQuery}
+            setCategoriesQuery={setCategoriesQuery}
           />
           <div>
             <QuestionsTable

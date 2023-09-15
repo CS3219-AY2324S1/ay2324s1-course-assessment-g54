@@ -33,7 +33,14 @@ const ChipArray = (props) => {
           handleAddChip();
         }}
       />
-      <Box display="flex">
+      <div
+        style={{
+          maxHeight: "100px",
+          overflowY: "auto",
+          wordWrap: "break-word",
+        }}
+      >
+      
         {chips.map((chip) => (
           <Chip
             key={chip}
@@ -42,7 +49,7 @@ const ChipArray = (props) => {
             sx={{ marginRight: 1, marginTop: 1 }}
           />
         ))}
-      </Box>
+      </div>
     </Box>
   );
 };
