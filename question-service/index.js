@@ -4,7 +4,8 @@ import express from "express";
 import morgan from "morgan";
 import mongoose from "mongoose";
 import QuestionRouter from "./routes/questionRoutes.js";
-import { createQuestionCounter, getNextQuestionId } from "./controllers/questionCounter.js";
+import { createQuestionCounter } from "./controllers/questionCounter.js";
+import { createLeetcodeCounter } from "./controllers/leetcode.js";
 
 dotenv.config("./.env");
 const uri = process.env.MONGO_OPTION == "cloud" ? process.env.MONGO_CLOUD_URI : process.env.MONGO_LOCAL_DOCKER_URI;
@@ -30,6 +31,7 @@ if (process.env.NODE_ENV === 'development') {
 };
 
 createQuestionCounter();
+createLeetcodeCounter();
 
 //app.use('/api/question', QuestionRouter);
 app.use('/', QuestionRouter);
