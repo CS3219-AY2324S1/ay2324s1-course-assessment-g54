@@ -34,14 +34,12 @@ router.get('/get-leetcode-id', getCurrentLeetcodeId);
 router.post('/upload-bulk-questions',  createQuestionBulk);
 
 router.get("/test", async (req, res, next) => {
-    console.log("'/test' call");
     try {
         const testresponse = await axios.get("http://google.com");
-        console.log(testresponse);
+        console.log(testresponse.status);
         // runs ok
 
-        const response = await axios.get("http://127.0.0.1:3002/test");
-        // connect ECONNREFUSED 127.0.0.1:3002
+        const response = await axios.get("http://localhost:3002/test");
         console.log(response);
         return res.send("HI");
     }
@@ -49,5 +47,8 @@ router.get("/test", async (req, res, next) => {
         next(err)
     }
 })
+
+const response = await axios.get("http://localhost:3002/test");
+console.log(response);
 
 export default router;
