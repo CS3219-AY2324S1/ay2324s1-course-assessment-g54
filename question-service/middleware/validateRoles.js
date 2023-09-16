@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const usersServiceBase = "http://users-service:3002";
+const usersServiceBase = process.env.USERS_SERVICE_HOST;
 
 export async function validateLogin(req, res, next) {
     try{
