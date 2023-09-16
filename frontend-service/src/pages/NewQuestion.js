@@ -48,6 +48,9 @@ const NewQuestion = () => {
       }
       const url = `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions`;
       const token = window.localStorage.getItem("token");
+      const header = {
+        headers: { Authorization: token },
+      };
       const response = await axios.post(
         url,
         {
@@ -56,7 +59,7 @@ const NewQuestion = () => {
           categories,
           description,
         },
-        { headers: { Authorization: token } }
+        header
       );
       setAlertMessage(
         response.status === 200

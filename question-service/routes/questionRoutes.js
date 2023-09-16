@@ -5,7 +5,7 @@ import { createQuestionBulk, getCurrentLeetcodeId, getLeetcodeId } from '../cont
 import { updateQuestion } from '../controllers/updateQuestion.js';
 import { validateCreateQuestion, validateUpdateQuestion, validateQuestionId, validateQuestionQuery } from '../middleware/validateQuestions.js';
 import express from "express";
-import { validateLogin } from '../middleware/validateRoles.js';
+import { validateIsMaintainer, validateLogin } from '../middleware/validateRoles.js';
 import axios from 'axios';
 
 const router = express.Router();
@@ -15,37 +15,22 @@ router.get('/', (req, res) => {
 });
 
 // '/getQuestions'
-router.get('/questions', [validateQuestionQuery], getQuestionsWithQuery);
+router.get('/questions', [validateLogin, validateQuestionQuery], getQuestionsWithQuery);
 
 // '/getQuestion/:id'
-router.get('/questions/:id', [validateQuestionId], getSingleQuestion);
+router.get('/questions/:id', [validateLogin, validateQuestionId], getSingleQuestion);
 
 // '/createQuestion'
-router.post('/questions', [validateCreateQuestion], createQuestion);
+router.post('/questions', [validateIsMaintainer, validateCreateQuestion], createQuestion);
 
 // '/updateQuestion/:id'
-router.put('/questions/:id', [validateQuestionId, validateUpdateQuestion], updateQuestion);
+router.put('/questions/:id', [validateIsMaintainer, validateQuestionId, validateUpdateQuestion], updateQuestion);
 
 // '/deleteQuestion/:id'
-router.delete('/questions/:id', [validateQuestionId], deleteQuestion);
+router.delete('/questions/:id', [validateIsMaintainer, validateQuestionId], deleteQuestion);
 
 router.get('/get-leetcode-id', getCurrentLeetcodeId);
 
 router.post('/upload-bulk-questions',  createQuestionBulk);
-
-router.get("/test", async (req, res, next) => {
-    try {
-        const testresponse = await axios.get("http://google.com");
-        console.log(testresponse.status);
-        // runs ok
-
-        const response = await axios.get("http://localhost:3002/test");
-        console.log(response);
-        return res.send("HI");
-    }
-    catch (err) {
-        next(err)
-    }
-})
 
 export default router;

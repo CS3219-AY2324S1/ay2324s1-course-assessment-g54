@@ -15,7 +15,7 @@ import Typography from "@mui/material/Typography";
 const Questions = () => {
   const [questions, setQuestions] = useState([]);
   const token = window.localStorage.getItem("token");
-  const headers = {
+  const header = {
     headers: {
       'Authorization': `${token}` 
   }};
@@ -26,7 +26,7 @@ const Questions = () => {
       try {
         const response = await axios.get(
           "http://localhost:3001/questions/",
-          headers
+          header
         );
 
         if (response.status === 200) {
