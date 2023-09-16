@@ -40,13 +40,13 @@ router.get("/test", async (req, res, next) => {
         console.log(testresponse);
         // runs ok
 
-        const response = await axios.get("http://localhost:3002/test");
+        const response = await axios.get("http://127.0.0.1:3002/test");
         // connect ECONNREFUSED 127.0.0.1:3002
         console.log(response);
         return res.send("HI");
     }
     catch (err) {
-    next(err)
+        next(err)
     }
 })
 

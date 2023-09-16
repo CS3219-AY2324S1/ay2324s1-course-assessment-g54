@@ -14,6 +14,10 @@ app.use(cors());
 app.use(express.json());
 if (process.env.NODE_ENV === "development") app.use(morgan("tiny"));
 
+app.get("/test", (res, rep)=> {
+  rep.send("hi testing");
+})
+
 app.post("/login", handlers.handleLogin);
 
 app.post("/logout", (req, res) => {
