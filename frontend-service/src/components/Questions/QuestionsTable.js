@@ -21,6 +21,7 @@ import Tooltip from "@mui/material/Tooltip";
 
 import ConfirmationModal from "../ConfirmationModal";
 import AcknowledgementToast from "../AcknowledgementToast";
+import { useUser } from "../../contexts/UserContext";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -51,6 +52,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 const QuestionsTable = ({ filteredQuestions, setFilteredQuestions }) => {
   const navigate = useNavigate();
+  const user = useUser();
+
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [questionIdToDelete, setQuestionIdToDelete] = useState(null);
   const [toastOpen, setToastOpen] = useState(false);
@@ -108,7 +111,7 @@ const QuestionsTable = ({ filteredQuestions, setFilteredQuestions }) => {
 
       showToast("Question deleted successfully!", "success");
     } catch (err) {
-      showToast("Question deleted unsuccessful!", "error");
+      showToast("Question deletion unsuccessful. Please try again!", "error");
       console.log(err);
     }
   };
@@ -117,7 +120,38 @@ const QuestionsTable = ({ filteredQuestions, setFilteredQuestions }) => {
     setDeleteModalOpen(false);
     setQuestionIdToDelete(null);
   };
-  
+
+  const renderActionsColumnIfMaintainer = (question) => {
+    if (!user.isMaintainer) return null;
+    return (
+      <StyledTableCell>
+        <Stack direction="row" spacing={1}>
+          <Tooltip title="Edit">
+            <IconButton
+              className="edit-icon"
+              color="primary"
+              aria-label="edit"
+              size="large"
+              onClick={() => navigate(`/questions/${question.question_id}/edit`)}
+            >
+              <EditIcon fontSize="inherit" />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Delete">
+            <IconButton
+              className="delete-icon"
+              color="error"
+              aria-label="delete"
+              size="large"
+              onClick={() => handleDeleteClick(question.question_id)}
+            >
+              <DeleteIcon fontSize="inherit" />
+            </IconButton>
+          </Tooltip>
+        </Stack>
+      </StyledTableCell>
+    );
+  };  
 
   return (
     <div style={{ display: "flex", justifyContent: "center", height: "auto" }}>
@@ -125,10 +159,10 @@ const QuestionsTable = ({ filteredQuestions, setFilteredQuestions }) => {
         <Table sx={{ minWidth: 650 }} stickyHeader aria-label="simple table" >
           <TableHead>
             <TableRow>
-            <StyledTableCell>Difficulty</StyledTableCell>
-            <StyledTableCell>Title</StyledTableCell>
-            <StyledTableCell>Category</StyledTableCell>
-            <StyledTableCell>Actions</StyledTableCell>
+              <StyledTableCell>Difficulty</StyledTableCell>
+              <StyledTableCell>Title</StyledTableCell>
+              <StyledTableCell>Category</StyledTableCell>
+              {(user.isMaintainer) ? <StyledTableCell>Actions</StyledTableCell> : null}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -159,32 +193,7 @@ const QuestionsTable = ({ filteredQuestions, setFilteredQuestions }) => {
                     ))}
                   </Stack>
                 </StyledTableCell>
-                <TableCell>
-                  <Stack direction="row" spacing={1}>
-                    <Tooltip title="Edit">
-                      <IconButton
-                        className="edit-icon"
-                        color="primary"
-                        aria-label="edit"
-                        size="large"
-                        onClick={() => navigate(`/questions/${question.question_id}/edit`)}
-                      >
-                        <EditIcon fontSize="inherit"/>
-                    </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Delete">
-                      <IconButton
-                      className="delete-icon"
-                        color="error"
-                        aria-label="delete"
-                        size="large" 
-                        onClick={() => handleDeleteClick(question.question_id)}
-                      >
-                        <DeleteIcon fontSize="inherit"/>
-                      </IconButton>
-                    </Tooltip>
-                  </Stack>
-                </TableCell>
+                {renderActionsColumnIfMaintainer(question)}
               </StyledTableRow>
             ))}
           </TableBody>
