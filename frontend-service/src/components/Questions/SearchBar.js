@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
+import AddIcon from '@mui/icons-material/Add';
+import Button from '@mui/material/Button';
 import Chip from "@mui/material/Chip";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -20,7 +23,7 @@ const SearchInput = ({ searchQuery, setSearchQuery, handleSearchOnEnter, filterD
       type="search"
       variant="outlined"
       size="small"
-      style={{ width: "100%" }}
+      style={{ width: "50%" }}
       value={searchQuery}
       onChange={(event) => setSearchQuery(event.target.value)}
       onKeyUp={handleSearchOnEnter}
@@ -62,7 +65,7 @@ const CategoryInput = ({ categoryChipValue, setCategoryChipValue, handleAddChip 
       fullWidth
       variant="outlined"
       size="small"
-      style={{ width: "50%" }}
+      style={{ width: "40%" }}
       label={"Categories"}
       value={categoryChipValue}
       helperText={"Press enter to add a new category"}
@@ -94,6 +97,17 @@ const CategoryChips = ({ categoriesQuery, handleDeleteChip }) => {
         />
       ))}
     </div>
+  );
+};
+
+const AddButton = () => {
+  const navigate = useNavigate();
+  const handleAddClick = () => navigate(`/questions/new`);
+  
+  return (
+    <Button variant="contained" startIcon={<AddIcon />} onClick={handleAddClick}>
+      Add
+    </Button>
   );
 };
 
@@ -165,8 +179,9 @@ const SearchBar = ({
         direction="row"
         spacing={1}
         alignItems="flex-start"
-        width={"70%"}
+        justifyContent="space-between"
       >
+        <Stack direction="row" spacing={1} alignItems="flex-start" width={"70%"}>
         <SearchInput
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
@@ -182,6 +197,8 @@ const SearchBar = ({
           setCategoryChipValue={setCategoryChipValue}
           handleAddChip={handleAddChip}
         />
+        </Stack>
+        <AddButton />
       </Stack>
       <CategoryChips
         categoriesQuery={categoriesQuery}
