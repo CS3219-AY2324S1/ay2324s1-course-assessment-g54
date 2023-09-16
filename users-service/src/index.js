@@ -15,6 +15,7 @@ app.use(express.json());
 if (process.env.NODE_ENV === "development") app.use(morgan("tiny"));
 
 app.get("/test", (res, rep)=> {
+  console.log("connected!")
   rep.send("hi testing");
 })
 
