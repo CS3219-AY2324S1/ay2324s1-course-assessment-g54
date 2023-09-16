@@ -10,10 +10,13 @@ const DeleteAccountCard = () => {
   const navigate = useNavigate();
   const CONFIRM_DELETE_TEXT = "DELETE"
 
-  const [confirmDeleteInput, setConfirmDeleteInput] = useState("");
+  const [isConfirmed, setIsConfirmed] = useState(false);
+  const handleConfirmDeleteText = (event) => {
+    setIsConfirmed(event.target.value == CONFIRM_DELETE_TEXT)
+  }
 
   const handleDeleteAccount = async () => {
-    if (confirmDeleteInput == CONFIRM_DELETE_TEXT) {
+    if (isConfirmed) {
       const token = window.localStorage.getItem("token");
       try {
         await axios.delete(
@@ -32,8 +35,11 @@ const DeleteAccountCard = () => {
     <Box display="flex" justifyContent="center" flexDirection="column" >
       <Typography mb={3}>Deleting your account will remove all your information from our database. This action cannot be undone.</Typography>
       <Typography>Please type in "{CONFIRM_DELETE_TEXT}" to confirm.</Typography>
-      <TextField onChange={(e) => setConfirmDeleteInput(e.target.value)} />
-      <Button onClick={handleDeleteAccount} variant="contained" color="error" sx={{ mt: 3 }}>Yes, I want to delete my account</Button>
+      <TextField onChange={handleConfirmDeleteText} />
+      {isConfirmed
+        ? <Button onClick={handleDeleteAccount} variant="contained" color="error" sx={{ mt: 3 }}>Yes, I want to delete my account</Button>
+        : <Button disabled onClick={handleDeleteAccount} variant="contained" color="error" sx={{ mt: 3 }}>Yes, I want to delete my account</Button>
+      }
     </Box>
   )
 }
