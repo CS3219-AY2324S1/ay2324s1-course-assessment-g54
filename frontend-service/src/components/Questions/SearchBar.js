@@ -14,6 +14,8 @@ import FormControl from '@mui/material/FormControl';
 import MenuItem from "@mui/material/MenuItem";
 import Stack from "@mui/material/Stack";
 
+import { useUser } from "../../contexts/UserContext";
+
 const SearchInput = ({ searchQuery, setSearchQuery, handleSearchOnEnter, filterData }) => {
   return (
     <TextField
@@ -102,7 +104,10 @@ const CategoryChips = ({ categoriesQuery, handleDeleteChip }) => {
 
 const AddButton = () => {
   const navigate = useNavigate();
+  const user = useUser();
   const handleAddClick = () => navigate(`/questions/new`);
+
+  if (!user.isMaintainer) return null;
   
   return (
     <Button variant="contained" startIcon={<AddIcon />} onClick={handleAddClick}>
