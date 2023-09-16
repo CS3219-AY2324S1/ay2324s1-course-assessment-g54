@@ -77,13 +77,11 @@ const Questions = () => {
             categoriesQuery={categoriesQuery}
             setCategoriesQuery={setCategoriesQuery}
           />
-          <div>
-            <QuestionsTable
-              filteredQuestions={filteredData}
-              setFilteredQuestions={setFilteredData}
-            />
-          </div>
-      </Stack>
+          <QuestionsTable
+            filteredQuestions={filteredData}
+            setFilteredQuestions={setFilteredData}
+          />
+        </Stack>
       </div>
     </div>
   );
