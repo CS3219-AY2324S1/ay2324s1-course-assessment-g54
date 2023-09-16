@@ -22,6 +22,9 @@ services:
       - 3001:3001
     depends_on:
       - mongodb
+    environment:
+      PORT: 3001
+      USERS_SERVICE_HOST: http://users-service:3002
     volumes:
       - ./question-service:/app
     command: yarn start
