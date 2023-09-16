@@ -16,6 +16,7 @@ import Typography from "@mui/material/Typography";
 import SettingsModal from "./SettingsModal";
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/ExitToApp';
+import AvatarWithBadge from "./AvatarWithBadge";
 
 const NavBar = () => {
   const navigate = useNavigate();
@@ -49,11 +50,10 @@ const NavBar = () => {
             }}
           >
             <Stack padding={3} spacing={1} alignItems="center">
-              <Avatar
-                sx={{ width: 54, height: 54 }}
-                alt={user.name}
-                src="/static/images/avatar/2.jpg"
-              />
+              {user.isMaintainer
+              ? <AvatarWithBadge/>  
+              : <Avatar sx={{ width: 54, height: 54 }} alt={user.name} src="/static/images/avatar/2.jpg" />
+ }
               <Typography variant="body1" align="center">
                 {user.name}
               </Typography>
