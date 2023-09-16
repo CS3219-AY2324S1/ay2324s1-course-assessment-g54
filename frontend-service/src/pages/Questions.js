@@ -14,13 +14,19 @@ import Typography from "@mui/material/Typography";
 
 const Questions = () => {
   const [questions, setQuestions] = useState([]);
+  const token = window.localStorage.getItem("token");
+  const header = {
+    headers: {
+      'Authorization': `${token}` 
+  }};
 
   useEffect(() => {
     // Define a function to fetch data from the API
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3001/questions/"
+          "http://localhost:3001/questions/",
+          header
         );
 
         if (response.status === 200) {

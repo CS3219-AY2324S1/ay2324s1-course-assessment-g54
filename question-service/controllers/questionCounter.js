@@ -1,27 +1,23 @@
 import { Counter } from "../model/counter.js";
 import { Question } from "../model/question.js";
 import sampleQuestions from "../routes/sampleQuestions.js";
+import { populateDatabase } from "./createQuestion.js";
 
 export async function createQuestionCounter() {
-    const exist = await Counter.exists({_id: "question"}); 
-    if (exist != null) {
-        console.log("qCounter already exists")
-    } else {
-        const qCounter = new Counter({_id: "question", seq:1});
+    const idName = "question";
+    const startingSeq = 1;
 
+    const exist = await Counter.exists({_id: idName}); 
+    if (exist != null) {
+        console.log(`${idName} counter already exists`)
+    } else {
+        const counter = new Counter({_id: idName, seq: startingSeq});
         try {
-            const createQCounter = await qCounter.save();
-            // populate the database (for now)
-            async function tempPopulateDatabase(q) {
-                const id = await getNextQuestionId();
-                const newQ = new Question({
-                    question_id: id,
-                    ...q
-                });
-                await newQ.save();
-            }
-            sampleQuestions.forEach(tempPopulateDatabase);
-            return createQCounter;
+            const createdCounter = await counter.save();
+            
+            await sampleQuestions.forEach(populateDatabase); // populate the database (for now)
+
+            return createdCounter;
         } catch (error) {
             throw error;
         }
@@ -29,13 +25,13 @@ export async function createQuestionCounter() {
 }
 
 export async function getNextQuestionId() {
+    const idName = "question";
     try{
-        const qCounter = await Counter.findOneAndUpdate(
-            {_id: "question"},
+        const counter = await Counter.findOneAndUpdate(
+            {_id: idName},
             { $inc: { seq: 1 } }
-        )
-        console.log(qCounter);
-        return qCounter.seq;
+        );
+        return counter.seq;
     } catch (error) {
         return error;
     }

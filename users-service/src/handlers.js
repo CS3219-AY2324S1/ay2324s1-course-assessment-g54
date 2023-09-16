@@ -34,7 +34,7 @@ export const handleDeleteProfile = async (request, response) => {
  * @returns { Promise<void> }
  */
 export const handleGetProfile = async (request, response) => {
-  if (!request.headers.authorization) return res.status(401).send();
+  if (!request.headers.authorization) return response.status(401).send();
   const jsonWebToken = request.headers.authorization;
   let id;
   try {
