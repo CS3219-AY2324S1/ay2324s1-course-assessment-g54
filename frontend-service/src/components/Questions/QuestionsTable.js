@@ -155,7 +155,7 @@ const QuestionsTable = ({ filteredQuestions, setFilteredQuestions }) => {
 
   return (
     <div style={{ display: "flex", justifyContent: "center", height: "auto" }}>
-      <TableContainer component={Paper} style={{ marginTop: "5px", maxHeight: 500 }}>
+      <TableContainer component={Paper} style={{ marginTop: "5px", maxHeight: 400 }}>
         <Table sx={{ minWidth: 650 }} stickyHeader aria-label="simple table" >
           <TableHead>
             <TableRow>
