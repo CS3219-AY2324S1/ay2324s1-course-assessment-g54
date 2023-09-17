@@ -61,29 +61,31 @@ const Questions = () => {
   return (
     <>
       <NavBar />
-      <Box display="flex" flexDirection="column" alignItems="center">
-        <Stack spacing={2} style={{ width: "80%" }}>
-          <Typography
-            variant="h3"
-            color="initial"
-            style={{ marginTop: "10px" }}
-          >
-            Questions
-          </Typography>
-          <SearchBar
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            filterData={filterData}
-            difficultyQuery={difficultyQuery}
-            setDifficultyQuery={setDifficultyQuery}
-            categoriesQuery={categoriesQuery}
-            setCategoriesQuery={setCategoriesQuery}
-          />
-          <QuestionsTable
-            filteredQuestions={filteredData}
-            setFilteredQuestions={setFilteredData}
-          />
-        </Stack>
+      <Box height="calc(100vh - 64px)" width="100vw" bgcolor="whitesmoke">
+        <Box display="flex" flexDirection="column" alignItems="center">
+          <Stack spacing={2} style={{ width: "80%" }}>
+            <Typography
+              variant="h3"
+              color="initial"
+              style={{ marginTop: "10px" }}
+            >
+              Questions
+            </Typography>
+            <SearchBar
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              filterData={filterData}
+              difficultyQuery={difficultyQuery}
+              setDifficultyQuery={setDifficultyQuery}
+              categoriesQuery={categoriesQuery}
+              setCategoriesQuery={setCategoriesQuery}
+            />
+            <QuestionsTable
+              filteredQuestions={filteredData}
+              setFilteredQuestions={setFilteredData}
+            />
+          </Stack>
+        </Box>
       </Box>
     </>
   );
