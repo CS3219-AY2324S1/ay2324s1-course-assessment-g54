@@ -13,11 +13,16 @@ const Questions = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [difficultyQuery, setDifficultyQuery] = useState("");
   const [categoriesQuery, setCategoriesQuery] = useState([]);
-
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions/`);
+        const url = `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions/`;
+        const token = window.localStorage.getItem("token");
+        const header = {
+          headers: { Authorization: token },
+        };
+        const response = await axios.get(url, header);
 
         if (response.status === 200) {
           setFilteredData(response.data)
@@ -34,7 +39,6 @@ const Questions = () => {
 
   const filterData = async () => {
     try {
-      const url = `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions/`;
       const params = {};
       if (searchQuery) {
         params.title = searchQuery;
@@ -50,7 +54,13 @@ const Questions = () => {
         });
       }
 
-      const response = await axios.get(url, { params: params });
+      const url = `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions`;
+      const token = window.localStorage.getItem("token");
+      const header = {
+        headers: { Authorization: token },
+      };
+
+      const response = await axios.get(url, { params: params }, header);
       setFilteredData(response.data);
     } catch (err) {
       console.log(err);

@@ -1,8 +1,11 @@
 {
-    "question_id": 1,
     "title": "Reverse String",
     "complexity": "easy",
-    "categories": ["Two Pointers", "String", "Algorithms"],
+    "categories": [
+        "Two Pointers",
+        "String",
+        "Algorithms"
+    ],
     "link": "https://leetcode.com/problems/reverse-string/",
-    "description": "Write a function that reverses a string. The input string is given as an array of characters `s`.<br><br>You must do this by modifying the input array [in-place](https://en.wikipedia.org/wiki/In-place_algorithm) with `O(1)` extra memory.<br><br><br><br>**Example 1:** <br>**Input:**  s = [\"h\",\"e\",\"l\",\"l\",\"o\"]<br>**Output:**  [\"o\",\"l\",\"l\",\"e\",\"h\"]<br><br>**Example 2:** <br>**Input:**  s = [\"H\",\"a\",\"n\",\"n\",\"a\",\"h\"]<br>**Output:**  [\"h\",\"a\",\"n\",\"n\",\"a\",\"H\"]<br><br><br>**Constraints:** <br>* `1 <= s.length <= 105`<br>* `s[i]` is a [printable ascii character](https://en.wikipedia.org/wiki/ASCII#Printable_characters).<br><br>"
+    "description": "Write a function that reverses a string. The input string is given as an array of characters `s`.\n\nYou must do this by modifying the input array [in-place](https://en.wikipedia.org/wiki/In-place_algorithm) with `O(1)` extra memory.\n\n**Example 1:**\n**Input:** s = [\"h\",\"e\",\"l\",\"l\",\"o\"]\n**Output:** [\"o\",\"l\",\"l\",\"e\",\"h\"]\n\n**Example 2:**\n**Input:** s = [\"H\",\"a\",\"n\",\"n\",\"a\",\"h\"]\n**Output:** [\"h\",\"a\",\"n\",\"n\",\"a\",\"H\"]\n\n**Constraints:**\n* `1 <= s.length <= 105`\n* `s[i]` is a [printable ascii character](https://en.wikipedia.org/wiki/ASCII#Printable_characters).\n\n"
 }

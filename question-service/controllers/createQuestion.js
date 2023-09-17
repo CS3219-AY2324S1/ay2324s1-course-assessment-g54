@@ -3,21 +3,20 @@ import { filterQuestion } from "./common.js";
 import { getNextQuestionId } from "./questionCounter.js";
 
 export async function createQuestion(req, res) {
-    const id = await getNextQuestionId();
-
-    const question = new Question({
-        question_id: id,
-        title: req.body.title,
-        categories: req.body.categories,
-        complexity: req.body.complexity,
-        link: req.body.link,
-        description: req.body.description
-    });
-
     try {
-        const createdQuestion = await question.save();
+        const createdQuestion = await populateDatabase(req.body);
         return res.send(filterQuestion(createdQuestion));
     } catch (error) {
         return res.status(400).send(error.message);
     }
+}
+
+export async function populateDatabase(q) {
+    const id = await getNextQuestionId();
+    const newQ = new Question({
+        question_id: id,
+        ...q
+    });
+    await newQ.save();
+    return newQ;
 }

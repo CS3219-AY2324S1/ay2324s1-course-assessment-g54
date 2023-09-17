@@ -43,9 +43,10 @@ const EditQuestion = () => {
     const getQuestion = async () => {
       const url = `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions/${id}`;
       const token = window.localStorage.getItem("token");
-      const response = await axios.get(url, {
+      const header = {
         headers: { Authorization: token },
-      });
+      };
+      const response = await axios.get(url, header);
       if (response.status !== 200) return navigate("/questions");
       const { categories, complexity, description, title } = response.data;
       setTitle(title);
@@ -69,12 +70,17 @@ const EditQuestion = () => {
         return;
       }
       const url = `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions/${id}`;
+      const token = window.localStorage.getItem("token");
+      const header = {
+        headers: { Authorization: token },
+      };
       const response = await axios.put(url, {
         title,
         complexity,
         categories,
         description,
-      });
+      },  header
+      );
       setAlertMessage(
         response.status === 200
           ? "The question has been saved."

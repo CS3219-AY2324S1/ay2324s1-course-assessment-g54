@@ -53,6 +53,11 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 const QuestionsTable = ({ filteredQuestions, setFilteredQuestions }) => {
   const navigate = useNavigate();
   const user = useUser();
+  const token = window.localStorage.getItem("token");
+  const header = {
+    headers: {
+      'Authorization': `${token}` 
+  }};
 
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [questionIdToDelete, setQuestionIdToDelete] = useState(null);
@@ -103,7 +108,7 @@ const QuestionsTable = ({ filteredQuestions, setFilteredQuestions }) => {
   const handleConfirmDelete = async () => {
     try {
       const url = `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions/${questionIdToDelete}`;
-      const response = await axios.delete(url);
+      const response = await axios.delete(url, header);
       
       const filtered = filteredQuestions.filter(q => q.question_id !== questionIdToDelete)
       setFilteredQuestions(filtered)

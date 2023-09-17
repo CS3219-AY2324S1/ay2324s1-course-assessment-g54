@@ -1,8 +1,13 @@
 {
-    "question_id": 9,
     "title": "Course Schedule",
     "complexity": "medium",
-    "categories": ["Depth-First Search", "Breadth-First Search", "Graph", "Topological Sort", "Algorithms"],
+    "categories": [
+        "Depth-First Search",
+        "Breadth-First Search",
+        "Graph",
+        "Topological Sort",
+        "Algorithms"
+    ],
     "link": "https://leetcode.com/problems/course-schedule/",
-    "description": "There are a total of `numCourses` courses you have to take, labeled from `0` to `numCourses - 1`. You are given an array `prerequisites` where `prerequisites[i] = [ai, bi]` indicates that you **must** take course `bi` first if you want to take course `ai`.<br><br>* For example, the pair `[0, 1]`, indicates that to take course `0` you have to first take course `1`.<br><br>Return `true` if you can finish all courses. Otherwise, return `false`.<br><br><br><br>**Example 1:** <br>**Input:**  numCourses = 2, prerequisites = [[1,0]]<br>**Output:**  true<br>**Explanation:**  There are a total of 2 courses to take. <br>To take course 1 you should have finished course 0. So it is possible.<br><br>**Example 2:** <br>**Input:**  numCourses = 2, prerequisites = [[1,0],[0,1]]<br>**Output:**  false<br>**Explanation:**  There are a total of 2 courses to take. <br>To take course 1 you should have finished course 0, and to take course 0 you should also have finished course 1. So it is impossible.<br><br><br>**Constraints:** <br>* `1 <= numCourses <= 2000`<br>* `0 <= prerequisites.length <= 5000`<br>* `prerequisites[i].length == 2`<br>* `0 <= ai, bi < numCourses`<br>* All the pairs prerequisites[i] are **unique**.<br><br>"
+    "description": "There are a total of `numCourses` courses you have to take, labeled from `0` to `numCourses - 1`. You are given an array `prerequisites` where `prerequisites[i] = [ai, bi]` indicates that you **must** take course `bi` first if you want to take course `ai`.\n\n* For example, the pair `[0, 1]`, indicates that to take course `0` you have to first take course `1`.\n\nReturn `true` if you can finish all courses. Otherwise, return `false`.\n\n**Example 1:**\n**Input:** numCourses = 2, prerequisites = [[1,0]]\n**Output:** true\n**Explanation:** There are a total of 2 courses to take. \nTo take course 1 you should have finished course 0. So it is possible.\n\n**Example 2:**\n**Input:** numCourses = 2, prerequisites = [[1,0],[0,1]]\n**Output:** false\n**Explanation:** There are a total of 2 courses to take. \nTo take course 1 you should have finished course 0, and to take course 0 you should also have finished course 1. So it is impossible.\n\n**Constraints:**\n* `1 <= numCourses <= 2000`\n* `0 <= prerequisites.length <= 5000`\n* `prerequisites[i].length == 2`\n* `0 <= ai, bi < numCourses`\n* All the pairs prerequisites[i] are **unique**.\n\n"
 }
