@@ -13,22 +13,25 @@ import Stack from "@mui/material/Stack";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import EditProfileModal from "./EditProfileModal";
+import SettingsModal from "./SettingsModal";
+import SettingsIcon from '@mui/icons-material/Settings';
+import LogoutIcon from '@mui/icons-material/ExitToApp';
+import AvatarWithBadge from "./AvatarWithBadge";
 
 const NavBar = () => {
   const navigate = useNavigate();
   const user = useUser();
 
   const [anchorElement, setAnchorElement] = useState(null);
-  const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState(false);
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
 
   const handleOpenUserMenu = (event) => setAnchorElement(event.currentTarget);
   const handleCloseUserMenu = () => setAnchorElement(null);
-  const handleOpenModal = () => setIsEditProfileModalOpen(true);
+  const handleOpenModal = () => setIsSettingsModalOpen(true);
 
   return (
     <AppBar position="static">
-      <EditProfileModal isModalOpen={isEditProfileModalOpen} setIsModalOpen={setIsEditProfileModalOpen}/>
+      <SettingsModal isModalOpen={isSettingsModalOpen} setIsModalOpen={setIsSettingsModalOpen}/>
       <Toolbar disableGutters sx={{ paddingX: 1.5 }}>
         <Box sx={{ flexGrow: 1 }} />
         <Box sx={{ flexGrow: 0 }}>
@@ -47,11 +50,10 @@ const NavBar = () => {
             }}
           >
             <Stack padding={3} spacing={1} alignItems="center">
-              <Avatar
-                sx={{ width: 54, height: 54 }}
-                alt={user.name}
-                src="/static/images/avatar/2.jpg"
-              />
+              {user.isMaintainer
+              ? <AvatarWithBadge/>  
+              : <Avatar sx={{ width: 54, height: 54 }} alt={user.name} src="/static/images/avatar/2.jpg" />
+ }
               <Typography variant="body1" align="center">
                 {user.name}
               </Typography>
@@ -65,8 +67,9 @@ const NavBar = () => {
                 fullWidth
                 size="small"
                 onClick={handleOpenModal}
+                startIcon={<SettingsIcon/>}
               >
-                Edit Profile
+                Settings
               </Button>
               <Button
                 variant="contained"
@@ -77,6 +80,7 @@ const NavBar = () => {
                   window.localStorage.removeItem("token");
                   navigate("/login");
                 }}
+                startIcon={<LogoutIcon/>}
               >
                 Sign Out
               </Button>
