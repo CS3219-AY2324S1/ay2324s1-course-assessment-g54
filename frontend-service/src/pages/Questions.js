@@ -13,22 +13,18 @@ const Questions = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [difficultyQuery, setDifficultyQuery] = useState("");
   const [categoriesQuery, setCategoriesQuery] = useState([]);
-  
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const url = `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions/`;
         const token = window.localStorage.getItem("token");
-        const header = {
+        const response = await axios.get(url, {
           headers: { Authorization: token },
-        };
-        const response = await axios.get(url, header);
-
-        if (response.status === 200) {
-          setFilteredData(response.data)
-        } else {
-          console.error("Failed to fetch questions.");
-        }
+        });
+        if (response.status !== 200)
+          return console.error("Failed to fetch questions.");
+        setFilteredData(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -40,42 +36,43 @@ const Questions = () => {
   const filterData = async () => {
     try {
       const params = {};
-      if (searchQuery) {
-        params.title = searchQuery;
-      }
-
-      if (difficultyQuery) {
-        params.complexity = difficultyQuery;
-      }
-
-      if (categoriesQuery && categoriesQuery.length > 0) {
+      if (searchQuery) params.title = searchQuery;
+      if (difficultyQuery) params.complexity = difficultyQuery;
+      if (categoriesQuery && categoriesQuery.length > 0)
         categoriesQuery.forEach((category, index) => {
           params[`categories[${index}]`] = category;
         });
-      }
 
       const url = `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions`;
       const token = window.localStorage.getItem("token");
-      const header = {
+      const response = await axios.get(url, {
+        params,
         headers: { Authorization: token },
-      };
-
-      const response = await axios.get(url, { params: params }, header);
+      });
+      if (response.status !== 200)
+        return console.error("Failed to fetch questions.");
       setFilteredData(response.data);
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      console.log(error);
     }
-  }
+  };
 
   return (
     <div>
       <NavBar />
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-        <Stack
-          spacing={2}
-          style={{ width: "80%" }}
-        >
-          <Typography variant="h3" color="initial" style={{ marginTop: "10px" }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <Stack spacing={2} style={{ width: "80%" }}>
+          <Typography
+            variant="h3"
+            color="initial"
+            style={{ marginTop: "10px" }}
+          >
             Questions
           </Typography>
           <SearchBar
