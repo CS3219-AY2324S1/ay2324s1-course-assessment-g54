@@ -2,83 +2,92 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 
 import NavBar from "../components/NavBar";
+import QuestionsTable from "../components/Questions/QuestionsTable";
+import SearchBar from "../components/Questions/SearchBar";
 
-import Paper from "@mui/material/Paper";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
+import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import Stack from "@mui/material/Stack";
 
 const Questions = () => {
-  const [questions, setQuestions] = useState([]);
-  const token = window.localStorage.getItem("token");
-  const header = {
-    headers: {
-      'Authorization': `${token}` 
-  }};
+  const [filteredData, setFilteredData] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [difficultyQuery, setDifficultyQuery] = useState("");
+  const [categoriesQuery, setCategoriesQuery] = useState([]);
 
   useEffect(() => {
-    // Define a function to fetch data from the API
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:3001/questions/",
-          header
-        );
-
-        if (response.status === 200) {
-          setQuestions(response.data);
-        } else {
-          console.error("Failed to fetch questions.");
-        }
+        const url = `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions/`;
+        const token = window.localStorage.getItem("token");
+        const response = await axios.get(url, {
+          headers: { Authorization: token },
+        });
+        if (response.status !== 200)
+          return console.error("Failed to fetch questions.");
+        setFilteredData(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
 
-    // Call the fetchData function when the component mounts
     fetchData();
-  }, []); // The empty dependency array means this effect will run once when the component mounts
+  }, []);
+
+  const filterData = async () => {
+    try {
+      const params = {};
+      if (searchQuery) params.title = searchQuery;
+      if (difficultyQuery) params.complexity = difficultyQuery;
+      if (categoriesQuery && categoriesQuery.length > 0)
+        categoriesQuery.forEach((category, index) => {
+          params[`categories[${index}]`] = category;
+        });
+
+      const url = `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions`;
+      const token = window.localStorage.getItem("token");
+      const response = await axios.get(url, {
+        params,
+        headers: { Authorization: token },
+      });
+      if (response.status !== 200)
+        return console.error("Failed to fetch questions.");
+      setFilteredData(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
-    <div>
+    <>
       <NavBar />
-      <Typography variant="h3" color="initial">
-        Questions
-      </Typography>
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell>Title</TableCell>
-              <TableCell>Category</TableCell>
-              <TableCell>Complexity</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {questions.map((question) => (
-              <TableRow
-                key={question.question_id}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              >
-                <TableCell component="th" scope="row">
-                  {question.title}
-                </TableCell>
-                <TableCell>
-                  {question.categories.map((cat) => (
-                    <div>{cat}</div>
-                  ))}
-                </TableCell>
-                <TableCell>{question.complexity}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </div>
+      <Box height="calc(100vh - 64px)" width="100vw" bgcolor="whitesmoke">
+        <Box display="flex" flexDirection="column" alignItems="center">
+          <Stack spacing={2} style={{ width: "80%" }}>
+            <Typography
+              variant="h3"
+              color="initial"
+              style={{ marginTop: "10px" }}
+            >
+              Questions
+            </Typography>
+            <SearchBar
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              filterData={filterData}
+              difficultyQuery={difficultyQuery}
+              setDifficultyQuery={setDifficultyQuery}
+              categoriesQuery={categoriesQuery}
+              setCategoriesQuery={setCategoriesQuery}
+            />
+            <QuestionsTable
+              filteredQuestions={filteredData}
+              setFilteredQuestions={setFilteredData}
+            />
+          </Stack>
+        </Box>
+      </Box>
+    </>
   );
 };
 export default Questions;
