@@ -69,6 +69,7 @@ const CategoryInput = ({ categoryChipValue, setCategoryChipValue, handleAddChip 
       size="small"
       style={{ width: "40%" }}
       label={"Categories"}
+      id="Categories"
       value={categoryChipValue}
       helperText={"Press enter to add a new category"}
       onChange={(event) => setCategoryChipValue(event.target.value)}
@@ -146,8 +147,12 @@ const SearchBar = ({
   };
 
   const handleAddChip = () => {
-    const valueToBeAdded = categoryChipValue.trim();
-    if (valueToBeAdded === "") return;
+    const valueToBeAdded = categoryChipValue
+    .trim()
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");;
+    if (valueToBeAdded === "") return;    
     const isValueAlreadyAdded = categoriesQuery
       .map((chip) => chip.toLowerCase())
       .includes(categoryChipValue.toLowerCase());
