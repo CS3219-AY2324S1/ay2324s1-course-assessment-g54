@@ -14,7 +14,7 @@ function queryBuilder(query) {
     }
 
     if (query.categories) {
-        finalQuery.categories = { "$all" : query.categories.map(t => new RegExp(t))}; 
+        finalQuery.categories = { "$all" : query.categories.map(t => new RegExp(t, "i"))}; 
     }
     return finalQuery;
 }
