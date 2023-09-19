@@ -85,7 +85,6 @@ const CategoryChips = ({ categoriesQuery, handleDeleteChip }) => {
   return (
     <div
       style={{
-        maxHeight: "50px",
         overflowY: "auto",
         wordWrap: "break-word",
       }}
@@ -150,7 +149,7 @@ const SearchBar = ({
     const valueToBeAdded = categoryChipValue
     .trim()
     .split(" ")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLocaleLowerCase())
     .join(" ");;
     if (valueToBeAdded === "") return;    
     const isValueAlreadyAdded = categoriesQuery
@@ -184,7 +183,7 @@ const SearchBar = ({
   }, [categoriesQuery, categoriesChanged, filterData]);
 
   return (
-    <div style={{ height: "100px" }}>
+    <div>
       <Stack
         direction="row"
         spacing={1}
