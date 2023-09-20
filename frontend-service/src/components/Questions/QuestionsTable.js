@@ -19,6 +19,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 
+import NoResults from "../../assets/NoResults.svg"
 import ConfirmationModal from "../ConfirmationModal";
 import AcknowledgementToast from "../AcknowledgementToast";
 import { useUser } from "../../contexts/UserContext";
@@ -112,7 +113,13 @@ const QuestionsTable = ({ filteredQuestions, setFilteredQuestions }) => {
 
 
   if (filteredQuestions.length === 0) {
-    return <Typography>No matching results</Typography>;
+    return (
+      <div style={{ textAlign: "center" }}>
+        <img src={NoResults} alt="No Results Illustration" style={{ maxWidth: "100%" }} />
+        <Typography variant="h6" color="textSecondary" style={{ fontSize: '24px' }}>Oops! No matching questions found.</Typography>
+      </div>
+    );
+
   }
 
   const handleDeleteClick = (questionId) => {
