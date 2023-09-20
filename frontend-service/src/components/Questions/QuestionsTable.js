@@ -29,7 +29,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     color: theme.palette.common.white,
   },
   [`&.${tableCellClasses.body}`]: {
-    fontSize: 14,
+    fontSize: 14
   },
 }));
 
@@ -64,11 +64,32 @@ const QuestionsTable = ({ filteredQuestions, setFilteredQuestions }) => {
   const [toastOpen, setToastOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastType, setToastType] = useState("info");
-
+  const [tableHeight, setTableHeight] = useState("");
+  const [tableWidth, setTableWidth] = useState("");
 
   useEffect(() => {
     setFilteredQuestions(filteredQuestions);
   }, [filteredQuestions, setFilteredQuestions]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const windowHeight = window.innerHeight;
+      const newHeight = windowHeight * 0.65;
+      setTableHeight(`${newHeight}px`);
+
+      const windowWidth = window.innerWidth;
+      const newWidth = windowWidth * 0.8;
+      setTableWidth(`${newWidth}px`);
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   const navigateToQuestion = (e, question) => {
     const isEditIcon = e.target.closest(".edit-icon");
@@ -160,14 +181,14 @@ const QuestionsTable = ({ filteredQuestions, setFilteredQuestions }) => {
 
   return (
     <div style={{ display: "flex", justifyContent: "center", height: "auto" }}>
-      <TableContainer component={Paper} style={{ marginTop: "5px", maxHeight: 400 }}>
-        <Table sx={{ minWidth: 650 }} stickyHeader aria-label="simple table" >
+      <TableContainer component={Paper} style={{ marginTop: "5px", maxHeight: tableHeight, maxWidth: tableWidth, overflowY: "auto" }}>
+        <Table stickyHeader aria-label="simple table" >
           <TableHead>
             <TableRow>
-              <StyledTableCell>Difficulty</StyledTableCell>
-              <StyledTableCell>Title</StyledTableCell>
-              <StyledTableCell>Category</StyledTableCell>
-              {(user.isMaintainer) ? <StyledTableCell>Actions</StyledTableCell> : null}
+              <StyledTableCell style={{ width: { xs: "5%"} }}>Difficulty</StyledTableCell>
+              <StyledTableCell style={{ width: { xs: "5%", md: "20%", lg: "40%"} }}>Title</StyledTableCell>
+              <StyledTableCell style={{ width: { xs: "5%", md: "20%", lg: "50%"} }}>Category</StyledTableCell>
+              {(user.isMaintainer) ? <StyledTableCell width="10%">Actions</StyledTableCell> : null}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -188,12 +209,13 @@ const QuestionsTable = ({ filteredQuestions, setFilteredQuestions }) => {
                   {question.title}
                 </StyledTableCell>
                 <StyledTableCell>
-                  <Stack direction="row" spacing={1}>
+                  <Stack direction="row" spacing={1} sx={{ flexWrap: "wrap" }}>
                     {question.categories.map((cat) => (
                       <Chip
                         key={cat}
                         label={cat}
                         variant="outlined"
+                        style={{margin: "2px"}}
                       />
                     ))}
                   </Stack>
