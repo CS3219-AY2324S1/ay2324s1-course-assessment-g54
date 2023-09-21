@@ -29,6 +29,9 @@ docker exec -it question-service sh
 docker exec -it users-service sh
 ```
 ```bash
+docker exec -it matchmaking-service sh
+```
+```bash
 docker exec -it postgresql sh
 ```
 
