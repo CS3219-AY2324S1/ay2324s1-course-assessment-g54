@@ -1,4 +1,5 @@
 import { WebSocketServer } from "ws";
+import { getUserFromToken } from "./authorization";
 
 const wss = new WebSocketServer({ port: process.env.PORT });
 const authenticationUrl = `${process.env.USERS_SERVICE_HOST}/profile`;
@@ -12,12 +13,7 @@ wss.on("connection", async (ws, request) => {
 
   let user = null;
   try {
-    const authResponse = await fetch(authenticationUrl, {
-      method: "GET",
-      headers: { Authorization: token },
-    });
-    if (authResponse.status !== 200) throw new Error(authResponse.body);
-    user = await authResponse.json();
+    user = await getUserFromToken(token);
     if (!user) {
       console.log("Invalid token found in authorization header.");
       return ws.close(1008, "Unauthorized");
