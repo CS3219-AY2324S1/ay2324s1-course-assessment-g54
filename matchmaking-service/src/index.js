@@ -1,8 +1,13 @@
 import { WebSocketServer } from "ws";
-import { getUserFromToken } from "./authorization";
+import { getUserFromToken } from "./authorization.js";
+import {
+  enqueueFindMatch,
+  subscribeMatchResponse,
+  unsubscribeMatchResponse,
+} from "./rabbitmq.js";
 
 const wss = new WebSocketServer({ port: process.env.PORT });
-const authenticationUrl = `${process.env.USERS_SERVICE_HOST}/profile`;
+const difficulties = ["easy", "medium", "hard"];
 
 wss.on("connection", async (ws, request) => {
   const token = request.headers.authorization;
@@ -23,5 +28,30 @@ wss.on("connection", async (ws, request) => {
     return ws.close(1011, "Internal Server Error");
   }
 
-  return ws.close(1000);
+  const urlSearchParams = new URLSearchParams(request.url.substring(1));
+  const difficulty = urlSearchParams.get("difficulty");
+  if (!difficulty || !difficulties.includes(difficulty.toLowerCase())) {
+    console.log("Difficulty is missing from search params or is incorrect.");
+    return ws.close(1000);
+  }
+
+  const matchResponseHandler = async (response) => {
+    console.log(response);
+    ws.close(1000, "Match has been found!");
+    return true;
+  };
+
+  try {
+    await subscribeMatchResponse(user.id, matchResponseHandler);
+    await enqueueFindMatch(user.id, difficulty.toLowerCase());
+  } catch (error) {
+    console.error(error);
+    return ws.close(1011, "Internal Server Error");
+  }
+
+  ws.on("close", async () => {
+    await unsubscribeMatchResponse(user.id);
+  });
+
+  if (!difficulty) request.trailers;
 });

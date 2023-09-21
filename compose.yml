@@ -60,6 +60,7 @@ services:
       - rabbitmq
     environment:
       PORT: 3003
+      RABBITMQ_HOST: amqp://rabbitmq:5672
       USERS_SERVICE_HOST: http://users-service:3002
     volumes:
       - ./matchmaking-service:/app
