@@ -1,14 +1,13 @@
-import cors from "cors";
-import express from "express";
-import morgan from "morgan";
+import { WebSocketServer } from "ws";
 
-const PORT = process.env.PORT;
+const wss = new WebSocketServer({ port: process.env.PORT });
 
-const app = express();
+wss.on("connection", function connection(ws) {
+  ws.on("error", console.error);
 
-app.use(cors());
-if (process.env.NODE_ENV === "development") app.use(morgan("tiny"));
+  ws.on("message", function message(data) {
+    console.log("received: %s", data);
+  });
 
-app.listen(PORT, () => {
-  console.log(`Matchmaking app listening on port ${PORT}`);
+  ws.send("something");
 });
