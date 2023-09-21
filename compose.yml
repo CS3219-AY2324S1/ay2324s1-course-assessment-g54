@@ -48,6 +48,22 @@ services:
     volumes:
       - ./users-service:/app
     command: yarn start
+  
+  matchmaking-service:
+    build:
+      context: ./matchmaking-service
+    container_name: matchmaking-service
+    ports:
+      - 3003:3003
+    depends_on:
+      - users-service
+      - rabbitmq
+    environment:
+      PORT: 3003
+      USERS_SERVICE_HOST: http://users-service:3002
+    volumes:
+      - ./matchmaking-service:/app
+    command: yarn start
 
   postgresql:
     image: postgres:15-alpine
