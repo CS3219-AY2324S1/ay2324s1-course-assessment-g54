@@ -1,4 +1,5 @@
 import amqp from "amqplib";
+import { findMatchRequestHandler } from "./handlers.js";
 
 const FIND_MATCH_QUEUE = "find-match";
 const MATCH_RESULTS_EXCHANGE = "match-results";
@@ -10,11 +11,26 @@ let channel = null;
 (async () => {
   const connection = await amqp.connect(`${process.env.RABBITMQ_HOST}`);
   channel = await connection.createChannel();
+  await channel.assertQueue(FIND_MATCH_QUEUE);
+  await channel.assertExchange(MATCH_RESULTS_EXCHANGE);
+  await subscribeFindMatch(findMatchRequestHandler);
   process.once("SIGINT", async () => {
-    if (connection) await connection.close();
     if (channel) await channel.close();
+    if (connection) await connection.close();
   });
 })();
+
+export const publishMatchResponse = async (result) => {
+  if (!channel) throw new Error("RabbitMQ channel cannot be found.");
+  await channel.assertExchange(MATCH_RESULTS_EXCHANGE, "direct");
+  const isMessagePublished = channel.publish(
+    MATCH_RESULTS_EXCHANGE,
+    "",
+    Buffer.from(JSON.stringify(result))
+  );
+  if (!isMessagePublished)
+    throw new Error(`Error when publishing matchmaking result.\n${result}`);
+};
 
 export const enqueueFindMatch = async (userId, difficulty) => {
   if (!channel) throw new Error("RabbitMQ channel cannot be found.");
@@ -29,19 +45,18 @@ export const enqueueFindMatch = async (userId, difficulty) => {
     );
 };
 
-export const publishMatchResponse = async (result) => {
+export const subscribeFindMatch = async (requestHandler) => {
   if (!channel) throw new Error("RabbitMQ channel cannot be found.");
-  await channel.assertExchange(MATCH_RESULTS_EXCHANGE, "direct");
-  const isMessagePublished = channel.publish(
-    MATCH_RESULTS_EXCHANGE,
-    "",
-    Buffer.from(JSON.stringify(result))
-  );
-  if (!isMessagePublished)
-    throw new Error(`Error when publishing matchmaking result.\n${result}`);
+  await channel.assertQueue(FIND_MATCH_QUEUE);
+  await channel.consume(FIND_MATCH_QUEUE, async (message) => {
+    if (!message) return;
+    const { userId, difficulty } = JSON.parse(message.content.toString());
+    await requestHandler(userId, difficulty);
+    channel.ack(message);
+  });
 };
 
-export const subscribeMatchResponse = async (userId, messageHandler) => {
+export const subscribeMatchResponse = async (userId, responseHandler) => {
   if (!channel) throw new Error("RabbitMQ channel cannot be found.");
   await channel.assertExchange(MATCH_RESULTS_EXCHANGE, "direct");
   const queueName = `${userId}-result-queue`;
@@ -50,7 +65,7 @@ export const subscribeMatchResponse = async (userId, messageHandler) => {
   await channel.consume(queue, async (message) => {
     if (!message) return;
     const response = JSON.parse(message.content.toString());
-    const shouldDeleteQueue = await messageHandler(response);
+    const shouldDeleteQueue = await responseHandler(response);
     channel.ack(message);
     if (shouldDeleteQueue) await unsubscribeMatchResponse(userId);
   });

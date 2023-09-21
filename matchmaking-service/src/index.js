@@ -1,5 +1,6 @@
 import { WebSocketServer } from "ws";
 import { getUserFromToken } from "./authorization.js";
+import { cancelFindMatchRequest } from "./handlers.js";
 import {
   enqueueFindMatch,
   subscribeMatchResponse,
@@ -31,8 +32,9 @@ wss.on("connection", async (ws, request) => {
     }
 
     const matchResponseHandler = async (response) => {
-      console.log(response);
-      ws.close(1000, "Match has been found!");
+      const { users, difficulty } = response;
+      const matchedUser = users.filter((userId) => userId !== user.id)[0];
+      ws.close(1000, JSON.stringify({ matchedUser, difficulty }));
       return true;
     };
 
@@ -40,6 +42,7 @@ wss.on("connection", async (ws, request) => {
     await enqueueFindMatch(user.id, difficulty.toLowerCase());
 
     ws.on("close", async () => {
+      await cancelFindMatchRequest(user.id, difficulty);
       await unsubscribeMatchResponse(user.id);
     });
   } catch (error) {
