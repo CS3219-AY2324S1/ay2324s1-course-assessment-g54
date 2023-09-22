@@ -34,6 +34,7 @@ export const publishMatchResponse = async (result) => {
 
 export const enqueueFindMatch = async (userId, difficulty) => {
   if (!channel) throw new Error("RabbitMQ channel cannot be found.");
+  console.log("enqueueFindMatch");
   await channel.assertQueue(FIND_MATCH_QUEUE);
   const isMessageQueued = channel.sendToQueue(
     FIND_MATCH_QUEUE,
@@ -58,6 +59,7 @@ export const subscribeFindMatch = async (requestHandler) => {
 
 export const subscribeMatchResponse = async (userId, responseHandler) => {
   if (!channel) throw new Error("RabbitMQ channel cannot be found.");
+  console.log("subscribeMatchResponse");
   await channel.assertExchange(MATCH_RESULTS_EXCHANGE, "direct");
   const queueName = `${userId}-result-queue`;
   const { queue } = await channel.assertQueue(queueName, { exclusive: true });
@@ -65,6 +67,7 @@ export const subscribeMatchResponse = async (userId, responseHandler) => {
   await channel.consume(queue, async (message) => {
     if (!message) return;
     const response = JSON.parse(message.content.toString());
+    console.log(response);
     const shouldDeleteQueue = await responseHandler(response);
     channel.ack(message);
     if (shouldDeleteQueue) await unsubscribeMatchResponse(userId);
