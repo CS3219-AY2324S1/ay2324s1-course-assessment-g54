@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
@@ -80,6 +80,8 @@ const CAT_ARRAY = [
 const ChipArray = (props) => {
   const { chips, helperText, label, onAddChip } = props;
   const [value, setValue] = useState("");
+  const [selectedChips, setSelectedChips] = useState(chips);
+  console.log(selectedChips);
 
   const handleAddChip = () => {
     const valueToBeAdded = value.trim();
@@ -90,6 +92,27 @@ const ChipArray = (props) => {
     if (isValueAlreadyAdded) return;
     onAddChip(valueToBeAdded);
     setValue("");
+  };
+
+
+  const handleToggleClick = (chip) => {
+    const currSelectedChips = new Set(selectedChips);
+    if (currSelectedChips.has(chip)) {
+      const newChipArray = selectedChips.filter((element) => element !== chip);
+      setSelectedChips(newChipArray);
+    } else {
+      const newChipArray = [...selectedChips, chip];
+      setSelectedChips(newChipArray);
+    }
+  };
+
+  const isSelected = (chip) => {
+    const currSelectedChips = new Set(selectedChips);
+    if (currSelectedChips.has(chip)) {
+      return true;
+    } else {
+      return false;
+    }
   };
 
   return (
@@ -108,16 +131,19 @@ const ChipArray = (props) => {
       />
       <div
         style={{
-          maxHeight: "100px",
+          maxHeight: "200px",
           overflowY: "auto",
           wordWrap: "break-word",
         }}
       >
       
         {CAT_ARRAY.map((chip) => (
+          
           <Chip
+            color={isSelected(chip) ? "primary" : "default"}
             key={chip}
             label={chip}
+            onClick={() => handleToggleClick(chip)}
             sx={{ marginRight: 1, marginTop: 1 }}
           />
         ))}
