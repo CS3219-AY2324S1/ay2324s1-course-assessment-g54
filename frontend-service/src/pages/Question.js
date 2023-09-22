@@ -151,8 +151,9 @@ const Question = () => {
                 </Select>
               </Stack>
               <Editor
-                language={editorLanguage}
-                value={editorLanguage == "python" ? "# Insert your code here" : "// Insert your code here" }
+                path={editorLanguage}
+                defaultLanguage={editorLanguage}
+                defaultValue={editorLanguage == "python" ? "# Insert your code here" : "// Insert your code here" }
                 theme="vs-dark"
                 onMount={(editor) => {
                   editorRef.current = editor;
