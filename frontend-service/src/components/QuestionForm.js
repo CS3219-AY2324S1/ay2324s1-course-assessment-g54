@@ -57,6 +57,13 @@ const QuestionForm = ({
                   newCategory,
                 ])
               }
+              onDeleteChip={(deletedCategory) =>
+                onCategoriesChange((prevCategories) =>
+                  prevCategories.filter(
+                    (category) => category !== deletedCategory
+                  )
+                )
+              }
             />
           </Card>
         </Stack>

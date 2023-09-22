@@ -78,7 +78,7 @@ const CAT_ARRAY = [
   "Biconnected Component"];
 
 const ChipArray = (props) => {
-  const { chips, helperText, label, onAddChip } = props;
+  const { chips, helperText, label, onAddChip, onDeleteChip } = props;
   const [value, setValue] = useState("");
   const [selectedChips, setSelectedChips] = useState(chips);
   console.log(selectedChips);
@@ -100,9 +100,11 @@ const ChipArray = (props) => {
     if (currSelectedChips.has(chip)) {
       const newChipArray = selectedChips.filter((element) => element !== chip);
       setSelectedChips(newChipArray);
+      onDeleteChip(chip);
     } else {
       const newChipArray = [...selectedChips, chip];
       setSelectedChips(newChipArray);
+      onAddChip(chip);
     }
   };
 
@@ -138,7 +140,6 @@ const ChipArray = (props) => {
       >
       
         {CAT_ARRAY.map((chip) => (
-          
           <Chip
             color={isSelected(chip) ? "primary" : "default"}
             key={chip}
