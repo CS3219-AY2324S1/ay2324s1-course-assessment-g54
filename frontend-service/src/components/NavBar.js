@@ -17,6 +17,7 @@ import SettingsModal from "./SettingsModal";
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/ExitToApp';
 import AvatarWithBadge from "./AvatarWithBadge";
+import MatchmakingIcon from '@mui/icons-material/PeopleOutline';
 
 const NavBar = () => {
   const navigate = useNavigate();
@@ -27,12 +28,15 @@ const NavBar = () => {
 
   const handleOpenUserMenu = (event) => setAnchorElement(event.currentTarget);
   const handleCloseUserMenu = () => setAnchorElement(null);
-  const handleOpenModal = () => setIsSettingsModalOpen(true);
+  const handleOpenSettingsModal = () => setIsSettingsModalOpen(true);
 
   return (
     <AppBar position="static">
       <SettingsModal isModalOpen={isSettingsModalOpen} setIsModalOpen={setIsSettingsModalOpen}/>
-      <Toolbar disableGutters sx={{ paddingX: 1.5 }}>
+      <Toolbar disableGutters sx={{ paddingRight: 1.5}}>
+        <Button sx={{ height:65, borderRadius: 0, boxShadow: "none"}} variant="contained" color="success" startIcon={<MatchmakingIcon/>}>
+          Find Match
+        </Button>
         <Box sx={{ flexGrow: 1 }} />
         <Box sx={{ flexGrow: 0 }}>
           <Tooltip title={user.name}>
@@ -66,7 +70,7 @@ const NavBar = () => {
                 variant="contained"
                 fullWidth
                 size="small"
-                onClick={handleOpenModal}
+                onClick={handleOpenSettingsModal}
                 startIcon={<SettingsIcon/>}
               >
                 Settings
