@@ -28,6 +28,8 @@ app.delete("/profile", handlers.handleDeleteProfile);
 
 app.post("/signup", handlers.handleSignup);
 
+app.get("/match/:id", handlers.handleGetMatchProfile);
+
 app.listen(PORT, () => {
   console.log(`Users app listening on port ${PORT}`);
 });

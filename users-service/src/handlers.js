@@ -59,6 +59,31 @@ export const handleGetProfile = async (request, response) => {
  * @param { import("express").Response } response
  * @returns { Promise<void> }
  */
+export const handleGetMatchProfile = async (request, response) => {
+  if (!request.headers.authorization) return response.status(401).send();
+  const jsonWebToken = request.headers.authorization;
+  const id = request.params.id;
+  try {
+    const user = utils.verifyJsonWebToken(jsonWebToken);
+  } catch (error) {
+    return response.status(200).json(error.message);
+  }
+
+  const matchUser = await database.select().from("users").where({ id }).first();
+  if (!matchUser) {
+    console.error("Matched User cannot be found.");
+    return response.status(400).send();
+  }
+
+  const { name, email } = matchUser;
+  return response.status(200).json({ id, name, email });
+};
+
+/**
+ * @param { import("express").Request } request
+ * @param { import("express").Response } response
+ * @returns { Promise<void> }
+ */
 export const handleLogin = async (request, response) => {
   const { body } = request;
 
