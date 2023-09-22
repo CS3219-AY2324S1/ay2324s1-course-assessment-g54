@@ -22,14 +22,24 @@ const QuestionForm = ({
     <Stack height="calc(100% - 48px)" direction="row" spacing={1}>
       <Box width="50%" height="100%">
         <Stack width="100%" spacing={1}>
-          <Card variant="outlined" sx={{ padding: 1, backgroundColor: theme => theme.palette.background.light }}>
+          <Card
+            variant="outlined"
+            sx={{
+              padding: 1,
+              backgroundColor: (theme) => theme.palette.background.light,
+            }}
+          >
             <TextField
               fullWidth
               variant="outlined"
               label="Question Title"
               value={title}
               error={title.trim().length < 3}
-              helperText={title.length < 3 ? "Title must be at least 3 characters long" : ""}
+              helperText={
+                title.length < 3
+                  ? "Title must be at least 3 characters long"
+                  : ""
+              }
               onChange={(e) => onTitleChange(e.target.value)}
               onBlur={(e) => {
                 const trimmedValue = e.target.value.trim();
@@ -37,7 +47,13 @@ const QuestionForm = ({
               }}
             />
           </Card>
-          <Card variant="outlined" sx={{ padding: 1, backgroundColor: theme => theme.palette.background.light }}>
+          <Card
+            variant="outlined"
+            sx={{
+              padding: 1,
+              backgroundColor: (theme) => theme.palette.background.light,
+            }}
+          >
             <Selector
               id="question-complexity"
               label="Question Complexity"
@@ -46,7 +62,14 @@ const QuestionForm = ({
               onChange={(event) => onComplexityChange(event.target.value)}
             />
           </Card>
-          <Card variant="outlined" sx={{ padding: 1, backgroundColor: theme => theme.palette.background.light }}>
+          <Card
+            variant="outlined"
+            sx={{
+              padding: 1,
+              backgroundColor: (theme) => theme.palette.background.light,
+            }}
+            height="100%"
+          >
             <ChipArray
               chips={categories}
               helperText="Press enter to add a new category..."
@@ -69,7 +92,14 @@ const QuestionForm = ({
         </Stack>
       </Box>
       <Box width="50%" height="100%">
-        <Card sx={{ height: "100%", width: "100%", overflow: "auto", backgroundColor: "white"}}>
+        <Card
+          sx={{
+            height: "100%",
+            width: "100%",
+            overflow: "auto",
+            backgroundColor: "white",
+          }}
+        >
           <SimpleMde
             value={description}
             onChange={(value) => onDescriptionChange(value)}

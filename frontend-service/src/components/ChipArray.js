@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
 import Chip from "@mui/material/Chip";
 import TextField from "@mui/material/TextField";
 
@@ -33,7 +34,7 @@ const CAT_ARRAY = [
   "Union Find",
   "Linked List",
   "Ordered Set",
-"  Enumeration",
+  "Enumeration",
   "Monotonic Stack",
   "Trie",
   "Recursion",
@@ -131,14 +132,8 @@ const ChipArray = (props) => {
           handleAddChip();
         }}
       />
-      <div
-        style={{
-          maxHeight: "200px",
-          overflowY: "auto",
-          wordWrap: "break-word",
-        }}
-      >
-      
+
+      <Box sx={{ height: "315px", width: "100%", overflow: "auto" }}>
         {CAT_ARRAY.map((chip) => (
           <Chip
             color={isSelected(chip) ? "primary" : "default"}
@@ -148,7 +143,7 @@ const ChipArray = (props) => {
             sx={{ marginRight: 1, marginTop: 1 }}
           />
         ))}
-      </div>
+      </Box>
     </Box>
   );
 };
