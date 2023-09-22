@@ -17,6 +17,7 @@ import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
+import Temp from "./pages/Temp";
 
 const theme = createTheme();
 
@@ -31,6 +32,7 @@ const protectedRoutes = [
   { path: "/questions/new", element: <NewQuestion /> },
   { path: "/questions/:id", element: <Question /> },
   { path: "/questions/:id/edit", element: <EditQuestion /> },
+  { path: "temp", element: <Temp />}, 
 ];
 
 function App() {
