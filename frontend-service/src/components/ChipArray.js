@@ -78,7 +78,7 @@ const CAT_ARRAY = [
   "Biconnected Component"];
 
 const ChipArray = (props) => {
-  const { chips, helperText, label, onAddChip, onDeleteChip } = props;
+  const { chips, helperText, label, onAddChip } = props;
   const [value, setValue] = useState("");
 
   const handleAddChip = () => {
@@ -114,11 +114,10 @@ const ChipArray = (props) => {
         }}
       >
       
-        {chips.map((chip) => (
+        {CAT_ARRAY.map((chip) => (
           <Chip
             key={chip}
             label={chip}
-            onDelete={() => onDeleteChip(chip)}
             sx={{ marginRight: 1, marginTop: 1 }}
           />
         ))}
