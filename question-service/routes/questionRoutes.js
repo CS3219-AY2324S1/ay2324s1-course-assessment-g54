@@ -6,7 +6,7 @@ import { updateQuestion } from '../controllers/updateQuestion.js';
 import { validateCreateQuestion, validateUpdateQuestion, validateQuestionId, validateQuestionQuery, validateQuestionComplexity } from '../middleware/validateQuestions.js';
 import express from "express";
 import { validateIsMaintainer, validateLogin } from '../middleware/validateRoles.js';
-import axios from 'axios';
+import { getCategories } from '../controllers/getCategories.js';
 
 const router = express.Router();
 
@@ -16,6 +16,9 @@ router.get('/', (req, res) => {
 
 // '/getQuestions'
 router.get('/questions', [validateLogin, validateQuestionQuery], getQuestionsWithQuery);
+
+// '/getCategories'
+router.get('/categories', [validateLogin], getCategories);
 
 // '/getQuestion/:id'
 router.get('/questions/:id', [validateLogin, validateQuestionId], getSingleQuestion);

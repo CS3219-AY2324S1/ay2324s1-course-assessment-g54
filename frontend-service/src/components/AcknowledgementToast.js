@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 
@@ -8,6 +7,7 @@ const AcknowledgementToast = ({ open, message, onClose, severity }) => {
       open={open}
       autoHideDuration={4000}
       onClose={onClose}
+      anchorOrigin={{ vertical: "top", horizontal: "center" }}
     >
       <MuiAlert
         elevation={6}
