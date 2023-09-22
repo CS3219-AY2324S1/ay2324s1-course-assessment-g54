@@ -1,4 +1,4 @@
-import { validateNewQuestion, validateQuery, validateUpdatedQuestion } from "./validators.js";
+import { validateComplexity, validateNewQuestion, validateQuery, validateUpdatedQuestion } from "./validators.js";
 
 export const validateCreateQuestion = (req, res, next) => {
     const { error } = validateNewQuestion(req.body); 
@@ -30,3 +30,11 @@ export const validateQuestionId = (req, res, next) => {
     }
     next();
 }
+
+export const validateQuestionComplexity = (req, res, next) => {
+  const { error } = validateComplexity(req.params.complexity); 
+  if (error) {
+      return res.status(400).send(error.details[0].message);
+  }
+  next();
+};
