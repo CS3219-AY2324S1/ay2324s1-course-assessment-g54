@@ -48,8 +48,28 @@ services:
     volumes:
       - ./users-service:/app
     command: yarn start
-  
+
   matchmaking-service:
+    build:
+      context: ./collab-service
+    container_name: collab-service
+    ports:
+      - 3004:3004
+    depends_on:
+      - users-service
+      - redis
+    environment:
+      PORT: 3004
+      REDIS_PW: test
+      REDIS_NAME: redis
+      REDIS_PORT: 6379
+      USERS_SERVICE_HOST: http://users-service:3002
+      QUESTION_SERVICE_HOST: http://question-service:3001
+    volumes:
+      - ./collab-service:/app
+    command: yarn start
+
+  collab-service:
     build:
       context: ./matchmaking-service
     container_name: matchmaking-service
@@ -126,6 +146,14 @@ services:
     ports:
       - 5672:5672
       - 15672:15672
+
+  redis:
+    image: redis
+    container_name: redis
+    restart: always
+    command: redis-server --requirepass test
+    ports:
+      - 6379:6379
 
 volumes:
   postgres:
