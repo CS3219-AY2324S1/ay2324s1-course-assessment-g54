@@ -1,4 +1,4 @@
-
+import cors from "cors";
 import express from "express";
 import http from "http";
 import { Server } from "socket.io"
@@ -7,6 +7,7 @@ import { createRoomHash, getRandomQuestion, scheduleDeleteJob } from "./utils.js
 import { validateDifficulty, validateLogin } from "./validators.js";
 
 const app = express();
+app.use(cors());
 const server = http.createServer(app);
 const io = new Server(server);
 
