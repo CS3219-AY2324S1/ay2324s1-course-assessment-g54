@@ -13,6 +13,7 @@ import Question from "./pages/Question";
 import Questions from "./pages/Questions";
 import Signup from "./pages/Signup";
 import Matchmaking from "./pages/MatchmakingLoading";
+import NavBar from "./components/NavBar";
 
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
@@ -49,7 +50,10 @@ function App() {
               <Route
                 key={path}
                 path={path}
-                element={<AuthGuard>{element}</AuthGuard>}
+                element={<AuthGuard>
+                          <NavBar/>
+                          {element}
+                        </AuthGuard>}
               />
             ))}
           </Routes>

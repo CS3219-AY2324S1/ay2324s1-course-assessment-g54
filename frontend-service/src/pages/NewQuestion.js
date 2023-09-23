@@ -78,7 +78,6 @@ const NewQuestion = () => {
 
   return (
     <>
-      <NavBar />
       <Box height="calc(100vh - 64px)" width="100%" bgcolor="whitesmoke">
         <Box height="100%" display="flex">
           <Stack height="100%" width="100%" spacing={1} padding={1}>
