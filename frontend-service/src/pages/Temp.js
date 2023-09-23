@@ -6,6 +6,7 @@ const Temp =  () => {
     const [difficulty, setDifficulty] = useState('');
     const [msg, setMsg] = useState('');
     const [data, setData] = useState('');
+    const [webSocket, setWebSocket] = useState({});
 
     const token = window.localStorage.getItem("token");
 
@@ -19,23 +20,34 @@ const Temp =  () => {
     }
 
     async function handleSave () {
-        setMsg("sent"); 
+        setMsg("sent");
+        setData("");
         const ws = await connectToServer(); 
-
+        setWebSocket(ws);
+        
         ws.addEventListener("open", (event) => {
-            setMsg("connected to matching server!");
+            setMsg("Connected to matching server!");
         });
 
         ws.addEventListener("message", (event) => {
             console.log(event.data);
-            setData(`Message from server ${event.data}`);
+            setData(`Message from socket: ${event.data}`);
         });
         
         ws.addEventListener("close", (event) => {
-            console.log(event.data);
-            setMsg("connection to matching server closed");
+            console.log(event.reason);
+            setWebSocket({});
+            setData(`Socket close with reason: ${event.reason}`);
+            setMsg("Connection to matching server closed");
         })
     }
+
+    // for debugging
+    useEffect(()=> {
+        if (webSocket !== undefined && webSocket.length !== 0) {
+            console.log(webSocket);
+        }
+    }, [webSocket]);
 
     return (
     <>
@@ -72,7 +84,4 @@ const Temp =  () => {
     );
 }
 
-/*
-
-*/
 export default Temp;
