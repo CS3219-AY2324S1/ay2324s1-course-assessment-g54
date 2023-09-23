@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 
 import Box from "@mui/material/Box";
-import Card from "@mui/material/Card";
 import Chip from "@mui/material/Chip";
 import TextField from "@mui/material/TextField";
 
@@ -80,19 +79,18 @@ const CAT_ARRAY = [
 
 const ChipArray = (props) => {
   const { chips, helperText, label, onAddChip, onDeleteChip } = props;
-  const [value, setValue] = useState("");
+  const [inputValue, setInputValue] = useState("");
   const [selectedChips, setSelectedChips] = useState(chips);
-  console.log(selectedChips);
+  const [filteredArray, setFilteredArray] = useState([]);
 
   const handleAddChip = () => {
-    const valueToBeAdded = value.trim();
+    const valueToBeAdded = inputValue.trim();
     if (valueToBeAdded === "") return;
     const isValueAlreadyAdded = chips
       .map((chip) => chip.toLowerCase())
-      .includes(value.toLowerCase());
+      .includes(inputValue.toLowerCase());
     if (isValueAlreadyAdded) return;
-    onAddChip(valueToBeAdded);
-    setValue("");
+    setInputValue("");
   };
 
 
@@ -118,23 +116,33 @@ const ChipArray = (props) => {
     }
   };
 
+  useEffect(() => {
+    const filteredValues = () => {
+      const filteredValues = CAT_ARRAY.filter((value) =>
+        value.toLowerCase().includes(inputValue.toLowerCase())
+      );
+      setFilteredArray(filteredValues);
+    }
+    filteredValues();
+
+  }, [inputValue]);
+
   return (
     <Box width="100%">
       <TextField
         fullWidth
         variant="outlined"
         label={label}
-        value={value}
+        value={inputValue}
         helperText={helperText}
-        onChange={(event) => setValue(event.target.value)}
+        onChange={(event) => setInputValue(event.target.value)}
         onKeyUp={(event) => {
           if (event.key !== "Enter") return;
           handleAddChip();
         }}
       />
-
-      <Box sx={{ height: "315px", width: "100%", overflow: "auto" }}>
-        {CAT_ARRAY.map((chip) => (
+      <Box>
+        {filteredArray.map((chip) => (
           <Chip
             color={isSelected(chip) ? "primary" : "default"}
             key={chip}
@@ -143,6 +151,21 @@ const ChipArray = (props) => {
             sx={{ marginRight: 1, marginTop: 1 }}
           />
         ))}
+      </Box>
+      <Box sx={{ height: "315px", width: "100%", overflow: "auto" }}>
+        {CAT_ARRAY.map((chip) => {
+          if (filteredArray.includes(chip)) {
+            return "";
+          }
+          return <Chip
+            color={isSelected(chip) ? "primary" : "default"}
+            key={chip}
+            label={chip}
+            onClick={() => handleToggleClick(chip)}
+            sx={{ marginRight: 1, marginTop: 1 }}
+          />;
+        })
+        }
       </Box>
     </Box>
   );
