@@ -48,6 +48,23 @@ services:
     volumes:
       - ./users-service:/app
     command: yarn start
+  
+  matchmaking-service:
+    build:
+      context: ./matchmaking-service
+    container_name: matchmaking-service
+    ports:
+      - 3003:3003
+    depends_on:
+      - users-service
+      - rabbitmq
+    environment:
+      PORT: 3003
+      RABBITMQ_HOST: amqp://rabbitmq:5672
+      USERS_SERVICE_HOST: http://users-service:3002
+    volumes:
+      - ./matchmaking-service:/app
+    command: yarn start
 
   postgresql:
     image: postgres:15-alpine
@@ -98,6 +115,17 @@ services:
       PGADMIN_DEFAULT_EMAIL: test@gmail.com
       PGADMIN_DEFAULT_PASSWORD: test
       PGADMIN_LISTEN_PORT: 80
+
+  rabbitmq:
+    image: rabbitmq:management-alpine
+    container_name: rabbitmq
+    restart: always
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    ports:
+      - 5672:5672
+      - 15672:15672
 
 volumes:
   postgres:

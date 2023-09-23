@@ -29,6 +29,9 @@ docker exec -it question-service sh
 docker exec -it users-service sh
 ```
 ```bash
+docker exec -it matchmaking-service sh
+```
+```bash
 docker exec -it postgresql sh
 ```
 
@@ -104,3 +107,9 @@ Under `Connection`:
 - Postgres = `postgres`
 
 Then click save and you can run queries on the postgres server!
+
+## Matchmaking Microservice
+
+### RabbitMQ
+
+The matchmaking microservice uses [RabbitMQ](https://www.rabbitmq.com/) as a message broker. To access the management UI, go to http://localhost:15672 after starting the `rabbitmq` docker container. 
