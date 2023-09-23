@@ -26,6 +26,7 @@ const NavBar = () => {
 
   const [anchorElement, setAnchorElement] = useState(null);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+  const [selectedButton, setSelectedButton] = useState(null);
 
   const handleOpenUserMenu = (event) => setAnchorElement(event.currentTarget);
   const handleCloseUserMenu = () => setAnchorElement(null);
