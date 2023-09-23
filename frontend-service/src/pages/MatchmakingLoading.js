@@ -2,7 +2,7 @@ import { Box, Button, FormControl, InputLabel, MenuItem, Select, Typography } fr
 import NavBar from "../components/NavBar";
 import React, { useEffect, useState } from "react";
 
-const MatchmakingLoading =  () => {
+const Matchmaking =  () => {
     const [difficulty, setDifficulty] = useState('');
     const [msg, setMsg] = useState('');
     const [data, setData] = useState('');
@@ -75,4 +75,4 @@ const MatchmakingLoading =  () => {
 /*
 
 */
-export default MatchmakingLoading;
+export default Matchmaking;

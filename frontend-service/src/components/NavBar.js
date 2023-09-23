@@ -18,6 +18,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/ExitToApp';
 import AvatarWithBadge from "./AvatarWithBadge";
 import MatchmakingIcon from '@mui/icons-material/PeopleOutline';
+import QuizIcon from '@mui/icons-material/Quiz';
 
 const NavBar = () => {
   const navigate = useNavigate();
@@ -34,7 +35,10 @@ const NavBar = () => {
     <AppBar position="static">
       <SettingsModal isModalOpen={isSettingsModalOpen} setIsModalOpen={setIsSettingsModalOpen}/>
       <Toolbar disableGutters sx={{ paddingRight: 1.5}}>
-        <Button onClick={() => navigate("/questions/matchmakingLoading")} sx={{ height:65, borderRadius: 0, boxShadow: "none"}} variant="contained" color="success" startIcon={<MatchmakingIcon/>}>
+        <Button onClick={() => navigate("/questions")} sx={{ height:65, borderRadius: 0, boxShadow: "none", px: 4}} variant="contained" color="secondary" startIcon={<QuizIcon/>}>
+          Questions
+        </Button>
+        <Button onClick={() => navigate("/matchmaking")} sx={{ height:65, borderRadius: 0, boxShadow: "none", px: 4}} variant="contained" color="success" startIcon={<MatchmakingIcon/>}>
           Find Match
         </Button>
         <Box sx={{ flexGrow: 1 }} />
