@@ -2,7 +2,6 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import NavBar from "../components/NavBar";
 import AcknowledgementToast from "../components/AcknowledgementToast";
 
 import { useUser } from "../contexts/UserContext";
