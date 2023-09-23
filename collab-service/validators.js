@@ -1,5 +1,5 @@
 import axios from "axios";
-import { usersServiceBase } from "./constant.js";
+import { difficulties, usersServiceBase } from "./constant.js";
 
 export async function validateLogin(token) {
     const usersServiceUrl = `${usersServiceBase}/profile`;
@@ -10,6 +10,6 @@ export async function validateLogin(token) {
     return response;
 };
 
-export function validateDifficulty(token) {
-
+export function validateDifficulty(difficulty) {
+    return difficulty && difficulties.includes(difficulty.toLowerCase());
 }

@@ -3,9 +3,8 @@ import express from "express";
 import http from "http";
 import { Server } from "socket.io"
 import { createRedisClient, createRoomInfo, deleteRoomInfo, deleteUserID, getRoomInfo, getUserID, saveSocketToUserID } from "./redis.js";
-import { createRoomHash, getRandomQuestion } from "./utils.js";
-import { validateLogin } from "./validators.js";
-import { difficulties } from "./constant.js";
+import { createRoomHash, getRandomQuestion, scheduleDeleteJob } from "./utils.js";
+import { validateDifficulty, validateLogin } from "./validators.js";
 
 const app = express();
 const server = http.createServer(app);
@@ -57,7 +56,7 @@ async function onConnection(socket) {
         if (response != null) {
             io.to(socket.id).emit('roomInfo', response);
         } else {
-            if (matchedUser && difficulty && difficulties.includes(difficulty.toLowerCase())) {
+            if (matchedUser && validateDifficulty(difficulty)) {
                 const randomQuestion  = await getRandomQuestion();
                 const roomInfo = {
                     "roomHash": roomHash,
@@ -70,7 +69,7 @@ async function onConnection(socket) {
                 io.to(socket.id).emit('roomInfo', roomInfo);
 
                 // schedule a cron job to delete the room after 3 hours
-                scheduleDeleteJob(roomHash);
+                //scheduleDeleteJob(roomHash);
             } else {
                 io.to(socket.id).emit('roomInfo', "FAILED TO JOIN ROOM");
                 return socket.disconnect("FAIL");

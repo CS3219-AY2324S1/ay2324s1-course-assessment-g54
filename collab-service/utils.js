@@ -15,14 +15,15 @@ export const createRoomHash = (currentUserID, matchedUserId) => {
 }
 
 export async function getRandomQuestion() {
-    // call getRandomQuestion from question service
+    // to-do call getRandomQuestion from question service
     return {"question_id" : 3}
 }
 
 // schedule a cron job to delete the room after 3 hours
-function scheduleDeleteJob(roomID) {
+export function scheduleDeleteJob(roomID) {
+    console.log("scheduling delete job!")
     const startTime = new Date(Date.now() + Milliseconds.IN_THREE_HOURS);
-    scedu.scheduleJob(roomID, startTime,
+    schedule.scheduleJob(roomID, startTime,
         async function () {
             await deleteRoomInfo(redisClient, roomID);
         }
