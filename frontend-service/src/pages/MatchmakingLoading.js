@@ -1,5 +1,4 @@
 import { Box, Button, FormControl, InputLabel, MenuItem, Select, Typography, ToggleButton, ToggleButtonGroup } from "@mui/material";
-import NavBar from "../components/NavBar";
 import React, { useEffect, useState } from "react";
 
 const Matchmaking =  () => {

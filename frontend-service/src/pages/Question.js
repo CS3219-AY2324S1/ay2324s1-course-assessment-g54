@@ -5,7 +5,6 @@ import Editor from "@monaco-editor/react";
 import { useEffect, useState, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import NavBar from "../components/NavBar";
 
 import { useUser } from "../contexts/UserContext";
 

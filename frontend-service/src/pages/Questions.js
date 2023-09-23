@@ -1,7 +1,6 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 
-import NavBar from "../components/NavBar";
 import QuestionsTable from "../components/Questions/QuestionsTable";
 import SearchBar from "../components/Questions/SearchBar";
 
