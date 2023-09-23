@@ -12,6 +12,7 @@ import NewQuestion from "./pages/NewQuestion";
 import Question from "./pages/Question";
 import Questions from "./pages/Questions";
 import Signup from "./pages/Signup";
+import MatchmakingLoading from "./pages/MatchmakingLoading";
 
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
@@ -31,6 +32,7 @@ const protectedRoutes = [
   { path: "/questions/new", element: <NewQuestion /> },
   { path: "/questions/:id", element: <Question /> },
   { path: "/questions/:id/edit", element: <EditQuestion /> },
+  { path: "/questions/matchmakingLoading", element: <MatchmakingLoading /> },
 ];
 
 function App() {

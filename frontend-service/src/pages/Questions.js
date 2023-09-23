@@ -61,7 +61,7 @@ const Questions = () => {
   return (
     <>
       <NavBar />
-      <Box height="calc(100vh - 64px)" width="100vw" bgcolor="whitesmoke">
+      <Box height="calc(100vh - 64px)" width="100%" bgcolor="whitesmoke">
         <Box display="flex" flexDirection="column" alignItems="center">
           <Stack spacing={2} style={{ width: "80%" }}>
             <Typography

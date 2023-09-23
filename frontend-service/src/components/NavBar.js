@@ -34,7 +34,7 @@ const NavBar = () => {
     <AppBar position="static">
       <SettingsModal isModalOpen={isSettingsModalOpen} setIsModalOpen={setIsSettingsModalOpen}/>
       <Toolbar disableGutters sx={{ paddingRight: 1.5}}>
-        <Button sx={{ height:65, borderRadius: 0, boxShadow: "none"}} variant="contained" color="success" startIcon={<MatchmakingIcon/>}>
+        <Button onClick={() => navigate("/questions/matchmakingLoading")} sx={{ height:65, borderRadius: 0, boxShadow: "none"}} variant="contained" color="success" startIcon={<MatchmakingIcon/>}>
           Find Match
         </Button>
         <Box sx={{ flexGrow: 1 }} />
