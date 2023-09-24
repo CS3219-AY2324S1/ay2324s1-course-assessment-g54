@@ -25,7 +25,6 @@ const NavBar = () => {
   const user = useUser();
   const location = useLocation();
 
-  console.log(location)
   const [anchorElement, setAnchorElement] = useState(null);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
 
@@ -34,7 +33,7 @@ const NavBar = () => {
   const handleOpenSettingsModal = () => setIsSettingsModalOpen(true);
 
   return (
-    <AppBar position="static" sx={{backgroundColor: theme => theme.palette.background.secondary}}>
+    <AppBar position="static" sx={{backgroundColor: theme => theme.palette.background.navBar}}>
       <SettingsModal isModalOpen={isSettingsModalOpen} setIsModalOpen={setIsSettingsModalOpen}/>
       <Toolbar disableGutters sx={{ paddingRight: 1.5}}>
         <Button 
@@ -46,10 +45,10 @@ const NavBar = () => {
                 py: "12px", 
                 px: 3, 
                 mx: 1, 
-                backgroundColor: location.pathname == "/questions" ? theme => theme.palette.buttonSelected.primary : "transparent", 
+                backgroundColor: location.pathname == "/questions" ? theme => theme.palette.navbarButtonSelected : "transparent", 
                 color: "white",
                 "&:hover": {
-                  backgroundColor: theme => theme.palette.buttonHover.primary, 
+                  backgroundColor: theme => theme.palette.navbarButtonHover, 
                 },
           }}
           variant="contained" 
@@ -65,10 +64,10 @@ const NavBar = () => {
                 boxShadow: "none", 
                 py: "12px", 
                 px: 3, 
-                backgroundColor: location.pathname == "/matchmaking" ? theme => theme.palette.buttonSelected.primary : "transparent", 
+                backgroundColor: location.pathname == "/matchmaking" ? theme => theme.palette.navbarButtonSelected : "transparent", 
                 color: "white",
                 "&:hover": {
-                  backgroundColor: theme => theme.palette.buttonHover.primary, 
+                  backgroundColor: theme => theme.palette.navbarButtonHover, 
                 },
               }}
           variant="contained" 
@@ -92,42 +91,44 @@ const NavBar = () => {
               horizontal: "right",
             }}
           >
-            <Stack padding={3} spacing={1} alignItems="center">
-              {user.isMaintainer
-              ? <AvatarWithBadge/>  
-              : <Avatar sx={{ width: 54, height: 54 }} alt={user.name} src="/static/images/avatar/2.jpg" />
- }
-              <Typography variant="body1" align="center">
-                {user.name}
-              </Typography>
-              <Typography variant="body2" align="center" color="gray">
-                {user.email}
-              </Typography>
-            </Stack>
-            <Stack padding={3} spacing={1} alignItems="center">
-              <Button
-                variant="contained"
-                fullWidth
-                size="small"
-                onClick={handleOpenSettingsModal}
-                startIcon={<SettingsIcon/>}
-              >
-                Settings
-              </Button>
-              <Button
-                variant="contained"
-                fullWidth
-                size="small"
-                color="error"
-                onClick={() => {
-                  window.localStorage.removeItem("token");
-                  navigate("/login");
-                }}
-                startIcon={<LogoutIcon/>}
-              >
-                Sign Out
-              </Button>
-            </Stack>
+            <Box border = "1px solid rgba(158, 158, 158, 0.1)" borderRadius={2} backgroundColor={theme => theme.palette.background.light}>
+              <Stack padding={3} spacing={1} alignItems="center" >
+                {user.isMaintainer
+                  ? <AvatarWithBadge />
+                  : <Avatar sx={{ width: 54, height: 54 }} alt={user.name} src="/static/images/avatar/2.jpg" />
+                }
+                <Typography variant="body1" align="center">
+                  {user.name}
+                </Typography>
+                <Typography variant="body2" align="center" color="gray">
+                  {user.email}
+                </Typography>
+              </Stack>
+              <Stack padding={3} spacing={1} alignItems="center">
+                <Button
+                  variant="contained"
+                  fullWidth
+                  size="small"
+                  onClick={handleOpenSettingsModal}
+                  startIcon={<SettingsIcon />}
+                >
+                  Settings
+                </Button>
+                <Button
+                  variant="contained"
+                  fullWidth
+                  size="small"
+                  color="error"
+                  onClick={() => {
+                    window.localStorage.removeItem("token");
+                    navigate("/login");
+                  }}
+                  startIcon={<LogoutIcon />}
+                >
+                  Sign Out
+                </Button>
+              </Stack>
+            </Box>
           </Popover>
         </Box>
       </Toolbar>

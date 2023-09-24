@@ -20,25 +20,22 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 
-const theme = createTheme();
-
 const darkTheme = createTheme({
   palette: {
     mode: 'dark',
     background: {
       default: "rgba(20, 28, 47, 1)",
-      secondary: "rgba(5, 16, 43, 1)",
+      navBar: "rgba(5, 16, 43, 1)",
+      light: "rgba(28, 38, 62, 1)",
     },
-    buttonSelected : {
-      primary: "rgba(66, 165, 245, 1)",
-    },
-    buttonHover : {
-      primary: "rgba(66, 165, 245, 0.7)",
-    },
+    navbarButtonSelected : "rgba(66, 165, 245, 1)",
+    navbarButtonHover : "rgba(66, 165, 245, 0.7)",
+    questionRowHover : "rgba(66, 165, 245, 0.7)",
+    questionTableHead: "rgba(28, 38, 62, 1)",
+    questionRowEven: "rgba(28, 38, 62, 1)",
+    questionRowOdd: "rgba(28, 38, 62, 0.8)",
   },
 })
-
-console.log(darkTheme);
 
 const unprotectedRoutes = [
   { path: "/", element: <Example /> },
