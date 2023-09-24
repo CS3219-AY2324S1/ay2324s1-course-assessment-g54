@@ -1,9 +1,8 @@
 import { ServerEvents, UserEvents } from "../constants/constant.js";
-import { deleteRoomInfo, getUserID } from "../redis/redis.js";
+import { deleteRoomInfo } from "../redis/redis.js";
 
-export const LeaveAllRoomsHandler = (io, socket, redisClient) => {
+export const LeaveAllRoomsHandler = (io, socket, redisClient, currentUser) => {
     async function handleLeaveAllRoom(data) {
-        const currentUser = await getUserID(redisClient, socket.id);
         socket.rooms.forEach( async function (room) {
                 if (socket.id != room) {
                     socket.leave(room);

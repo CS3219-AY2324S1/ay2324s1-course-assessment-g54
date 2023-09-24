@@ -3,7 +3,6 @@ import { deleteRoomInfo, getUserID } from "../redis/redis.js";
 
 export const LeaveRoomHandler = (io, socket, redisClient) => {
     async function handleLeaveRoom(data) {
-        const currentUser = await getUserID(redisClient, socket.id);
         const roomID = data.roomID;
         const response = {
             'roomID': roomID,
