@@ -107,22 +107,21 @@ const Matchmaking = () => {
               <Typography variant="body1" align="center">
                 {user.name}
               </Typography>
-              <Typography variant="body2" align="center" color="gray">
-                {user.email}
-              </Typography>
             </Stack>
           </CardContent>
         </Card>
-        <Card sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', p:3}}>
+        <Card sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', p: 3 }}>
           <CardContent>
             <Button variant="contained" onClick={handleEnd}>
               Cancel Matchmaking!
             </Button>
           </CardContent>
         </Card>
-        <Card>
-          <CardContent>
-            {isLoading ? <CircularProgress padding="100" color="secondary" /> :
+        {isLoading ? <Card  sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', p: 3 }}>
+          <CircularProgress size="5rem" color="secondary" />
+        </Card> :
+          <Card>
+            <CardContent>
               <Stack padding={3} spacing={1} alignItems="center">
                 {user.isMaintainer
                   ? <AvatarWithBadge />
@@ -130,12 +129,10 @@ const Matchmaking = () => {
                 <Typography variant="body1" align="center">
                   {user.name}
                 </Typography>
-                <Typography variant="body2" align="center" color="gray">
-                  {user.email}
-                </Typography>
-              </Stack>}
-          </CardContent>
-        </Card>
+              </Stack>
+            </CardContent>
+          </Card>}
+
       </Box>
     </Stack>
   );
