@@ -5,6 +5,14 @@ export const CodeEventHandler = (io, socket, redisClient, currentUser) => {
         const code = data.code;
         const roomID = data.roomID;
 
+        if (!code || code === undefined || !roomID || roomID === undefined ) {
+            const response = {
+                'roomID' : roomID,
+                'error': `No roomID or code provided`
+            }
+            return io.to(socket.id).emit(ServerEvents.ERROR, response);
+        }
+
         const response = {
             'roomID': roomID,
             'code': code

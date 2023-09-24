@@ -1,12 +1,21 @@
 import { ServerEvents, UserEvents } from "../constants/constant.js";
 import { deleteRoomInfo } from "../redis/redis.js";
 
-export const LeaveRoomHandler = (io, socket, redisClient) => {
+export const LeaveRoomHandler = (io, socket, redisClient, currentUser) => {
     async function handleLeaveRoom(data) {
         const roomID = data.roomID;
+
+        if (!roomID || roomID === undefined) {
+            const response = {
+                'roomID' : roomID,
+                'error': `No roomID provided`
+            }
+            return io.to(socket.id).emit(ServerEvents.ERROR, response);
+        }
+        
         const response = {
             'roomID': roomID,
-            'msg': `user ${currentUser} has left the room`
+            'msg': `user ${currentUser} has left the room ${roomID}`
         }
 
         socket.broadcast.in(roomID).emit(ServerEvents.ROOM_NOTIFS, response);
