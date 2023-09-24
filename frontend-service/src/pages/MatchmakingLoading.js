@@ -57,28 +57,42 @@ const Matchmaking = () => {
       setIsLoading(false);
     })
   }
+
+  let ws;
+
   async function handleStart() {
     setIsLoading(true);
-    setMsg("sent");
-    const ws = await connectToServer();
+    setMsg("sent start");
+    ws = await connectToServer();
 
     ws.addEventListener("open", (event) => {
       setMsg("connected to matching server!");
       setIsLoading(true);
     });
-  }
+    ws.addEventListener("message", (event) => {
+      console.log(event.data);
+      setData(`Message from server ${event.data}`);
+      setIsLoading(true);
+    });
 
-  async function handleEnd() {
-    setIsLoading(true);
-    setMsg("sent");
-    const ws = await connectToServer();
-
-    
     ws.addEventListener("close", (event) => {
       console.log(event.data);
       setMsg("connection to matching server closed");
       setIsLoading(false);
     })
+  }
+
+  async function handleEnd() {
+    if (ws) {
+      setIsLoading(true);
+      setMsg("sent end");
+      console.log("close");
+      ws.addEventListener("close", (event) => {
+        console.log(event.data);
+        setMsg("connection to matching server closed");
+        setIsLoading(false);
+      })
+    }
   }
 
   return (
