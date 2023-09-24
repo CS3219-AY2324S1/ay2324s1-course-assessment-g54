@@ -12,7 +12,7 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Card from "@mui/material/Card";
 import { CardContent } from "@mui/material";
-let ws;
+let ws = null;
 
 const Matchmaking = () => {
   const user = useUser();
