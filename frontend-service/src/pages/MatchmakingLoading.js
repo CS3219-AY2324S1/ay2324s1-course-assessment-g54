@@ -69,11 +69,17 @@ const Matchmaking = () => {
       setIsLoading(true);
     });
 
+    ws.addEventListener("message", (event) => {
+      console.log(event.data);
+      setData(`Message from server ${event.data}`);
+      setIsLoading(true);
+    });
+
   }
 
   async function handleEnd() {
     if (ws) {
-      setIsLoading(true);
+      
       setMsg("sent end");
       console.log("close");
       ws.addEventListener("close", (event) => {
@@ -81,6 +87,8 @@ const Matchmaking = () => {
         setMsg("connection to matching server closed");
         setIsLoading(false);
       })
+
+      ws.close();
     }
   }
 
