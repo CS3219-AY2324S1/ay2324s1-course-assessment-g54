@@ -19,8 +19,6 @@ export const JoinRoomHandler = (io, socket, redisClient, currentUser) => {
         } 
 
         socket.join(roomID);
-        informOtherRoomUsers(socket, currentUser, roomID);
-
         const response = await getRoomInfo(redisClient, roomID);
         if (response != null) {
             io.to(socket.id).emit(ServerEvents.ROOM_INFO, response);
@@ -59,8 +57,8 @@ export const JoinRoomHandler = (io, socket, redisClient, currentUser) => {
             // schedule a cron job to delete the room after 3 hours
             //scheduleDeleteJob(redisClient, roomID);
         }
+        informOtherRoomUsers(socket, currentUser, roomID);
         getNumPeopleInRoom(io, socket, roomID);
-        
     }
 
     socket.on(UserEvents.JOIN_ROOM, handleJoinRoom)
