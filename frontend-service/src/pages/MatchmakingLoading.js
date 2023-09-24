@@ -11,7 +11,7 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Card from "@mui/material/Card";
-import { CardContent } from "@mui/material";
+import CardContent from "@mui/material/Card";
 let ws = null;
 
 const Matchmaking = () => {
@@ -98,7 +98,7 @@ const Matchmaking = () => {
       <Typography>{msg}</Typography>
       <Typography>{data}</Typography>
       <Box sx={{ display: "flex", flexDirection: "row" }}>
-        <Card sx={{ mr: 1 }}>
+        <Card>
           <CardContent>
             <Stack padding={3} spacing={1} alignItems="center">
               {user.isMaintainer
@@ -113,7 +113,7 @@ const Matchmaking = () => {
             </Stack>
           </CardContent>
         </Card>
-        <Card sx={{ mr: 1 }}>
+        <Card sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', p:3}}>
           <CardContent>
             <Button variant="contained" onClick={handleEnd}>
               Cancel Matchmaking!
