@@ -3,9 +3,8 @@ import { createRoomInfo, getRoomInfo, getUserID } from "../redis/redis.js";
 import { createroomID, getRandomQuestion, scheduleDeleteJob } from "../utils/utils.js";
 import { validateDifficulty } from "../validators/validators.js";
 
-export const JoinRoomHandler = (io, socket, redisClient) => {
+export const JoinRoomHandler = (io, socket, redisClient, currentUser) => {
     async function handleJoinRoom (data) {
-        const currentUser = await getUserID(redisClient, socket.id);
         const matchedUser = data.matchedUser;
         const difficulty = data.difficulty;
         const roomID = data.roomID === undefined ? createroomID(currentUser, matchedUser) : data.roomID;
@@ -36,16 +35,26 @@ export const JoinRoomHandler = (io, socket, redisClient) => {
                 return disconnectSocket(socket);
             }
 
-            const randomQuestion  = await getRandomQuestion();
-            const roomInfo = {
-                "roomID": roomID,
-                "user1": currentUser,
-                "user2": matchedUser,
-                "difficulty": difficulty,
-                "question_id": randomQuestion.question_id,
-            };
-            await createRoomInfo(redisClient, roomID, roomInfo);
-            io.to(socket.id).emit(ServerEvents.ROOM_INFO, roomInfo);
+            try{
+                const randomQuestionResponse = await getRandomQuestion(socket.handshake.query.token, difficulty);
+                const roomInfo = {
+                    "roomID": roomID,
+                    "user1": currentUser,
+                    "user2": matchedUser,
+                    "difficulty": difficulty,
+                    "question_id": randomQuestionResponse.data.question_id,
+                };
+                await createRoomInfo(redisClient, roomID, roomInfo);
+                io.to(socket.id).emit(ServerEvents.ROOM_INFO, roomInfo);
+            } catch (error) {
+                const response = {
+                    'roomID' : roomID,
+                    'error': error.message
+                }
+                io.to(socket.id).emit(ServerEvents.ERROR, response);
+                console.log(`user ${currentUser} has been kicked due to some error in getting random question: ${error.message}`);
+                return disconnectSocket(socket);
+            }
 
             // schedule a cron job to delete the room after 3 hours
             //scheduleDeleteJob(redisClient, roomID);
