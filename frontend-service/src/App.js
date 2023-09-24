@@ -26,7 +26,7 @@ const darkTheme = createTheme({
   palette: {
     mode: 'dark',
     primary: {
-      main: "#444654",
+      main: "#30D5C8",
     },
     secondary: {
       main: "#494c7d"
@@ -34,9 +34,9 @@ const darkTheme = createTheme({
     background: {
       default: '#141C2F'
     },
-    
   },
 })
+
 console.log(darkTheme);
 
 const unprotectedRoutes = [
