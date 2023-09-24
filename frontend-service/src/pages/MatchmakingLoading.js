@@ -28,13 +28,13 @@ const Matchmaking =  () => {
 
         ws.addEventListener("open", (event) => {
             setMsg("connected to matching server!");
-            setIsLoading(false);
+            setIsLoading(true);
         });
 
         ws.addEventListener("message", (event) => {
             console.log(event.data);
             setData(`Message from server ${event.data}`);
-            setIsLoading(false);
+            setIsLoading(true);
         });
         
         ws.addEventListener("close", (event) => {
