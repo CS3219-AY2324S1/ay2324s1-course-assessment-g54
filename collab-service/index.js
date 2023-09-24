@@ -37,12 +37,12 @@ async function onConnection(socket) {
     const currentUser = await getUserID(redisClient, socket.id);
     console.log(`user ${currentUser} connected to the socket`);
 
-    CodeEventHandler(io, socket, redisClient);
-    GetUserHandler(io, socket, redisClient);
-    JoinRoomHandler(io, socket, redisClient);
-    LeaveRoomHandler(io, socket, redisClient);
-    LeaveAllRoomsHandler(io, socket, redisClient);
-    DeleteRoomHandler(io, socket, redisClient);
+    CodeEventHandler(io, socket, redisClient, currentUser);
+    GetUserHandler(io, socket, redisClient, currentUser);
+    JoinRoomHandler(io, socket, redisClient, currentUser);
+    LeaveRoomHandler(io, socket, redisClient, currentUser);
+    LeaveAllRoomsHandler(io, socket, redisClient, currentUser);
+    DeleteRoomHandler(io, socket, redisClient, currentUser);
 
     socket.on(UserEvents.DISCONNECT, async function() {
         await deleteUserID(redisClient, socket.id);

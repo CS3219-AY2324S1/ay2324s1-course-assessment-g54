@@ -1,6 +1,7 @@
 import { createHash } from "crypto";
 import schedule from "node-schedule";
-import { Milliseconds } from "../constants/constant.js";
+import { Milliseconds, questionServiceBase } from "../constants/constant.js";
+import axios from "axios";
 
 export const createroomID = (currentUserID, matchedUserId) => {
     if (!currentUserID || !matchedUserId) {
@@ -14,9 +15,14 @@ export const createroomID = (currentUserID, matchedUserId) => {
     }
 }
 
-export async function getRandomQuestion() {
-    // to-do call getRandomQuestion from question service
-    return {"question_id" : 3}
+export async function getRandomQuestion(token, difficulty) {
+    const questionServiceUrl = `${questionServiceBase}/random-questions/${difficulty.toLowerCase()}`;
+    console.log(questionServiceUrl);
+    const response = await axios.get(
+        questionServiceUrl,
+        { headers: { Authorization: token } }
+    );
+    return response;
 }
 
 // schedule a cron job to delete the room after 3 hours
