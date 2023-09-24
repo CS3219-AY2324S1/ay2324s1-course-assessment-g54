@@ -26,8 +26,8 @@ import { useUser } from "../../contexts/UserContext";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
+    backgroundColor: theme.palette.action.hover,
+    color: "white"
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14

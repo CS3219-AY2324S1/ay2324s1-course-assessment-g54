@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import { useUser } from "../contexts/UserContext";
 
@@ -23,10 +23,11 @@ import QuizIcon from '@mui/icons-material/Quiz';
 const NavBar = () => {
   const navigate = useNavigate();
   const user = useUser();
+  const location = useLocation();
 
+  console.log(location)
   const [anchorElement, setAnchorElement] = useState(null);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
-  const [selectedPage, setSelectedPage] = useState("questions");
 
   const handleOpenUserMenu = (event) => setAnchorElement(event.currentTarget);
   const handleCloseUserMenu = () => setAnchorElement(null);
@@ -38,7 +39,6 @@ const NavBar = () => {
       <Toolbar disableGutters sx={{ paddingRight: 1.5}}>
         <Button 
           onClick={() => {
-            setSelectedPage("questions")
             navigate("/questions");
           }} 
           sx={{ borderRadius: 2, 
@@ -46,7 +46,7 @@ const NavBar = () => {
                 py: "12px", 
                 px: 3, 
                 mx: 1, 
-                backgroundColor: selectedPage == "questions" ? theme => theme.palette.buttonSelected.primary : "transparent", 
+                backgroundColor: location.pathname == "/questions" ? theme => theme.palette.buttonSelected.primary : "transparent", 
                 color: "white",
                 "&:hover": {
                   backgroundColor: theme => theme.palette.buttonHover.primary, 
@@ -59,14 +59,13 @@ const NavBar = () => {
         </Button>
         <Button 
           onClick={() => {
-            setSelectedPage("matchmaking")
             navigate("/matchmaking");
           }} 
           sx={{ borderRadius: 2, 
                 boxShadow: "none", 
                 py: "12px", 
                 px: 3, 
-                backgroundColor: selectedPage == "matchmaking" ? theme => theme.palette.buttonSelected.primary : "transparent", 
+                backgroundColor: location.pathname == "/matchmaking" ? theme => theme.palette.buttonSelected.primary : "transparent", 
                 color: "white",
                 "&:hover": {
                   backgroundColor: theme => theme.palette.buttonHover.primary, 
