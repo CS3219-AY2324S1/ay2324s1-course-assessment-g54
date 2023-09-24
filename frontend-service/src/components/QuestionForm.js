@@ -72,8 +72,8 @@ const QuestionForm = ({
           >
             <ChipArray
               chips={categories}
-              helperText="Press enter to add a new category..."
               label="Categories"
+              placeHolder="Filter categories"
               onAddChip={(newCategory) =>
                 onCategoriesChange((prevCategories) => [
                   ...prevCategories,
