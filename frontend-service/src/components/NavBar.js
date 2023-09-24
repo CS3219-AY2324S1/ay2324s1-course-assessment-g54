@@ -61,8 +61,7 @@ const NavBar = () => {
             <Stack padding={3} spacing={1} alignItems="center">
               {user.isMaintainer
               ? <AvatarWithBadge/>  
-              : <Avatar sx={{ width: 54, height: 54 }} alt={user.name} src="/static/images/avatar/2.jpg" />
- }
+              : <Avatar sx={{ width: 54, height: 54 }} alt={user.name} src="/static/images/avatar/2.jpg" />}
               <Typography variant="body1" align="center">
                 {user.name}
               </Typography>
