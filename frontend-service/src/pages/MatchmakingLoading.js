@@ -57,6 +57,29 @@ const Matchmaking = () => {
       setIsLoading(false);
     })
   }
+  async function handleStart() {
+    setIsLoading(true);
+    setMsg("sent");
+    const ws = await connectToServer();
+
+    ws.addEventListener("open", (event) => {
+      setMsg("connected to matching server!");
+      setIsLoading(true);
+    });
+  }
+
+  async function handleEnd() {
+    setIsLoading(true);
+    setMsg("sent");
+    const ws = await connectToServer();
+
+    
+    ws.addEventListener("close", (event) => {
+      console.log(event.data);
+      setMsg("connection to matching server closed");
+      setIsLoading(false);
+    })
+  }
 
   return (
     <Stack bgcolor="whitesmoke" alignItems="center" gap={2} pt={2}>
@@ -80,7 +103,7 @@ const Matchmaking = () => {
           </ToggleButton>
         </ToggleButtonGroup>
       </Stack>
-      <Button variant="contained" onClick={handleSave}>
+      <Button variant="contained" onClick={handleStart}>
         Let's Match!
       </Button>
       <Typography>{msg}</Typography>
@@ -103,7 +126,7 @@ const Matchmaking = () => {
         </Card>
         <Card sx={{ mr: 1 }}>
           <CardContent>
-            <Button variant="contained" onClick={handleSave}>
+            <Button variant="contained" onClick={handleEnd}>
               Cancel Matchmaking!
             </Button>
           </CardContent>
