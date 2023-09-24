@@ -12,6 +12,7 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Card from "@mui/material/Card";
 import { CardContent } from "@mui/material";
+let ws;
 
 const Matchmaking = () => {
   const user = useUser();
@@ -58,8 +59,6 @@ const Matchmaking = () => {
     })
   }
 
-  let ws;
-
   async function handleStart() {
     setIsLoading(true);
     setMsg("sent start");
@@ -69,17 +68,7 @@ const Matchmaking = () => {
       setMsg("connected to matching server!");
       setIsLoading(true);
     });
-    ws.addEventListener("message", (event) => {
-      console.log(event.data);
-      setData(`Message from server ${event.data}`);
-      setIsLoading(true);
-    });
 
-    ws.addEventListener("close", (event) => {
-      console.log(event.data);
-      setMsg("connection to matching server closed");
-      setIsLoading(false);
-    })
   }
 
   async function handleEnd() {
