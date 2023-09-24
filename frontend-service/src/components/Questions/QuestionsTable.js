@@ -208,7 +208,7 @@ const QuestionsTable = ({ filteredQuestions, setFilteredQuestions }) => {
                 <StyledTableCell>
                   <Chip
                     color={getComplexityStyle(question.complexity)}
-                    style={{ textTransform: "capitalize" }}
+                    sx={{ textTransform: "capitalize", color: "white" }}
                     label={question.complexity}
                   />
                 </StyledTableCell>

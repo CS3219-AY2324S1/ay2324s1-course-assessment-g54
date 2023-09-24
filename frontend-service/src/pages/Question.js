@@ -94,7 +94,7 @@ const Question = () => {
                 </Typography>
                 <Chip
                   label={question.complexity}
-                  color={getDifficultyChipColor(question.complexity)}
+                  sx={{backgroundColor: getDifficultyChipColor(question.complexity)}}
                   size="small"
                 />
                 {user.isMaintainer && (

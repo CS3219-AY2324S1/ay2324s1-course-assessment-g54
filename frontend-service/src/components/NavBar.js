@@ -26,20 +26,55 @@ const NavBar = () => {
 
   const [anchorElement, setAnchorElement] = useState(null);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
-  const [selectedButton, setSelectedButton] = useState(null);
+  const [selectedPage, setSelectedPage] = useState("questions");
 
   const handleOpenUserMenu = (event) => setAnchorElement(event.currentTarget);
   const handleCloseUserMenu = () => setAnchorElement(null);
   const handleOpenSettingsModal = () => setIsSettingsModalOpen(true);
 
   return (
-    <AppBar position="static">
+    <AppBar position="static" sx={{backgroundColor: theme => theme.palette.background.secondary}}>
       <SettingsModal isModalOpen={isSettingsModalOpen} setIsModalOpen={setIsSettingsModalOpen}/>
       <Toolbar disableGutters sx={{ paddingRight: 1.5}}>
-        <Button onClick={() => navigate("/questions")} sx={{ height:65, borderRadius: 0, boxShadow: "none", px: 4}} variant="contained" color="secondary" startIcon={<QuizIcon/>}>
+        <Button 
+          onClick={() => {
+            setSelectedPage("questions")
+            navigate("/questions");
+          }} 
+          sx={{ borderRadius: 2, 
+                boxShadow: "none", 
+                py: "12px", 
+                px: 3, 
+                mx: 1, 
+                backgroundColor: selectedPage == "questions" ? theme => theme.palette.buttonSelected.primary : "transparent", 
+                color: "white",
+                "&:hover": {
+                  backgroundColor: theme => theme.palette.buttonHover.primary, 
+                },
+          }}
+          variant="contained" 
+          startIcon={<QuizIcon/>}
+        >
           Questions
         </Button>
-        <Button onClick={() => navigate("/matchmaking")} sx={{ height:65, borderRadius: 0, boxShadow: "none", px: 4}} variant="contained" color="success" startIcon={<MatchmakingIcon/>}>
+        <Button 
+          onClick={() => {
+            setSelectedPage("matchmaking")
+            navigate("/matchmaking");
+          }} 
+          sx={{ borderRadius: 2, 
+                boxShadow: "none", 
+                py: "12px", 
+                px: 3, 
+                backgroundColor: selectedPage == "matchmaking" ? theme => theme.palette.buttonSelected.primary : "transparent", 
+                color: "white",
+                "&:hover": {
+                  backgroundColor: theme => theme.palette.buttonHover.primary, 
+                },
+              }}
+          variant="contained" 
+          startIcon={<MatchmakingIcon/>}
+        >
           Find Match
         </Button>
         <Box sx={{ flexGrow: 1 }} />

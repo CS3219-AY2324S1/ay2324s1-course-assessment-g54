@@ -25,14 +25,15 @@ const theme = createTheme();
 const darkTheme = createTheme({
   palette: {
     mode: 'dark',
-    primary: {
-      main: "#30D5C8",
-    },
-    secondary: {
-      main: "#494c7d"
-    },
     background: {
-      default: '#141C2F'
+      default: "rgba(20, 28, 47, 1)",
+      secondary: "rgba(5, 16, 43, 1)",
+    },
+    buttonSelected : {
+      primary: "rgba(66, 165, 245, 1)",
+    },
+    buttonHover : {
+      primary: "rgba(66, 165, 245, 0.7)",
     },
   },
 })
