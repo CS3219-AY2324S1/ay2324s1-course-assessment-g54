@@ -1,9 +1,8 @@
 import { ServerEvents, UserEvents } from "../constants/constant.js";
-import { deleteRoomInfo, getUserID } from "../redis/redis.js";
+import { deleteRoomInfo } from "../redis/redis.js";
 
-export const DeleteRoomHandler = (io, socket, redisClient) => {
+export const DeleteRoomHandler = (io, socket, redisClient, currentUser) => {
     async function handleDeleteRoom(data) {
-        const currentUser = await getUserID(redisClient, socket.id);
         const roomID = data.roomID;
         const response = {
             'roomID': roomID,

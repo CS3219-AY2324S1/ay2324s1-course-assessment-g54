@@ -1,11 +1,9 @@
 import { ServerEvents, UserEvents } from "../constants/constant.js";
-import { getUserID } from "../redis/redis.js";
 
-export const CodeEventHandler = (io, socket, redisClient) => {
+export const CodeEventHandler = (io, socket, redisClient, currentUser) => {
     async function handleCode(data) {
         const code = data.code;
         const roomID = data.roomID;
-        const currentUser = await getUserID(redisClient, socket.id);
 
         const response = {
             'roomID': roomID,
