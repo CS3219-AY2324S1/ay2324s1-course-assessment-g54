@@ -74,7 +74,7 @@ const Question = () => {
 
   return (
     <>
-      <Box height="calc(100vh - 64px)" width="100vw" bgcolor="whitesmoke">
+      <Box height="calc(100vh - 64px)" width="100vw" >
         <Box height="100%" display="flex">
           <Box width="50%" height="100%" padding={1}>
             <Stack height="100%" spacing={1}>

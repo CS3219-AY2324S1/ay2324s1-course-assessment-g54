@@ -22,6 +22,23 @@ import "@fontsource/roboto/700.css";
 
 const theme = createTheme();
 
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+    primary: {
+      main: "#444654",
+    },
+    secondary: {
+      main: "#494c7d"
+    },
+    background: {
+      default: '#141C2F'
+    },
+    
+  },
+})
+console.log(darkTheme);
+
 const unprotectedRoutes = [
   { path: "/", element: <Example /> },
   { path: "/login", element: <Login /> },
@@ -38,7 +55,7 @@ const protectedRoutes = [
 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={darkTheme}>
       <CssBaseline />
       <UserProvider>
         <BrowserRouter>
