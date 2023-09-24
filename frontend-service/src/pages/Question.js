@@ -117,7 +117,7 @@ const Question = () => {
                   />
                 ))}
               </Box>
-              <Card variant="outlined" sx={{ flexGrow: 1, padding: 1 }}>
+              <Card variant="outlined" sx={{ flexGrow: 1, padding: 1, backgroundColor: "white" }}>
                 <iframe
                   height="100%"
                   width="100%"
