@@ -1,5 +1,5 @@
 import { createClient } from "redis";
-import { redisUrl } from "./constant.js";
+import { redisUrl } from "../constant.js";
 
 function socketInfoPrefix(key) {
     return "socket-info:" + key
@@ -29,25 +29,14 @@ export async function deleteUserID(redisClient, socketID) {
     return redisClient.del(socketInfoPrefix(socketID));
 }
 
-export async function getRoomInfo(redisClient, roomHash) {
-    return redisClient.get(roomPrefix(roomHash))
+export async function getRoomInfo(redisClient, roomID) {
+    return redisClient.get(roomPrefix(roomID))
 }
 
-export async function createRoomInfo(redisClient, roomHash, roomInfo) {
-    redisClient.set(roomPrefix(roomHash), JSON.stringify(roomInfo));
+export async function createRoomInfo(redisClient, roomID, roomInfo) {
+    redisClient.set(roomPrefix(roomID), JSON.stringify(roomInfo));
 }
 
-export async function deleteRoomInfo(redisClient, roomHash) {
-    redisClient.del(roomPrefix(roomHash));
-}
-
-export async function getNumOfPeopleInRoom(redisClient, roomHash) {
-    const numPeople = await redisClient.get(numPeoplePrefix(roomHash))
-
-    if (numPeople == null) {
-        return 0;
-    } else {
-        return parseInt(numPeople);
-    }
-    
+export async function deleteRoomInfo(redisClient, roomID) {
+    redisClient.del(roomPrefix(roomID));
 }
