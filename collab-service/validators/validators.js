@@ -1,5 +1,5 @@
 import axios from "axios";
-import { difficulties, usersServiceBase } from "./constant.js";
+import { difficulties, usersServiceBase } from "../constants/constant.js";
 
 export async function validateLogin(token) {
     const usersServiceUrl = `${usersServiceBase}/profile`;

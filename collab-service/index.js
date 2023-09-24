@@ -3,8 +3,8 @@ import express from "express";
 import http from "http";
 import { Server } from "socket.io"
 import { createRedisClient, deleteUserID, getUserID, saveSocketToUserID } from "./redis/redis.js";
-import { validateLogin } from "./validators.js";
-import { ErrorMessages, UserEvents } from "./constant.js";
+import { validateLogin } from "./validators/validators.js";
+import { ErrorMessages, UserEvents } from "./constants/constant.js";
 import { CodeEventHandler } from "./handlers/handleCode.js";
 import { GetUserHandler } from "./handlers/handleGetUsers.js";
 import { JoinRoomHandler } from "./handlers/handleJoinRoom.js";

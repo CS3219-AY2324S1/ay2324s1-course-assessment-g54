@@ -1,4 +1,4 @@
-import { ServerEvents, UserEvents } from "../constant.js";
+import { ServerEvents, UserEvents } from "../constants/constant.js";
 import { deleteRoomInfo, getUserID } from "../redis/redis.js";
 
 export const LeaveAllRoomsHandler = (io, socket, redisClient) => {

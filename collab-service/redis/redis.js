@@ -1,5 +1,5 @@
 import { createClient } from "redis";
-import { redisUrl } from "../constant.js";
+import { redisUrl } from "../constants/constant.js";
 
 function socketInfoPrefix(key) {
     return "socket-info:" + key

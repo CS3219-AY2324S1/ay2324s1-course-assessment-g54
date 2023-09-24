@@ -1,7 +1,7 @@
-import { ErrorMessages, ServerEvents, UserEvents } from "../constant.js";
+import { ErrorMessages, ServerEvents, UserEvents } from "../constants/constant.js";
 import { createRoomInfo, getRoomInfo, getUserID } from "../redis/redis.js";
-import { createroomID, getRandomQuestion, scheduleDeleteJob } from "../utils.js";
-import { validateDifficulty } from "../validators.js";
+import { createroomID, getRandomQuestion, scheduleDeleteJob } from "../utils/utils.js";
+import { validateDifficulty } from "../validators/validators.js";
 
 export const JoinRoomHandler = (io, socket, redisClient) => {
     async function handleJoinRoom (data) {

@@ -1,6 +1,6 @@
 import { createHash } from "crypto";
 import schedule from "node-schedule";
-import { Milliseconds } from "./constant.js";
+import { Milliseconds } from "../constants/constant.js";
 
 export const createroomID = (currentUserID, matchedUserId) => {
     if (!currentUserID || !matchedUserId) {
@@ -28,11 +28,4 @@ export function scheduleDeleteJob(redisClient, roomID) {
             await deleteRoomInfo(redisClient, roomID);
         }
     );
-}
-
-export function formatDataForSending(roomID, data) {
-    return {
-        'roomID': roomID,
-        'data': data
-    }
 }

@@ -1,4 +1,4 @@
-import { ServerEvents, UserEvents } from "../constant.js";
+import { ServerEvents, UserEvents } from "../constants/constant.js";
 import { getUserID } from "../redis/redis.js";
 
 export const GetUserHandler = (io, socket, redisClient) => {
