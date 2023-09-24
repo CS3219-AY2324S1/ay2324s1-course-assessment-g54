@@ -1,8 +1,8 @@
 import { createHash } from "crypto";
 import schedule from "node-schedule";
-import { Milliseconds } from "./constant.js";
+import { Milliseconds } from "../constants/constant.js";
 
-export const createRoomHash = (currentUserID, matchedUserId) => {
+export const createroomID = (currentUserID, matchedUserId) => {
     if (!currentUserID || !matchedUserId) {
         return null;
     }
@@ -20,7 +20,7 @@ export async function getRandomQuestion() {
 }
 
 // schedule a cron job to delete the room after 3 hours
-export function scheduleDeleteJob(roomID) {
+export function scheduleDeleteJob(redisClient, roomID) {
     console.log("scheduling delete job!")
     const startTime = new Date(Date.now() + Milliseconds.IN_THREE_HOURS);
     schedule.scheduleJob(roomID, startTime,
