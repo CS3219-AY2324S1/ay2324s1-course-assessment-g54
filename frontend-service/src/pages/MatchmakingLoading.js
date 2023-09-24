@@ -11,6 +11,7 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Card from "@mui/material/Card";
+import { CardContent } from "@mui/material";
 
 const Matchmaking = () => {
   const user = useUser();
@@ -85,20 +86,44 @@ const Matchmaking = () => {
       <Typography>{msg}</Typography>
       <Typography>{data}</Typography>
       <Box sx={{ display: "flex", flexDirection: "row" }}>
-        <Card sx={{mr:1}}>
-          <Stack padding={3} spacing={1} alignItems="center">
-            {user.isMaintainer
-              ? <AvatarWithBadge />
-              : <Avatar sx={{ width: 54, height: 54 }} alt={user.name} src="/static/images/avatar/2.jpg" />}
-            <Typography variant="body1" align="center">
-              {user.name}
-            </Typography>
-            <Typography variant="body2" align="center" color="gray">
-              {user.email}
-            </Typography>
-          </Stack>
+        <Card sx={{ mr: 1 }}>
+          <CardContent>
+            <Stack padding={3} spacing={1} alignItems="center">
+              {user.isMaintainer
+                ? <AvatarWithBadge />
+                : <Avatar sx={{ width: 54, height: 54 }} alt={user.name} src="/static/images/avatar/2.jpg" />}
+              <Typography variant="body1" align="center">
+                {user.name}
+              </Typography>
+              <Typography variant="body2" align="center" color="gray">
+                {user.email}
+              </Typography>
+            </Stack>
+          </CardContent>
         </Card>
-        {true && <CircularProgress padding="100" color="secondary" />}
+        <Card sx={{ mr: 1 }}>
+          <CardContent>
+            <Button variant="contained" onClick={handleSave}>
+              Cancel Matchmaking!
+            </Button>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent>
+            {isLoading ? <CircularProgress padding="100" color="secondary" /> :
+              <Stack padding={3} spacing={1} alignItems="center">
+                {user.isMaintainer
+                  ? <AvatarWithBadge />
+                  : <Avatar sx={{ width: 54, height: 54 }} alt={user.name} src="/static/images/avatar/2.jpg" />}
+                <Typography variant="body1" align="center">
+                  {user.name}
+                </Typography>
+                <Typography variant="body2" align="center" color="gray">
+                  {user.email}
+                </Typography>
+              </Stack>}
+          </CardContent>
+        </Card>
       </Box>
     </Stack>
   );
