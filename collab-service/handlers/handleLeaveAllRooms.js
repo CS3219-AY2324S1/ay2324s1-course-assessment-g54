@@ -10,9 +10,10 @@ export const LeaveAllRoomsHandler = (io, socket, redisClient, currentUser) => {
                 
                 const response = {
                     'roomID': room,
-                    'msg': `user ${currentUser} has left the room`
+                    'msg': `user ${currentUser} has left the room ${room}`
                 }
                 socket.broadcast.in(room).emit(ServerEvents.ROOM_NOTIFS, response);
+                console.log(response.msg);
                 
                 if (io.sockets.adapter.rooms.get(room) !== undefined) {
                     const numPeople = io.sockets.adapter.rooms.get(room).size;

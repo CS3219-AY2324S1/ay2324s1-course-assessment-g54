@@ -18,10 +18,9 @@ export const JoinRoomHandler = (io, socket, redisClient, currentUser) => {
             return disconnectSocket(socket)
         } 
 
-        socket.join(roomID);
-        const response = await getRoomInfo(redisClient, roomID);
-        if (response != null) {
-            io.to(socket.id).emit(ServerEvents.ROOM_INFO, response);
+        const cachedRoomInfo = await getRoomInfo(redisClient, roomID);
+        if (cachedRoomInfo != null) {
+            io.to(socket.id).emit(ServerEvents.ROOM_INFO, cachedRoomInfo);
         } else {
             if (!matchedUser || !validateDifficulty(difficulty)) {
                 const response = {
@@ -57,6 +56,7 @@ export const JoinRoomHandler = (io, socket, redisClient, currentUser) => {
             // schedule a cron job to delete the room after 3 hours
             //scheduleDeleteJob(redisClient, roomID);
         }
+        socket.join(roomID);
         informOtherRoomUsers(socket, currentUser, roomID);
         getNumPeopleInRoom(io, socket, roomID);
     }
@@ -76,8 +76,8 @@ function getNumPeopleInRoom(io, socket, roomID) {
 function informOtherRoomUsers(socket, currentUser, roomID) {
     const notif = {
         'roomID' : roomID,
-        'msg': `user ${currentUser} has join room ${roomID}`
+        'msg': `user ${currentUser} has joined room ${roomID}`
     }
     socket.broadcast.in(roomID).emit(ServerEvents.ROOM_NOTIFS, notif);
-    console.log(`user ${currentUser} joined room: ${roomID}`);
+    console.log(notif.msg);
 }
