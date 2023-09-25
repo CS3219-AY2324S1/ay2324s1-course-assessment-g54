@@ -39,3 +39,8 @@ export const validateQuery = (question) => {
   );
   return validationSchema.validate(question);
 };
+
+export const validateComplexity = (complexity) => {
+  const validationSchema = Joi.string().valid(...Object.values(COMPLEXITIES));
+  return validationSchema.validate(complexity);
+};

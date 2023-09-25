@@ -6,6 +6,7 @@ const Matchmaking =  () => {
     const [msg, setMsg] = useState('');
     const [data, setData] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [webSocket, setWebSocket] = useState({});
 
     const token = window.localStorage.getItem("token");
 
@@ -21,28 +22,40 @@ const Matchmaking =  () => {
         return ws;
     }
 
-    async function handleSave () {
-        setIsLoading(true);
-        setMsg("sent"); 
-        const ws = await connectToServer(); 
+    async function handleSave() {
+      setIsLoading(true);
+      setMsg("sent");
+      setData("");
+      const ws = await connectToServer();
+      setWebSocket(ws);
 
-        ws.addEventListener("open", (event) => {
-            setMsg("connected to matching server!");
-            setIsLoading(false);
-        });
+      ws.addEventListener("open", (event) => {
+        setMsg("Connected to matching server!");
+        setIsLoading(false);
+      });
 
-        ws.addEventListener("message", (event) => {
-            console.log(event.data);
-            setData(`Message from server ${event.data}`);
-            setIsLoading(false);
-        });
-        
-        ws.addEventListener("close", (event) => {
-            console.log(event.data);
-            setMsg("connection to matching server closed");
-            setIsLoading(false);
-        })
+      ws.addEventListener("message", (event) => {
+        console.log(event.data);
+        setData(`Message from socket: ${event.data}`);
+        setIsLoading(false);
+      });
+
+      ws.addEventListener("close", (event) => {
+        console.log(event.reason);
+        setWebSocket({});
+        setData(`Socket close with reason: ${event.reason}`);
+        setMsg("Connection to matching server closed");
+        setIsLoading(false);
+      })
     }
+
+
+    // for debugging
+    useEffect(()=> {
+        if (webSocket !== undefined && webSocket.length !== 0) {
+            console.log(webSocket);
+        }
+    }, [webSocket]);
 
   return (
     <Stack sx={{backgroundColor: "primary"}} alignItems="center" gap={2} pt={2}>

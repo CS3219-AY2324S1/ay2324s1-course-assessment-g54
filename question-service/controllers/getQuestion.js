@@ -53,3 +53,17 @@ export async function getQuestionById(req, res) {
         throw error;
     }
 }
+
+export async function getRandomQuestionByComplexity(req, res) {
+  try{
+      const query = {complexity: req.params.complexity};
+      const questions = await Question.find(query);
+      if (!questions) {
+          return null;
+      }
+      const randomIndex = Math.floor(Math.random() * questions.length);
+      res.json(questions[randomIndex]);
+  } catch (error) {
+      throw error;
+  }
+}

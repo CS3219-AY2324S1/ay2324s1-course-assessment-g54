@@ -35,7 +35,6 @@ wss.on("connection", async (ws, request) => {
     const matchResponseHandler = async (response) => {
       const { users, difficulty } = response;
       const matchedUser = users.filter((userId) => userId !== user.id)[0];
-      ws.send(JSON.stringify({ matchedUser, difficulty }) );
       ws.close(1000, JSON.stringify({ matchedUser, difficulty }));
       return true;
     };
