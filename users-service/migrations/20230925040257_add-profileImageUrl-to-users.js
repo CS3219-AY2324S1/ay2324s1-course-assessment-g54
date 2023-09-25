@@ -4,7 +4,7 @@
  */
 export function up(knex) {
   return knex.schema.alterTable("users", function (table) {
-    table.boolean("profileImageUrl").defaultTo("");
+    table.text("profileImageUrl").notNullable().defaultTo("");
   });
 };
 

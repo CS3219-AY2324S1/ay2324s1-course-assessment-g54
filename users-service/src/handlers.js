@@ -50,8 +50,8 @@ export const handleGetProfile = async (request, response) => {
     return response.status(400).send();
   }
 
-  const { name, email, isMaintainer } = user;
-  return response.status(200).json({ id, name, email, isMaintainer });
+  const { name, email, isMaintainer, profileImageUrl } = user;
+  return response.status(200).json({ id, name, email, isMaintainer, profileImageUrl });
 };
 
 /**
@@ -171,6 +171,8 @@ export const handleUpdateProfile = async (request, response) => {
   }
 
   const name = body.name;
+  const profileImageUrl = body.profileImageUrl;
+
   try {
     await database("users").where("id", "=", id).update({ name, profileImageUrl });
   } catch (error) {
