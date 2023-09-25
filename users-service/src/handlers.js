@@ -172,7 +172,7 @@ export const handleUpdateProfile = async (request, response) => {
 
   const name = body.name;
   try {
-    await database("users").where("id", "=", id).update({ name });
+    await database("users").where("id", "=", id).update({ name, profileImageUrl });
   } catch (error) {
     console.error(error.message);
     return response.status(400).send();
