@@ -64,7 +64,7 @@ const NavBar = () => {
                 boxShadow: "none", 
                 py: "12px", 
                 px: 3, 
-                backgroundColor: location.pathname == "/matchmaking" ? theme => theme.palette.navbarButtonSelected : "transparent", 
+                backgroundColor: location.pathname == "/matchmakingSearch" ? theme => theme.palette.navbarButtonSelected : "transparent", 
                 color: "white",
                 "&:hover": {
                   backgroundColor: theme => theme.palette.navbarButtonHover, 

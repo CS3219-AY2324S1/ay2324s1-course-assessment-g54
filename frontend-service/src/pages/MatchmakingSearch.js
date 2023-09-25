@@ -72,7 +72,7 @@ const MatchmakingSearch = () => {
   }
 
   return (
-    <Stack bgcolor="whitesmoke" alignItems="center" gap={2} pt={2}>
+    <Stack alignItems="center" gap={2} pt={2}>
       <Typography>{msg}</Typography>
       <Typography>{data}</Typography>
       <Typography>

@@ -19,7 +19,7 @@ const Matchmaking = () => {
   }
 
   return (
-    <Stack bgcolor="whitesmoke" alignItems="center" gap={2} pt={2}>
+    <Stack alignItems="center" gap={2} pt={2}>
       <Stack direction="row" alignItems="center" gap={2}>
         <Typography fontSize={20}>Difficulty: </Typography>
         <ToggleButtonGroup value={difficulty} exclusive onChange={handleDifficultyChange}>
