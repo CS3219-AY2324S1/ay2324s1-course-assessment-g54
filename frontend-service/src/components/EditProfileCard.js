@@ -25,7 +25,6 @@ const EditProfileCard = () => {
     } catch (error) {
       console.error(error.message);
     }
-    console.log(user);
     dispatch({ type: "set", user: { ...user, name: inputName, profileImageUrl: inputProfileImageUrl} })
   }
 
@@ -49,7 +48,6 @@ const EditProfileCard = () => {
         <Stack direction="row" justifyContent="flex-end" pt={4} spacing={2}>
           <Button variant="contained" type='submit' sx={{ minWidth: 100 }}> Save</Button>
         </Stack>
-        <Typography>url:{user.profileImageUrl}</Typography>
       </form>
     </Box>
   )
