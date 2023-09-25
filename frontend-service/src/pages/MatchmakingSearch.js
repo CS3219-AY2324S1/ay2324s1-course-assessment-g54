@@ -19,31 +19,18 @@ const MatchmakingSearch = () => {
   const user = useUser();
   const navigate = useNavigate();
 
-  const [difficulty, setDifficulty] = useState('easy');
   const [msg, setMsg] = useState('');
   const [data, setData] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   const token = window.localStorage.getItem("token");
 
-  async function handleEnd() {
-    if (ws) {
-      setMsg("sent end");
-      console.log("close");
-      ws.addEventListener("close", (event) => {
-        console.log(event.data);
-        setMsg("connection to matching server closed");
-        setIsLoading(false);
-        ws = null;
-      })
-
-      ws.close();
-      
-    }
-    navigate(() => "/matchmaking");
-    console.log("goback");
-  }
   useEffect(() => {
+    //console.log(difficulty);
+    const queryString = window.location.search;
+    const difficulty = queryString.split("=")[1];
+    console.log(difficulty);
+
     async function connectToServer() {
       const ws = new WebSocket(`ws://token:${token}@localhost:3003?difficulty=${difficulty}`, token);
       return ws;
@@ -67,7 +54,25 @@ const MatchmakingSearch = () => {
       }
     }
     handleStart();
-  }, [ws]);
+  }, [token]);
+
+  async function handleEnd() {
+    if (ws) {
+      setMsg("sent end");
+      console.log("close");
+      ws.addEventListener("close", (event) => {
+        console.log(event.data);
+        setMsg("connection to matching server closed");
+        setIsLoading(false);
+        ws = null;
+      })
+
+      ws.close();
+      
+    }
+    navigate(() => "/matchmaking");
+    console.log("goback");
+  }
 
   return (
     <Stack bgcolor="whitesmoke" alignItems="center" gap={2} pt={2}>

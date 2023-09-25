@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Button from "@mui/material/Button";
@@ -11,9 +11,6 @@ const Matchmaking = () => {
   const navigate = useNavigate();
 
   const [difficulty, setDifficulty] = useState('easy');
-  const [msg, setMsg] = useState('');
-  const [data, setData] = useState('');
-
 
   const handleDifficultyChange = (event, newDifficulty) => {
     if (newDifficulty !== null) {
@@ -47,8 +44,6 @@ const Matchmaking = () => {
       <Button variant="contained" onClick={() => navigate(`/matchmaking/find?difficulty=${difficulty}`)}>
         Let's Match!
       </Button>
-      <Typography>{msg}</Typography>
-      <Typography>{data}</Typography>
     </Stack>
   );
 }
