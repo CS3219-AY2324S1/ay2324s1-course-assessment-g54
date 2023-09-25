@@ -12,8 +12,7 @@ import NewQuestion from "./pages/NewQuestion";
 import Question from "./pages/Question";
 import Questions from "./pages/Questions";
 import Signup from "./pages/Signup";
-import Matchmaking from "./pages/MatchmakingLoading";
-import MatchmakingLoading from "./pages/MatchmakingLoading";
+import Matchmaking from "./pages/Matchmaking";
 import NavBar from "./components/NavBar";
 
 import "@fontsource/roboto/300.css";
@@ -35,7 +34,6 @@ const protectedRoutes = [
   { path: "/questions/:id", element: <Question /> },
   { path: "/questions/:id/edit", element: <EditQuestion /> },
   { path: "/matchmaking", element: <Matchmaking /> },
-  { path: "/matchmaking/searching", element: <MatchmakingLoading /> },
 ];
 
 function App() {
