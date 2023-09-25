@@ -13,4 +13,5 @@ export const signupRequestBodySchema = yup.object({
 
 export const updateProfileRequestBodySchema = yup.object({
   name: yup.string().required(),
+  profileImageUrl: yup.string().notRequired().default(''),
 });
