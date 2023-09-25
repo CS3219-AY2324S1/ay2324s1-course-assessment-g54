@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Typography from "@mui/material/Typography";
-import Stack from "@mui/material/Stack";
 
 const Matchmaking = () => {
   const navigate = useNavigate();
@@ -17,7 +17,6 @@ const Matchmaking = () => {
       setDifficulty(newDifficulty);
     }
   }
-
 
   return (
     <Stack bgcolor="whitesmoke" alignItems="center" gap={2} pt={2}>
@@ -48,7 +47,4 @@ const Matchmaking = () => {
   );
 }
 
-/*
-
-*/
 export default Matchmaking;
