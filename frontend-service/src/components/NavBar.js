@@ -37,7 +37,7 @@ const NavBar = () => {
         <Box sx={{ flexGrow: 0 }}>
           <Tooltip title={user.name}>
             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-              <Avatar alt={user.name} src="/static/images/avatar/2.jpg" />
+              <Avatar alt={user.name} src={user.profileImageUrl}/>
             </IconButton>
           </Tooltip>
           <Popover
@@ -52,7 +52,7 @@ const NavBar = () => {
             <Stack padding={3} spacing={1} alignItems="center">
               {user.isMaintainer
               ? <AvatarWithBadge/>  
-              : <Avatar sx={{ width: 54, height: 54 }} alt={user.name} src="/static/images/avatar/2.jpg" />
+              : <Avatar sx={{ width: 54, height: 54 }} alt={user.name} src={user.profileImageUrl} />
  }
               <Typography variant="body1" align="center">
                 {user.name}
