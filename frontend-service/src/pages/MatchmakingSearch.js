@@ -47,10 +47,18 @@ const MatchmakingSearch = () => {
         });
 
         ws.addEventListener("message", (event) => {
-          //console.log(event.data);
+          console.log(event.data);
           setData(`Message from server ${event.data}`);
           setIsLoading(true);
         });
+
+        ws.addEventListener("close", (event) => {
+          console.log(event.data);
+          setMsg("connection to matching server closed");
+          setIsLoading(false);
+          ws = null;
+        })
+        ws.close();
       }
     }
     handleStart();
