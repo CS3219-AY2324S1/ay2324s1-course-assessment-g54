@@ -4,11 +4,6 @@ import { cleanupRoomIfEmpty, informUsersSomeoneLeft } from "./common.js";
 export const LeaveAllRoomsHandler = (io, socket, redisClient, currentUser) => {
     async function handleLeaveAllRoom(data) {
         socket.rooms.forEach( async function (roomID) {
-                const response = {
-                    'roomID': roomID,
-                    'user': currentUser,
-                }
-
                 if (socket.id != roomID) {
                     socket.leave(roomID);
                 }
