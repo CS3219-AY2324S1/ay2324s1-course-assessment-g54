@@ -18,7 +18,6 @@ export const createroomID = (currentUserID, matchedUserId) => {
 export async function getRandomQuestion(token, difficulty) {
     try {
         const questionServiceUrl = `${questionServiceBase}/random-questions/${difficulty.toLowerCase()}`;
-        console.log(questionServiceUrl);
         const response = await axios.get(
             questionServiceUrl,
             { headers: { Authorization: token } }

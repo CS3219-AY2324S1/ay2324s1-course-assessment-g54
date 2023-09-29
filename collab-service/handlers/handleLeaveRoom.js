@@ -1,6 +1,5 @@
-import { ErrorMessages, ServerEvents, UserEvents } from "../constants/constant.js";
-import { deleteRoomInfo } from "../redis/redis.js";
-import { getNumPeopleInRoom, informUserOfError } from "./common.js";
+import { ErrorMessages, UserEvents } from "../constants/constant.js";
+import { cleanupRoomIfEmpty, informUserOfError, informUsersSomeoneLeft } from "./common.js";
 
 export const LeaveRoomHandler = (io, socket, redisClient, currentUser) => {
     async function handleLeaveRoom(data) {
@@ -11,22 +10,9 @@ export const LeaveRoomHandler = (io, socket, redisClient, currentUser) => {
             return; 
         }
         
-        const response = {
-            'roomID': roomID,
-            'user': currentUser,
-        }
-
         socket.leave(roomID);
-        socket.broadcast.in(roomID).emit(ServerEvents.LEFT_ROOM, response);
-        console.log(`user ${currentUser} left room ${roomID}`);
-
-        // delete room if there are no people left in the room
-        const numPeople = getNumPeopleInRoom(io, socket, roomID);
-        console.log(`numPeople: ${numPeople} left in room ${roomID}`);
-        if (numPeople === 0) {
-            await deleteRoomInfo(redisClient, roomID);
-            io.in(roomID).socketsLeave(roomID);
-        }
+        informUsersSomeoneLeft(socket, currentUser, roomID);
+        await cleanupRoomIfEmpty(io, socket, redisClient, roomID);
     }
 
     socket.on(UserEvents.LEAVE_ROOM, handleLeaveRoom);
