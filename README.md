@@ -114,25 +114,15 @@ Then click save and you can run queries on the postgres server!
 
 The matchmaking microservice uses [RabbitMQ](https://www.rabbitmq.com/) as a message broker. To access the management UI, go to http://localhost:15672 after starting the `rabbitmq` docker container. 
 
-### Download Judge0 with http
-1. Install [Docker](https://docs.docker.com) and [Docker Compose](https://docs.docker.com/compose).
-2. Download and extract the release archive:
-```bash
-wget https://github.com/judge0/judge0/releases/download/v1.13.0/judge0-v1.13.0.zip
-unzip judge0-v1.13.0.zip
-```
-3. Run all services and wait a few seconds until everything is initialized:
-```bash
-cd judge0-v1.13.0
-docker-compose up -d db redis
-sleep 10
-docker-compose up -d
-sleep 5
-```
-The judge0 service is avaliable on `http://localhost:2358`
-4. If you have an error on the Mac
-Change the config of `deprecatedCgroupv1` to `true` in
+## Judge0 
+A sample UI for the Judge0 server is avaliable on `http://localhost:2358/dummy-client.html`.
+
+If you have an error on the Mac:
+
+- Change the config of `deprecatedCgroupv1` to `true` in
+
 ```bash
 vim ~/Library/Group\ Containers/group.com.docker/settings.json
 ```
-Then, in `Docker` go to `Settings` > `Features` in development enable checkbox for `Use` > enable checkbox for Rosetta for `x86/amd64 emulation on Apple Silicon`
+
+- Then, in `Docker` go to `Settings` > `Features` in development enable checkbox for `Use` > enable checkbox for Rosetta for `x86/amd64 emulation on Apple Silicon`
