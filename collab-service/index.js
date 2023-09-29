@@ -21,15 +21,18 @@ const redisClient = await createRedisClient();
 
 async function authentication(socket, next) {
     if (socket.handshake.query && socket.handshake.query.token){
-        const response = await validateLogin(socket.handshake.query.token);
-        if (response.data == null) {
-            next(new Error(ErrorMessages.AUTHENTICATION));
-        } 
-        await saveSocketToUserID(redisClient, socket.id, response.data.id);
-        next();
-    }
-    else {
-        next(new Error(ErrorMessages.AUTHENTICATION));
+        try {
+            const response = await validateLogin(socket.handshake.query.token);
+            if (response.data === null) {
+                return next(new Error(ErrorMessages.AUTHENTICATION));
+            } 
+            await saveSocketToUserID(redisClient, socket.id, response.data.id);
+            next();
+        } catch (error) {
+            return next (error);
+        }
+    } else {
+        return next(new Error(ErrorMessages.AUTHENTICATION));
     } 
 }
 
