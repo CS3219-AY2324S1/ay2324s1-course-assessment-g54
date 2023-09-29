@@ -1,5 +1,6 @@
-import { ServerEvents, UserEvents } from "../constants/constant.js";
+import { ErrorMessages, ServerEvents, UserEvents } from "../constants/constant.js";
 import { getUserID } from "../redis/redis.js";
+import { informUserOfError } from "./common.js";
 
 export const GetUserHandler = (io, socket, redisClient, currentUser) => {
     async function handleGetUser(data) {
@@ -7,11 +8,8 @@ export const GetUserHandler = (io, socket, redisClient, currentUser) => {
         const roomID = data.roomID;
 
         if (!roomID || roomID === undefined) {
-            const response = {
-                'roomID' : roomID,
-                'error': `No roomID provided`
-            }
-            return io.to(socket.id).emit(ServerEvents.ERROR, response);
+            informUserOfError(io, socket, currentUser, roomID, ErrorMessages.NO_ROOM_ID);
+            return; 
         }
 
         const socketInRoom = io.sockets.adapter.rooms.get(roomID)

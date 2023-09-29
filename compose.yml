@@ -1,3 +1,9 @@
+x-logging: &default-logging
+  logging:
+    driver: json-file
+    options:
+      max-size: 100m
+
 services:
   frontend-service:
     build:
@@ -49,7 +55,7 @@ services:
       - ./users-service:/app
     command: yarn start
 
-  matchmaking-service:
+  collab-service:
     build:
       context: ./collab-service
     container_name: collab-service
@@ -57,11 +63,11 @@ services:
       - 3004:3004
     depends_on:
       - users-service
-      - redis
+      - collab-redis
     environment:
       PORT: 3004
       REDIS_PW: test
-      REDIS_NAME: redis
+      REDIS_NAME: collab-redis
       REDIS_PORT: 6379
       USERS_SERVICE_HOST: http://users-service:3002
       QUESTION_SERVICE_HOST: http://question-service:3001
@@ -69,7 +75,7 @@ services:
       - ./collab-service:/app
     command: yarn start
 
-  collab-service:
+  matchmaking-service:
     build:
       context: ./matchmaking-service
     container_name: matchmaking-service
@@ -103,12 +109,35 @@ services:
     image: mongo:7.0.1
     container_name: mongodb
     restart: always
+    volumes:
+      - "mongodb-data:/data/db"
     ports:
       - "27017:27017"
     environment:
       MONGO_INITDB_ROOT_USERNAME: test
       MONGO_INITDB_ROOT_PASSWORD: testpw
       MONGO_INITDB_DATABASE: peerprep-database
+
+  rabbitmq:
+    image: rabbitmq:management-alpine
+    container_name: rabbitmq
+    restart: always
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    ports:
+      - 5672:5672
+      - 15672:15672
+
+  collab-redis:
+    image: redis
+    container_name: collab-redis
+    volumes:
+      - "collab-redis-data:/data"
+    restart: always
+    command: redis-server --requirepass test
+    ports:
+      - 6379:6379
 
   mongo-ui:
     image: mongo-express
@@ -136,24 +165,56 @@ services:
       PGADMIN_DEFAULT_PASSWORD: test
       PGADMIN_LISTEN_PORT: 80
 
-  rabbitmq:
-    image: rabbitmq:management-alpine
-    container_name: rabbitmq
-    restart: always
-    environment:
-      - RABBITMQ_DEFAULT_USER=guest
-      - RABBITMQ_DEFAULT_PASS=guest
+  judge0-server:
+    image: judge0/judge0:1.13.0
+    volumes:
+      - ./code-execution-service/judge0.conf:/judge0.conf:ro
     ports:
-      - 5672:5672
-      - 15672:15672
+      - "2358:2358"
+    privileged: true
+    depends_on:
+      - db
+      - redis
+    <<: *default-logging
+    restart: always
+
+  judge0-workers:
+    image: judge0/judge0:1.13.0
+    command: ["./scripts/workers"]
+    volumes:
+      - ./code-execution-service/judge0.conf:/judge0.conf:ro
+    privileged: true
+    <<: *default-logging
+    restart: always
+    depends_on:
+      - db
+      - redis
+
+  db:
+    image: postgres:13.0
+    env_file: ./code-execution-service/judge0.conf
+    volumes:
+      - judge0-postgres:/var/lib/postgresql/data/
+    <<: *default-logging
+    restart: always
 
   redis:
-    image: redis
-    container_name: redis
+    image: redis:6.0
+    command:
+      [
+        "bash",
+        "-c",
+        'docker-entrypoint.sh --appendonly yes --requirepass "$$REDIS_PASSWORD"',
+      ]
+    env_file: ./code-execution-service/judge0.conf
+    volumes:
+      - judge0-redis-data:/data
+    <<: *default-logging
     restart: always
-    command: redis-server --requirepass test
-    ports:
-      - 6379:6379
 
 volumes:
   postgres:
+  mongodb-data:
+  collab-redis-data:
+  judge0-postgres:
+  judge0-redis-data:
