@@ -13,12 +13,12 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 
-let ws = null;
 
 const MatchmakingSearch = () => {
   const user = useUser();
   const navigate = useNavigate();
 
+  const [ws, setWs] = useState("");
   const [difficulty, setDifficulty] = useState("");
   const [msg, setMsg] = useState('');
   const [data, setData] = useState('');
@@ -36,48 +36,51 @@ const MatchmakingSearch = () => {
       return ws;
     }
     async function handleStart() {
-      if (!ws) {
+
+      setIsLoading(true);
+      setMsg("sent start");
+      const ws = await connectToServer();
+      setWs(ws);
+      //console.log("start");
+      ws.addEventListener("open", (event) => {
+        setMsg("connected to matching server!");
         setIsLoading(true);
-        setMsg("sent start");
-        ws = await connectToServer();
-        //console.log("start");
-        ws.addEventListener("open", (event) => {
-          setMsg("connected to matching server!");
-          setIsLoading(true);
-        });
+      });
 
-        ws.addEventListener("message", (event) => {
-          console.log(event.data);
-          setData(`Message from server ${event.data}`);
-          setIsLoading(true);
-        });
+      ws.addEventListener("message", (event) => {
+        console.log(event.data);
+        setData(`Message from server ${event.data}`);
+        setIsLoading(true);
+      });
 
-        ws.addEventListener("close", (event) => {
-          console.log(event.data);
-          setMsg("connection to matching server closed");
-          setIsLoading(false);
-          ws = null;
-        })
-        ws.close();
-      }
-    }
-    handleStart();
-  }, [token]);
-
-  async function handleEnd() {
-    if (ws) {
-      setMsg("sent end");
-      console.log("close");
       ws.addEventListener("close", (event) => {
         console.log(event.data);
         setMsg("connection to matching server closed");
         setIsLoading(false);
-        ws = null;
       })
-      ws.close();
     }
-    navigate("/matchmaking");
-  }
+    handleStart();
+    return () => {
+      if (ws) {
+        ws.close();
+      }
+    }
+  }, [token]);
+
+  // async function handleEnd() {
+  //   if (ws) {
+  //     setMsg("sent end");
+  //     console.log("close");
+  //     ws.addEventListener("close", (event) => {
+  //       console.log(event.data);
+  //       setMsg("connection to matching server closed");
+  //       setIsLoading(false);
+  //       ws = null;
+  //     })
+  //     ws.close();
+  //   }
+  //   navigate("/matchmaking");
+  // }
 
   return (
     <Stack alignItems="center" gap={2} pt={2}>
@@ -101,7 +104,7 @@ const MatchmakingSearch = () => {
         </Card>
         <Card sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', p: 3, spacing: 2 }}>
           <CardContent>
-            <Button variant="contained" onClick={handleEnd}>
+            <Button variant="contained">
               Cancel Search!
             </Button>
           </CardContent>
