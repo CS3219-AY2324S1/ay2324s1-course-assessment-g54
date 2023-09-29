@@ -2,7 +2,7 @@ import { ErrorMessages, ServerEvents, UserEvents } from "../constants/constant.j
 import { createRoomInfo, getRoomInfo } from "../redis/redis.js";
 import { createroomID, getRandomQuestion, scheduleDeleteJob } from "../utils/utils.js";
 import { validateDifficulty, validateUser } from "../validators/validators.js";
-import { getNumPeopleInRoom, informUserOfError } from "./common.js";
+import { cleanupRoomIfEmpty, getNumPeopleInRoom, informUserOfError, informUsersSomeoneLeft } from "./common.js";
 
 export const JoinRoomHandler = (io, socket, redisClient, currentUser) => {
     async function handleJoinRoom (data) {
@@ -61,6 +61,11 @@ export const JoinRoomHandler = (io, socket, redisClient, currentUser) => {
 
         const numPeople = getNumPeopleInRoom(io, socket, roomID);
         console.log(`numPeople: ${numPeople} in room ${roomID}`);
+
+        socket.on('disconnect', async () => {
+            informUsersSomeoneLeft(socket, currentUser, roomID);
+            await cleanupRoomIfEmpty(io, socket, redisClient, roomID);
+        })
     }
 
     socket.on(UserEvents.JOIN_ROOM, handleJoinRoom)

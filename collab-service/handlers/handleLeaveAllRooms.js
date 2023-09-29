@@ -1,27 +1,20 @@
-import { ServerEvents, UserEvents } from "../constants/constant.js";
-import { deleteRoomInfo } from "../redis/redis.js";
-import { getNumPeopleInRoom } from "./common.js";
+import { UserEvents } from "../constants/constant.js";
+import { cleanupRoomIfEmpty, informUsersSomeoneLeft } from "./common.js";
 
 export const LeaveAllRoomsHandler = (io, socket, redisClient, currentUser) => {
     async function handleLeaveAllRoom(data) {
-        socket.rooms.forEach( async function (room) {
+        socket.rooms.forEach( async function (roomID) {
                 const response = {
-                    'roomID': room,
+                    'roomID': roomID,
                     'user': currentUser,
                 }
 
-                if (socket.id != room) {
-                    socket.leave(room);
+                if (socket.id != roomID) {
+                    socket.leave(roomID);
                 }
-                socket.broadcast.in(room).emit(ServerEvents.LEFT_ROOM, response);
-                console.log(`user ${currentUser} has left the room ${room}`);
 
-                const numPeople = getNumPeopleInRoom(io, socket, room);
-                console.log(`numPeople: ${numPeople} left in room ${room}`);
-                if (numPeople === 0) {
-                    await deleteRoomInfo(redisClient, room);
-                    io.in(room).socketsLeave(room);
-                }
+                informUsersSomeoneLeft(socket, currentUser, roomID);
+                await cleanupRoomIfEmpty(io, socket, redisClient, roomID);
             }
         )
     }
