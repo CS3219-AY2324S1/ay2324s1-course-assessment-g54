@@ -40,7 +40,7 @@ const MatchmakingSearch = () => {
       setIsLoading(true);
       setMsg("sent start");
       const ws = await connectToServer();
-      setWs(ws);
+      //setWs(ws);
       //console.log("start");
       ws.addEventListener("open", (event) => {
         setMsg("connected to matching server!");
@@ -56,6 +56,7 @@ const MatchmakingSearch = () => {
       ws.addEventListener("close", (event) => {
         console.log(event.data);
         setMsg("connection to matching server closed");
+
         setIsLoading(false);
       })
     }
