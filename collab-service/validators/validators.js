@@ -25,8 +25,8 @@ export async function validateUser(userID, token) {
         );
         return response;
     } catch (error) {
-        console.log(error.message);
-        throw new Error(ErrorMessages.USER_SERVICE_ERROR);
+        console.log(error.response.data);
+        throw new Error(error.response.data);
     }
 };
 

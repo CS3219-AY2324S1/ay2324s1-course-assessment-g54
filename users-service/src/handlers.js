@@ -63,6 +63,13 @@ export const handleGetMatchProfile = async (request, response) => {
   if (!request.headers.authorization) return response.status(401).send();
   const jsonWebToken = request.headers.authorization;
   const id = request.params.id;
+
+  const uuid4Regex = /^[0-9A-F]{8}-[0-9A-F]{4}-[4][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i;
+  if (!uuid4Regex.test(id)) {
+    console.error('Invalid UUID provided');
+    return response.status(400).send('Invalid UUID provided');
+  }
+
   try {
     const user = utils.verifyJsonWebToken(jsonWebToken);
   } catch (error) {
@@ -71,8 +78,8 @@ export const handleGetMatchProfile = async (request, response) => {
 
   const matchUser = await database.select().from("users").where({ id }).first();
   if (!matchUser) {
-    console.error("Matched User cannot be found.");
-    return response.status(400).send();
+    console.error("Matched User cannot be found");
+    return response.status(400).send("Matched User cannot be found");
   }
 
   const { name, email } = matchUser;
