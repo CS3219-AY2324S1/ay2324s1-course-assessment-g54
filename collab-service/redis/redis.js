@@ -26,6 +26,7 @@ export async function saveSocketToUserID(redisClient, socketID, userID) {
 }
 
 export async function deleteUserID(redisClient, socketID) {
+    console.log(`${socketInfoPrefix(socketID)} will be deleted`)
     return redisClient.del(socketInfoPrefix(socketID));
 }
 
@@ -34,7 +35,6 @@ export async function getRoomInfo(redisClient, roomID) {
 }
 
 export async function createRoomInfo(redisClient, roomID, roomInfo) {
-    console.log(`roomID ${roomID} will be created`);
     return redisClient.set(roomPrefix(roomID), JSON.stringify(roomInfo));
 }
 
