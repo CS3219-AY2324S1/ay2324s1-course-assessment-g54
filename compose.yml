@@ -117,6 +117,8 @@ services:
       MONGO_INITDB_ROOT_USERNAME: test
       MONGO_INITDB_ROOT_PASSWORD: testpw
       MONGO_INITDB_DATABASE: peerprep-database
+      MONGO_LOCAL_URI: mongodb://test:testpw@localhost:27017/?retryWrites=true&w=majority&maxPoolSize=20
+      MONGO_LOCAL_DOCKER_URI: mongodb://test:testpw@mongodb:27017/?retryWrites=true&w=majority&maxPoolSize=20
 
   rabbitmq:
     image: rabbitmq:management-alpine
