@@ -82,8 +82,8 @@ export const handleGetMatchProfile = async (request, response) => {
     return response.status(400).send("Matched User cannot be found");
   }
 
-  const { name, email } = matchUser;
-  return response.status(200).json({ id, name, email });
+  const { name, email, profileImageUrl } = matchUser;
+  return response.status(200).json({ id, name, email, profileImageUrl });
 };
 
 /**
