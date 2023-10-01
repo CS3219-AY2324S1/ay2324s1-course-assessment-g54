@@ -22,10 +22,11 @@ export async function getUserID(redisClient, socketID) {
 }
 
 export async function saveSocketToUserID(redisClient, socketID, userID) {
-    redisClient.set(socketInfoPrefix(socketID), userID);
+    return redisClient.set(socketInfoPrefix(socketID), userID);
 }
 
 export async function deleteUserID(redisClient, socketID) {
+    console.log(`${socketInfoPrefix(socketID)} will be deleted`)
     return redisClient.del(socketInfoPrefix(socketID));
 }
 
@@ -34,9 +35,10 @@ export async function getRoomInfo(redisClient, roomID) {
 }
 
 export async function createRoomInfo(redisClient, roomID, roomInfo) {
-    redisClient.set(roomPrefix(roomID), JSON.stringify(roomInfo));
+    return redisClient.set(roomPrefix(roomID), JSON.stringify(roomInfo));
 }
 
 export async function deleteRoomInfo(redisClient, roomID) {
-    redisClient.del(roomPrefix(roomID));
+    console.log(`roomID ${roomID} will be deleted`);
+    return redisClient.del(roomPrefix(roomID));
 }

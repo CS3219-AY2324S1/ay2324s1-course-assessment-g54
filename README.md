@@ -113,3 +113,16 @@ Then click save and you can run queries on the postgres server!
 ### RabbitMQ
 
 The matchmaking microservice uses [RabbitMQ](https://www.rabbitmq.com/) as a message broker. To access the management UI, go to http://localhost:15672 after starting the `rabbitmq` docker container. 
+
+## Judge0 
+A sample UI for the Judge0 server is avaliable on `http://localhost:2358/dummy-client.html`.
+
+If you have an error on the Mac:
+
+- Change the config of `deprecatedCgroupv1` to `true` in
+
+```bash
+vim ~/Library/Group\ Containers/group.com.docker/settings.json
+```
+
+- Then, in `Docker` go to `Settings` > `Features` in development enable checkbox for `Use` > enable checkbox for Rosetta for `x86/amd64 emulation on Apple Silicon`

@@ -1,6 +1,6 @@
 import { createHash } from "crypto";
 import schedule from "node-schedule";
-import { Milliseconds, questionServiceBase } from "../constants/constant.js";
+import { ErrorMessages, Milliseconds, questionServiceBase } from "../constants/constant.js";
 import axios from "axios";
 
 export const createroomID = (currentUserID, matchedUserId) => {
@@ -16,13 +16,18 @@ export const createroomID = (currentUserID, matchedUserId) => {
 }
 
 export async function getRandomQuestion(token, difficulty) {
-    const questionServiceUrl = `${questionServiceBase}/random-questions/${difficulty.toLowerCase()}`;
-    console.log(questionServiceUrl);
-    const response = await axios.get(
-        questionServiceUrl,
-        { headers: { Authorization: token } }
-    );
-    return response;
+    try {
+        const questionServiceUrl = `${questionServiceBase}/random-questions/${difficulty.toLowerCase()}`;
+        const response = await axios.get(
+            questionServiceUrl,
+            { headers: { Authorization: token } }
+        );
+        return response;
+    } catch (error){
+        console.log(error.message)
+        throw new Error(ErrorMessages.QUESTION_SERVICE_ERROR);
+    }
+    
 }
 
 // schedule a cron job to delete the room after 3 hours

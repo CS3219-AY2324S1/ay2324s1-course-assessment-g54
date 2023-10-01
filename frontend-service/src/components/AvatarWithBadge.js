@@ -43,7 +43,7 @@ const AvatarWithBadge = () => {
       anchorOrigin={{ vertical: 'bottom', horizontal: 'right', }}
       fontSize="small"
     >
-      <Avatar sx={{ width: 54, height: 54 }} alt={user.name} src="/static/images/avatar/2.jpg" />
+      <Avatar sx={{ width: 54, height: 54 }} alt={user.name} src={user.profileImageUrl} />
     </StyledBadge>
   )
 }

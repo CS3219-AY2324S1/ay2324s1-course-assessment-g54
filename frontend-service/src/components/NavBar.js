@@ -79,7 +79,7 @@ const NavBar = () => {
         <Box sx={{ flexGrow: 0 }}>
           <Tooltip title={user.name}>
             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-              <Avatar alt={user.name} src="/static/images/avatar/2.jpg" />
+              <Avatar alt={user.name} src={user.profileImageUrl}/>
             </IconButton>
           </Tooltip>
           <Popover
@@ -91,6 +91,7 @@ const NavBar = () => {
               horizontal: "right",
             }}
           >
+<<<<<<< HEAD
             <Box border = "1px solid rgba(158, 158, 158, 0.1)" borderRadius={2} backgroundColor={theme => theme.palette.background.light}>
               <Stack padding={3} spacing={1} alignItems="center" >
                 {user.isMaintainer
@@ -129,6 +130,44 @@ const NavBar = () => {
                 </Button>
               </Stack>
             </Box>
+=======
+            <Stack padding={3} spacing={1} alignItems="center">
+              {user.isMaintainer
+              ? <AvatarWithBadge/>  
+              : <Avatar sx={{ width: 54, height: 54 }} alt={user.name} src={user.profileImageUrl} />
+ }
+              <Typography variant="body1" align="center">
+                {user.name}
+              </Typography>
+              <Typography variant="body2" align="center" color="gray">
+                {user.email}
+              </Typography>
+            </Stack>
+            <Stack padding={3} spacing={1} alignItems="center">
+              <Button
+                variant="contained"
+                fullWidth
+                size="small"
+                onClick={handleOpenModal}
+                startIcon={<SettingsIcon/>}
+              >
+                Settings
+              </Button>
+              <Button
+                variant="contained"
+                fullWidth
+                size="small"
+                color="error"
+                onClick={() => {
+                  window.localStorage.removeItem("token");
+                  navigate("/login");
+                }}
+                startIcon={<LogoutIcon/>}
+              >
+                Sign Out
+              </Button>
+            </Stack>
+>>>>>>> origin/master
           </Popover>
         </Box>
       </Toolbar>
