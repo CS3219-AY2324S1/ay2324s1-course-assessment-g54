@@ -18,7 +18,6 @@ export async function validateLogin(token) {
 export async function validateUser(userID, token) {
     try {
         const usersServiceUrl = `${usersServiceBase}/match/${userID}`;
-        console.log(usersServiceUrl);
         const response = await axios.get(
             usersServiceUrl,
             { headers: { Authorization: token } }

@@ -10,6 +10,10 @@ export const JoinRoomHandler = (io, socket, redisClient, currentUser) => {
         const difficulty = data.difficulty;
         const  roomID = data.roomID === undefined ? createroomID(currentUser, matchedUser) : data.roomID;
 
+        if (!matchedUser || !validateDifficulty(difficulty)) {
+            informUserOfError(io, socket, currentUser, roomID, ErrorMessages.JOIN_ROOM_INVALID_FIELDS);
+            return disconnectSocket(socket);
+        }
         if (!roomID) {
             informUserOfError(io, socket, currentUser,  ErrorMessages.JOIN_ROOM_MISSING_FIELDS);
             return disconnectSocket(socket);
@@ -32,11 +36,6 @@ export const JoinRoomHandler = (io, socket, redisClient, currentUser) => {
         if (cachedRoomInfo != null) {
             io.to(socket.id).emit(ServerEvents.ROOM_INFO, cachedRoomInfo);
         } else {
-            if (!matchedUser || !validateDifficulty(difficulty)) {
-                informUserOfError(io, socket, currentUser, roomID, ErrorMessages.JOIN_ROOM_INVALID_FIELDS);
-                return disconnectSocket(socket);
-            }
-
             try{
                 const randomQuestionResponse = await getRandomQuestion(socket.handshake.query.token, difficulty);
                 const roomInfo = {
