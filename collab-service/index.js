@@ -53,7 +53,7 @@ async function onConnection(socket) {
     });
     socket.on(UserEvents.DISCONNECT, async function(reason) {
         await deleteUserID(redisClient, socket.id);
-        console.log(`user ${currentUser} disconnected: ${reason}`);
+        // console.log(`user ${currentUser} disconnected: ${reason}`);
     })
 }
 
