@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Button from "@mui/material/Button";
@@ -11,6 +11,46 @@ const Matchmaking = () => {
   const navigate = useNavigate();
 
   const [difficulty, setDifficulty] = useState('easy');
+  const [msg, setMsg] = useState('');
+  const [data, setData] = useState('');
+  const [webSocket, setWebSocket] = useState({});
+
+  const token = window.localStorage.getItem("token");
+
+  async function connectToServer() {            
+      const ws = new WebSocket(`ws://token:${token}@localhost:3003?difficulty=${difficulty}`, token);
+      return ws;
+  }
+
+  async function handleSave () {
+      setMsg("sent");
+      setData("");
+      const ws = await connectToServer(); 
+      setWebSocket(ws);
+      
+      ws.addEventListener("open", (event) => {
+          setMsg("Connected to matching server!");
+      });
+
+      ws.addEventListener("message", (event) => {
+          console.log(event.data);
+          setData(`Message from socket: ${event.data}`);
+      });
+      
+      ws.addEventListener("close", (event) => {
+          console.log(event.reason);
+          setWebSocket({});
+          setData(`Socket close with reason: ${event.reason}`);
+          setMsg("Connection to matching server closed");
+      })
+  }
+
+  // for debugging
+  useEffect(()=> {
+      if (webSocket !== undefined && webSocket.length !== 0) {
+          console.log(webSocket);
+      }
+  }, [webSocket]);
 
   const handleDifficultyChange = (event, newDifficulty) => {
     if (newDifficulty !== null) {
@@ -40,9 +80,11 @@ const Matchmaking = () => {
           </ToggleButton>
         </ToggleButtonGroup>
       </Stack>
-      <Button variant="contained" onClick={() => navigate(`/matchmaking/find?difficulty=${difficulty}`)}>
+      <Button variant="contained" onClick={handleSave}>
         Let's Match!
       </Button>
+      <Typography>{msg}</Typography>
+      <Typography>{data}</Typography>
     </Stack>
   );
 }
