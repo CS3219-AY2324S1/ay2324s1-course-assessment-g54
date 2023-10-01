@@ -18,13 +18,17 @@ const app = express();
 
 console.log(uri);
 
-mongoose.connect(uri, connectionOptions)
-  .then(() => {
-    console.log("Successfully connected to MonogDB!");
-  }).catch((error) => {
+async function getConnection() {
+  try {
+    await mongoose.connect(uri, connectionOptions);
+    console.log(`Successfully connected to MonogDB!`);
+  } catch (error) {
     console.log(`Failed to connect to MongoDB!`);
-    throw error;
-  });
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    return getConnection();
+  }
+}
+await getConnection();
 
 app.use(cors());
 app.use(express.json());
