@@ -36,6 +36,7 @@ const MatchmakingSearch = () => {
   }
 
   async function handleSave () {
+      setIsLoading(true)
       setMsg("sent");
       setData("");
       const ws = await connectToServer(); 
@@ -67,6 +68,7 @@ const MatchmakingSearch = () => {
       });
       
       ws.addEventListener("close", (event) => {
+          setIsLoading(false)
           console.log(event.reason);
           setWebSocket({});
           setData(`Socket close with reason: ${event.reason}`);
@@ -106,19 +108,20 @@ const MatchmakingSearch = () => {
             </Button>
           </CardContent>
         </Card>
-        {isLoading ? <Card sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', p: 3 }}>
+        {isLoading 
+          ? <Card sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', p: 3 }}>
           <CircularProgress size="5rem" color="secondary" />
-        </Card> :
-          <Card>
-            <CardContent>
-              <Stack padding={3} spacing={1} alignItems="center">
-                {<Avatar sx={{ width: 54, height: 54 }} alt={user.name} src={matchedProfileImageUrl} />}
-                <Typography variant="body1" align="center">
-                  {matchedName}
-                </Typography>
-              </Stack>
-            </CardContent>
-          </Card>}
+            </Card> 
+          : <Card>
+              <CardContent>
+                <Stack padding={3} spacing={1} alignItems="center">
+                  {<Avatar sx={{ width: 54, height: 54 }} alt={user.name} src={matchedProfileImageUrl} />}
+                  <Typography variant="body1" align="center">
+                    {matchedName}
+                  </Typography>
+                </Stack>
+              </CardContent>
+            </Card>}
       </Box>
 
     </Stack>
