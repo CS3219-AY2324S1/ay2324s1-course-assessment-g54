@@ -95,7 +95,7 @@ const Signup = () => {
                   type="submit"
                   disabled={isSubmitting}
                 >
-                  Login
+                  Sign Up
                 </Button>
               </Stack>
             </form>
