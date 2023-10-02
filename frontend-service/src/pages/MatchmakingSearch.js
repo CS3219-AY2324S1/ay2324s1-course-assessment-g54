@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 import { useUser } from "../contexts/UserContext";
 
+
 import Avatar from "@mui/material/Avatar";
-import AvatarWithBadge from "../components/AvatarWithBadge";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
@@ -18,11 +19,13 @@ const MatchmakingSearch = () => {
   const user = useUser();
   const navigate = useNavigate();
 
-  const [ws, setWs] = useState("");
+  const [webSocket, setWebSocket] = useState({});
   const [difficulty, setDifficulty] = useState("");
   const [msg, setMsg] = useState('');
   const [data, setData] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [matchedName, setMatchedName] = useState("");
+  const [matchedProfileImageUrl, setMatchedProfileImageUrl] = useState("");
 
   const token = window.localStorage.getItem("token");
 
@@ -38,47 +41,65 @@ const MatchmakingSearch = () => {
     async function handleStart() {
 
       setIsLoading(true);
-      setMsg("sent start");
-      const ws = await connectToServer();
-      //setWs(ws);
-      //console.log("start");
+      setMsg("sent");
+      setData("");
+      const ws = await connectToServer(); 
+      setWebSocket(ws);
+
       ws.addEventListener("open", (event) => {
         setMsg("connected to matching server!");
         setIsLoading(true);
       });
 
-      ws.addEventListener("message", (event) => {
+      ws.addEventListener("message", async (event) => {
         console.log(event.data);
-        setData(`Message from server ${event.data}`);
-        setIsLoading(true);
-      });
+        const matchedUserID = event.data;
+        try {
+            const usersServiceUrl = `${process.env.REACT_APP_USERS_SERVICE_HOST}/match/${matchedUserID}`;
+            const response = await axios.get(
+                usersServiceUrl,
+                { headers: { Authorization: token } }
+            );
+            console.log(response.data)
+            setMatchedName(response.data.name)
+            setMatchedProfileImageUrl(response.data.profileImageUrl)
+            setIsLoading(false);
+        } catch (error) {
+            console.log(error.response.data);
+            setMatchedName("")
+            setMatchedProfileImageUrl("")
+            throw new Error(error.response.data);
+        }
+        setData(`Message from socket: ${event.data}`);
+    });
 
       ws.addEventListener("close", (event) => {
-        console.log(event.data);
-        setMsg("connection to matching server closed");
-
-        setIsLoading(false);
+          console.log(event.reason);
+          setWebSocket({});
+          setData(`Socket close with reason: ${event.reason}`);
+          setMsg("Connection to matching server closed");
+          //setIsLoading(false);
       })
     }
     handleStart();
-    return () => {
-      if (ws) {
-        ws.close();
-      }
-    }
+    // return () => {
+    //   if (webSocket) {
+    //     webSocket.close();
+    //   }
+    // }
   }, [token]);
 
   // async function handleEnd() {
-  //   if (ws) {
+  //   if (webSocket) {
   //     setMsg("sent end");
   //     console.log("close");
-  //     ws.addEventListener("close", (event) => {
+  //     webSocket.addEventListener("close", (event) => {
   //       console.log(event.data);
   //       setMsg("connection to matching server closed");
   //       setIsLoading(false);
-  //       ws = null;
+  //       setWebSocket({});
   //     })
-  //     ws.close();
+  //     webSocket.close();
   //   }
   //   navigate("/matchmaking");
   // }
@@ -94,9 +115,7 @@ const MatchmakingSearch = () => {
         <Card>
           <CardContent>
             <Stack padding={3} spacing={1} alignItems="center">
-              {user.isMaintainer
-                ? <AvatarWithBadge />
-                : <Avatar sx={{ width: 54, height: 54 }} alt={user.name} src="/static/images/avatar/2.jpg" />}
+                <Avatar sx={{ width: 54, height: 54 }} alt={user.name} src="/static/images/avatar/2.jpg" />
               <Typography variant="body1" align="center">
                 {user.name}
               </Typography>
@@ -116,11 +135,9 @@ const MatchmakingSearch = () => {
           <Card>
             <CardContent>
               <Stack padding={3} spacing={1} alignItems="center">
-                {user.isMaintainer
-                  ? <AvatarWithBadge />
-                  : <Avatar sx={{ width: 54, height: 54 }} alt={user.name} src="/static/images/avatar/2.jpg" />}
+                {<Avatar sx={{ width: 54, height: 54 }} alt={user.name} src={matchedProfileImageUrl} />}
                 <Typography variant="body1" align="center">
-                  {user.name}
+                  {matchedName}
                 </Typography>
               </Stack>
             </CardContent>
