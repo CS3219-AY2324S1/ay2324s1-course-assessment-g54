@@ -2,7 +2,6 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import NavBar from "../components/NavBar";
 import AcknowledgementToast from "../components/AcknowledgementToast";
 
 import { useUser } from "../contexts/UserContext";
@@ -104,8 +103,7 @@ const EditQuestion = () => {
 
   return (
     <>
-      <NavBar />
-      <Box height="calc(100vh - 64px)" width="100%" bgcolor="whitesmoke">
+      <Box height="calc(100vh - 64px)" width="100%">
         <Box height="100%" display="flex">
           <Stack height="100%" width="100%" spacing={1} padding={1}>
             <Box display="flex">

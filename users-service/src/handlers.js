@@ -33,7 +33,7 @@ export const handleDeleteProfile = async (request, response) => {
  * @param { import("express").Response } response
  * @returns { Promise<void> }
  */
-export const handleGetProfile = async (request, response) => {
+export const handleGetOwnProfile = async (request, response) => {
   if (!request.headers.authorization) return response.status(401).send();
   const jsonWebToken = request.headers.authorization;
   let id;
@@ -51,7 +51,9 @@ export const handleGetProfile = async (request, response) => {
   }
 
   const { name, email, isMaintainer, profileImageUrl } = user;
-  return response.status(200).json({ id, name, email, isMaintainer, profileImageUrl });
+  return response
+    .status(200)
+    .json({ id, name, email, isMaintainer, profileImageUrl });
 };
 
 /**
@@ -59,31 +61,24 @@ export const handleGetProfile = async (request, response) => {
  * @param { import("express").Response } response
  * @returns { Promise<void> }
  */
-export const handleGetMatchProfile = async (request, response) => {
+export const handleGetProfile = async (request, response) => {
   if (!request.headers.authorization) return response.status(401).send();
   const jsonWebToken = request.headers.authorization;
-  const id = request.params.id;
-
-  const uuid4Regex = /^[0-9A-F]{8}-[0-9A-F]{4}-[4][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i;
-  if (!uuid4Regex.test(id)) {
-    console.error('Invalid UUID provided');
-    return response.status(400).send('Invalid UUID provided');
-  }
-
   try {
-    const user = utils.verifyJsonWebToken(jsonWebToken);
+    utils.verifyJsonWebToken(jsonWebToken);
   } catch (error) {
-    return response.status(200).json(error.message);
+    return response.status(401).send();
   }
 
-  const matchUser = await database.select().from("users").where({ id }).first();
-  if (!matchUser) {
-    console.error("Matched User cannot be found");
-    return response.status(400).send("Matched User cannot be found");
+  const id = request.params.id;
+  const user = await database.select().from("users").where({ id }).first();
+  if (!user) {
+    console.error(`User with id ${id} cannot be found`);
+    return response.status(400).send();
   }
 
-  const { name, email } = matchUser;
-  return response.status(200).json({ id, name, email });
+  const { name, profileImageUrl } = user;
+  return response.status(200).json({ id, name, profileImageUrl });
 };
 
 /**
@@ -181,7 +176,9 @@ export const handleUpdateProfile = async (request, response) => {
   const profileImageUrl = body.profileImageUrl;
 
   try {
-    await database("users").where("id", "=", id).update({ name, profileImageUrl });
+    await database("users")
+      .where("id", "=", id)
+      .update({ name, profileImageUrl });
   } catch (error) {
     console.error(error.message);
     return response.status(400).send();

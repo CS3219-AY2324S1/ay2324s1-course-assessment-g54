@@ -1,7 +1,6 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 
-import NavBar from "../components/NavBar";
 import QuestionsTable from "../components/Questions/QuestionsTable";
 import SearchBar from "../components/Questions/SearchBar";
 
@@ -60,13 +59,11 @@ const Questions = () => {
 
   return (
     <>
-      <NavBar />
-      <Box height="calc(100vh - 64px)" width="100vw" bgcolor="whitesmoke">
+      <Box height="calc(100vh - 64px)" width="100%">
         <Box display="flex" flexDirection="column" alignItems="center">
           <Stack spacing={2} style={{ width: "80%" }}>
             <Typography
               variant="h3"
-              color="initial"
               style={{ marginTop: "10px" }}
             >
               Questions

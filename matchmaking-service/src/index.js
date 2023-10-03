@@ -29,12 +29,16 @@ wss.on("connection", async (ws, request) => {
     const difficulty = urlSearchParams.get("difficulty");
     if (!difficulty || !difficulties.includes(difficulty.toLowerCase())) {
       console.log("Difficulty is missing from search params or is incorrect.");
-      return ws.close(1000, "Difficulty is missing from search params or is incorrect.");
+      return ws.close(
+        1008,
+        "Difficulty is missing from search params or is incorrect."
+      );
     }
 
     const matchResponseHandler = async (response) => {
       const { users, difficulty } = response;
       const matchedUser = users.filter((userId) => userId !== user.id)[0];
+      ws.send(matchedUser);
       ws.close(1000, JSON.stringify({ matchedUser, difficulty }));
       return true;
     };

@@ -26,8 +26,8 @@ import { useUser } from "../../contexts/UserContext";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
+    backgroundColor: theme.palette.questionTableHead,
+    color: "white"
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14
@@ -36,9 +36,12 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:nth-of-type(odd)': {
-    backgroundColor: theme.palette.action.hover,
+    backgroundColor: theme.palette.questionRowEven,
   },
   
+  '&:nth-of-type(even)': {
+    backgroundColor: theme.palette.questionRowOdd,
+  },
   '&:last-child td, &:last-child th': {
     border: 0,
   },
@@ -46,7 +49,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   cursor: 'pointer',
 
   "&:hover": {
-    backgroundColor: '#fae9e8'
+    backgroundColor: theme.palette.questionRowHover,
   }
 
 }));
@@ -208,7 +211,7 @@ const QuestionsTable = ({ filteredQuestions, setFilteredQuestions }) => {
                 <StyledTableCell>
                   <Chip
                     color={getComplexityStyle(question.complexity)}
-                    style={{ textTransform: "capitalize" }}
+                    sx={{ textTransform: "capitalize", color: "white" }}
                     label={question.complexity}
                   />
                 </StyledTableCell>
