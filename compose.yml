@@ -32,6 +32,8 @@ services:
     environment:
       PORT: 3001
       USERS_SERVICE_HOST: http://users-service:3002
+      MONGO_LOCAL_URI: mongodb://test:testpw@localhost:27017/?retryWrites=true&w=majority&maxPoolSize=20
+      MONGO_LOCAL_DOCKER_URI: mongodb://test:testpw@mongodb:27017/?retryWrites=true&w=majority&maxPoolSize=20
     volumes:
       - ./question-service:/app
     command: yarn start
@@ -117,8 +119,6 @@ services:
       MONGO_INITDB_ROOT_USERNAME: test
       MONGO_INITDB_ROOT_PASSWORD: testpw
       MONGO_INITDB_DATABASE: peerprep-database
-      MONGO_LOCAL_URI: mongodb://test:testpw@localhost:27017/?retryWrites=true&w=majority&maxPoolSize=20
-      MONGO_LOCAL_DOCKER_URI: mongodb://test:testpw@mongodb:27017/?retryWrites=true&w=majority&maxPoolSize=20
 
   rabbitmq:
     image: rabbitmq:management-alpine
@@ -169,39 +169,49 @@ services:
 
   judge0-server:
     image: judge0/judge0:1.13.0
+    container_name: judge0-server
     volumes:
       - ./code-execution-service/judge0.conf:/judge0.conf:ro
     ports:
-      - "2358:2358"
+      - 2358:2358
+    restart: always
     privileged: true
     depends_on:
       - db
       - redis
     <<: *default-logging
-    restart: always
 
   judge0-workers:
     image: judge0/judge0:1.13.0
-    command: ["./scripts/workers"]
     volumes:
       - ./code-execution-service/judge0.conf:/judge0.conf:ro
-    privileged: true
-    <<: *default-logging
+    command: ["./scripts/workers"]
     restart: always
+    privileged: true
     depends_on:
       - db
       - redis
+    <<: *default-logging
 
   db:
     image: postgres:13.0
+    container_name: judge0-db
     env_file: ./code-execution-service/judge0.conf
     volumes:
       - judge0-postgres:/var/lib/postgresql/data/
-    <<: *default-logging
+    ports:
+      - 5433:5432
     restart: always
+    <<: *default-logging
 
   redis:
     image: redis:6.0
+    container_name: judge0-redis
+    volumes:
+      - judge0-redis-data:/data
+    ports:
+      - 6380:6379
+    restart: always
     command:
       [
         "bash",
@@ -209,10 +219,7 @@ services:
         'docker-entrypoint.sh --appendonly yes --requirepass "$$REDIS_PASSWORD"',
       ]
     env_file: ./code-execution-service/judge0.conf
-    volumes:
-      - judge0-redis-data:/data
     <<: *default-logging
-    restart: always
 
 volumes:
   postgres:

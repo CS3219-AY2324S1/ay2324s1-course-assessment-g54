@@ -4,12 +4,25 @@ import { findMatchRequestHandler } from "./handlers.js";
 const FIND_MATCH_QUEUE = "find-match";
 const MATCH_RESULTS_EXCHANGE = "match-results";
 
+
+async function getConnection() {
+  try {
+    const connection = await amqp.connect(`${process.env.RABBITMQ_HOST}`);
+    console.log("Connected to RabbitMQ successfully!");
+    return connection;
+  } catch (error) {
+    console.log("Failed to connect to RabbitMQ!")
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    return getConnection();
+  }
+}
+
 /**
  * @type {import("amqplib").Channel | null}
  */
 let channel = null;
 (async () => {
-  const connection = await amqp.connect(`${process.env.RABBITMQ_HOST}`);
+  const connection = await getConnection();
   channel = await connection.createChannel();
   await channel.assertQueue(FIND_MATCH_QUEUE);
   await channel.assertExchange(MATCH_RESULTS_EXCHANGE);
