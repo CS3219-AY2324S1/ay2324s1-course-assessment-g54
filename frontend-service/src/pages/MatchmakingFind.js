@@ -58,7 +58,7 @@ const MatchmakingFind = () => {
       ws.removeEventListener("close", closeEventHandler);
       ws.close(1000, "Client has left the page");
     };
-  }, []);
+  }, [navigate, searchParams]);
 
   if (!user) return <LinearProgress variant="indeterminate" />;
 
