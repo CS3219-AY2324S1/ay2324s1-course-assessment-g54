@@ -22,6 +22,7 @@ const MatchmakingFind = () => {
   const user = useUser();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const [searchTimeElapsed, setSearchTimeElapsed] = useState(0);
   const [isMatchError, setIsMatchError] = useState(false);
   const [isMatchFound, setIsMatchFound] = useState(false);
   const [matchedUser, setMatchedUser] = useState(null);
@@ -37,7 +38,13 @@ const MatchmakingFind = () => {
       token
     );
 
+    const clock = setInterval(
+      () => setSearchTimeElapsed((prevState) => prevState + 1),
+      1000
+    );
+
     const closeEventHandler = async (event) => {
+      clearInterval(clock);
       if (event.code !== 1000) {
         console.error(event.reason);
         return setIsMatchError(true);
@@ -55,6 +62,7 @@ const MatchmakingFind = () => {
     ws.addEventListener("close", closeEventHandler);
 
     return async () => {
+      clearInterval(clock);
       ws.removeEventListener("close", closeEventHandler);
       ws.close(1000, "Client has left the page");
     };
@@ -67,157 +75,111 @@ const MatchmakingFind = () => {
       <Stack
         height="100%"
         width="100%"
-        display="flex"
         justifyContent="center"
         alignItems="center"
-        direction="row"
         spacing={6}
       >
-        <Card>
-          <CardContent
-            sx={{
-              height: "200px",
-              width: "160px",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Avatar
-              sx={{ width: 80, height: 80, marginBottom: 3 }}
-              alt={user.name}
-              src={user.profileImageUrl}
-            />
-            {user.name}
-          </CardContent>
-        </Card>
-        <Box>
-          {!isMatchFound && (
-            <Button
-              variant="contained"
-              color="error"
-              onClick={() => navigate("/matchmaking")}
+        <Stack
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          direction="row"
+          spacing={6}
+        >
+          <Card>
+            <CardContent
+              sx={{
+                height: "200px",
+                width: "160px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
             >
-              Cancel
-            </Button>
-          )}
-          {isMatchFound && (
-            <Button
-              variant="contained"
-              onClick={() => navigate("/matchmaking")}
-            >
-              Start
-            </Button>
-          )}
-        </Box>
-        <Card>
-          <CardContent
-            sx={{
-              height: "200px",
-              width: "160px",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
+              <Avatar
+                sx={{ width: 80, height: 80, marginBottom: 3 }}
+                alt={user.name}
+                src={user.profileImageUrl}
+              />
+              {user.name}
+            </CardContent>
+          </Card>
+          <Stack
+            spacing={6}
+            width="200px"
+            justifyContent="center"
+            alignItems="center"
           >
-            {isMatchError && (
-              <>
-                <WarningIcon color="warning" fontSize="large" />
-                <Typography textAlign="center" marginTop={1}>
-                  There was an error when searching for a match...
-                </Typography>
-              </>
+            <Typography textAlign="center">
+              Question Level:{" "}
+              {searchParams.get("difficulty").charAt(0).toUpperCase() +
+                searchParams.get("difficulty").substring(1)}
+            </Typography>
+            {!isMatchFound && (
+              <Button
+                variant="contained"
+                color="error"
+                onClick={() => navigate("/matchmaking")}
+              >
+                Cancel
+              </Button>
             )}
-            {!isMatchError && !isMatchFound && (
-              <CircularProgress variant="indeterminate" />
+            {isMatchFound && (
+              <Button
+                variant="contained"
+                onClick={() => navigate("/matchmaking")}
+              >
+                Start
+              </Button>
             )}
-            {!isMatchError && isMatchFound && (
-              <>
-                <Avatar
-                  sx={{ width: 80, height: 80, marginBottom: 3 }}
-                  alt={matchedUser.name}
-                  src={matchedUser.profileImageUrl}
-                />
-                {matchedUser.name}
-              </>
-            )}
-          </CardContent>
-        </Card>
+          </Stack>
+          <Card>
+            <CardContent
+              sx={{
+                height: "200px",
+                width: "160px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              {isMatchError && (
+                <>
+                  <WarningIcon color="warning" fontSize="large" />
+                  <Typography textAlign="center" marginTop={1}>
+                    There was an error when searching for a match...
+                  </Typography>
+                </>
+              )}
+              {!isMatchError && !isMatchFound && (
+                <>
+                  <CircularProgress variant="indeterminate" />
+                  <Typography marginTop={3}>
+                    {searchTimeElapsed + "s"}
+                  </Typography>
+                </>
+              )}
+              {!isMatchError && isMatchFound && (
+                <>
+                  <Avatar
+                    sx={{ width: 80, height: 80, marginBottom: 3 }}
+                    alt={matchedUser.name}
+                    src={matchedUser.profileImageUrl}
+                  />
+                  {matchedUser.name}
+                </>
+              )}
+            </CardContent>
+          </Card>
+        </Stack>
+        <Typography textAlign="center">
+          Please hold on for a moment while we are searching for your partner...
+        </Typography>
       </Stack>
     </Box>
   );
-
-  // return (
-  //   <Stack alignItems="center" gap={2} pt={2}>
-  //     <Typography>{msg}</Typography>
-  //     <Typography>{data}</Typography>
-  //     <Typography>{`Difficulty: ${difficulty}`}</Typography>
-  //     <Box sx={{ display: "flex", flexDirection: "row" }}>
-  //       <Card>
-  //         <CardContent>
-  //           <Stack padding={3} spacing={1} alignItems="center">
-  //             <Avatar
-  //               sx={{ width: 54, height: 54 }}
-  //               alt={user.name}
-  //               src={user.profileImageUrl}
-  //             />
-  //             <Typography variant="body1" align="center">
-  //               {user.name}
-  //             </Typography>
-  //           </Stack>
-  //         </CardContent>
-  //       </Card>
-  //       <Card
-  //         sx={{
-  //           display: "flex",
-  //           flexDirection: "column",
-  //           alignItems: "center",
-  //           justifyContent: "center",
-  //           p: 3,
-  //           spacing: 2,
-  //         }}
-  //       >
-  //         <CardContent>
-  //           <Button variant="contained" onClick={handleSave}>
-  //             Ready
-  //           </Button>
-  //         </CardContent>
-  //       </Card>
-  //       {isLoading ? (
-  //         <Card
-  //           sx={{
-  //             display: "flex",
-  //             flexDirection: "column",
-  //             alignItems: "center",
-  //             justifyContent: "center",
-  //             p: 3,
-  //           }}
-  //         >
-  //           <CircularProgress size="5rem" color="secondary" />
-  //         </Card>
-  //       ) : (
-  //         <Card>
-  //           <CardContent>
-  //             <Stack padding={3} spacing={1} alignItems="center">
-  //               {
-  //                 <Avatar
-  //                   sx={{ width: 54, height: 54 }}
-  //                   alt={user.name}
-  //                   src={matchedProfileImageUrl}
-  //                 />
-  //               }
-  //               <Typography variant="body1" align="center">
-  //                 {matchedName}
-  //               </Typography>
-  //             </Stack>
-  //           </CardContent>
-  //         </Card>
-  //       )}
-  //     </Box>
-  //   </Stack>
-  // );
 };
 
 export default MatchmakingFind;
