@@ -13,7 +13,7 @@ import Question from "./pages/Question";
 import Questions from "./pages/Questions";
 import Signup from "./pages/Signup";
 import Matchmaking from "./pages/Matchmaking";
-import MatchmakingSearch from "./pages/MatchmakingSearch";
+import MatchmakingFind from "./pages/MatchmakingFind";
 import NavBar from "./components/NavBar";
 
 import "@fontsource/roboto/300.css";
@@ -23,20 +23,20 @@ import "@fontsource/roboto/700.css";
 
 const darkTheme = createTheme({
   palette: {
-    mode: 'dark',
+    mode: "dark",
     background: {
       default: "rgba(20, 28, 47, 1)",
       navBar: "rgba(5, 16, 43, 1)",
       light: "rgba(28, 38, 62, 1)",
     },
-    navbarButtonSelected : "rgba(66, 165, 245, 1)",
-    navbarButtonHover : "rgba(66, 165, 245, 0.7)",
-    questionRowHover : "rgba(66, 165, 245, 0.7)",
+    navbarButtonSelected: "rgba(66, 165, 245, 1)",
+    navbarButtonHover: "rgba(66, 165, 245, 0.7)",
+    questionRowHover: "rgba(66, 165, 245, 0.7)",
     questionTableHead: "rgba(28, 38, 62, 1)",
     questionRowEven: "rgba(28, 38, 62, 0.8)",
     questionRowOdd: "rgba(28, 38, 62, 1)",
   },
-})
+});
 
 const unprotectedRoutes = [
   { path: "/", element: <Example /> },
@@ -50,7 +50,7 @@ const protectedRoutes = [
   { path: "/questions/:id", element: <Question /> },
   { path: "/questions/:id/edit", element: <EditQuestion /> },
   { path: "/matchmaking", element: <Matchmaking /> },
-  { path: "/matchmaking/find", element: <MatchmakingSearch /> },
+  { path: "/matchmaking/find", element: <MatchmakingFind /> },
 ];
 
 function App() {
@@ -67,10 +67,12 @@ function App() {
               <Route
                 key={path}
                 path={path}
-                element={<AuthGuard>
-                          <NavBar/>
-                          {element}
-                        </AuthGuard>}
+                element={
+                  <AuthGuard>
+                    <NavBar />
+                    {element}
+                  </AuthGuard>
+                }
               />
             ))}
           </Routes>
