@@ -12,6 +12,9 @@ import CardContent from "@mui/material/CardContent";
 import CircularProgress from "@mui/material/CircularProgress";
 import LinearProgress from "@mui/material/LinearProgress";
 import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+
+import WarningIcon from "@mui/icons-material/Warning";
 
 const difficulties = ["easy", "medium", "hard"];
 
@@ -19,6 +22,7 @@ const MatchmakingFind = () => {
   const user = useUser();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const [isMatchError, setIsMatchError] = useState(false);
   const [isMatchFound, setIsMatchFound] = useState(false);
   const [matchedUser, setMatchedUser] = useState(null);
 
@@ -34,6 +38,10 @@ const MatchmakingFind = () => {
     );
 
     const closeEventHandler = async (event) => {
+      if (event.code !== 1000) {
+        console.error(event.reason);
+        return setIsMatchError(true);
+      }
       const result = JSON.parse(event.reason);
       const matchedUserId = result.matchedUser;
       const getProfielUrl = `${process.env.REACT_APP_USERS_SERVICE_HOST}/profile/${matchedUserId}`;
@@ -114,8 +122,18 @@ const MatchmakingFind = () => {
               alignItems: "center",
             }}
           >
-            {!isMatchFound && <CircularProgress variant="indeterminate" />}
-            {isMatchFound && (
+            {isMatchError && (
+              <>
+                <WarningIcon color="warning" fontSize="large" />
+                <Typography textAlign="center" marginTop={1}>
+                  There was an error when searching for a match...
+                </Typography>
+              </>
+            )}
+            {!isMatchError && !isMatchFound && (
+              <CircularProgress variant="indeterminate" />
+            )}
+            {!isMatchError && isMatchFound && (
               <>
                 <Avatar
                   sx={{ width: 80, height: 80, marginBottom: 3 }}
