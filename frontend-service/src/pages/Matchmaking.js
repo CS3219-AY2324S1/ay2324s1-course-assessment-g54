@@ -7,6 +7,8 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import StarIcon from "@mui/icons-material/Star";
+import StarBorderIcon from "@mui/icons-material/StarBorder";
 import { useNavigate } from "react-router-dom";
 
 const difficulties = ["easy", "medium", "hard"];
@@ -57,10 +59,15 @@ const Matchmaking = () => {
                     alignItems: "center",
                   }}
                 >
+                  <Stack spacing={1} direction="row">
+                    <StarIcon />
+                    {difficulty === "easy" ? <StarBorderIcon /> : <StarIcon />}
+                    {difficulty === "hard" ? <StarIcon /> : <StarBorderIcon />}
+                  </Stack>
                   <Chip
                     label={difficulty}
                     color={getDifficultyChipColor(difficulty)}
-                    sx={{ marginTop: "150px" }}
+                    sx={{ marginTop: "20px" }}
                   />
                 </CardContent>
               </CardActionArea>
