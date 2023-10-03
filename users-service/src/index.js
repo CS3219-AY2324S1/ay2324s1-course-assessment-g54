@@ -20,15 +20,15 @@ app.post("/logout", (req, res) => {
   res.status(200).send();
 });
 
-app.get("/profile", handlers.handleGetProfile);
+app.get("/profile", handlers.handleGetOwnProfile);
 
 app.put("/profile", handlers.handleUpdateProfile);
 
 app.delete("/profile", handlers.handleDeleteProfile);
 
-app.post("/signup", handlers.handleSignup);
+app.get("/profile/:id", handlers.handleGetProfile);
 
-app.get("/match/:id", handlers.handleGetMatchProfile);
+app.post("/signup", handlers.handleSignup);
 
 app.listen(PORT, () => {
   console.log(`Users app listening on port ${PORT}`);

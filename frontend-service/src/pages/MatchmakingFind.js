@@ -1,4 +1,5 @@
-import { useEffect } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 import { useUser } from "../contexts/UserContext";
@@ -18,6 +19,8 @@ const MatchmakingFind = () => {
   const user = useUser();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const [isMatchFound, setIsMatchFound] = useState(false);
+  const [matchedUser, setMatchedUser] = useState(null);
 
   useEffect(() => {
     const difficulty = searchParams.get("difficulty");
@@ -30,11 +33,21 @@ const MatchmakingFind = () => {
       token
     );
 
-    ws.addEventListener("close", (event) => {
-      console.log(event);
-    });
+    const closeEventHandler = async (event) => {
+      const result = JSON.parse(event.reason);
+      const matchedUserId = result.matchedUser;
+      const getProfielUrl = `${process.env.REACT_APP_USERS_SERVICE_HOST}/profile/${matchedUserId}`;
+      const response = await axios.get(getProfielUrl, {
+        headers: { Authorization: token },
+      });
+      setMatchedUser(response.data);
+      setIsMatchFound(true);
+    };
 
-    return () => {
+    ws.addEventListener("close", closeEventHandler);
+
+    return async () => {
+      ws.removeEventListener("close", closeEventHandler);
       ws.close(1000, "Client has left the page");
     };
   }, []);
@@ -72,13 +85,23 @@ const MatchmakingFind = () => {
           </CardContent>
         </Card>
         <Box>
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => navigate("/matchmaking")}
-          >
-            Cancel
-          </Button>
+          {!isMatchFound && (
+            <Button
+              variant="contained"
+              color="error"
+              onClick={() => navigate("/matchmaking")}
+            >
+              Cancel
+            </Button>
+          )}
+          {isMatchFound && (
+            <Button
+              variant="contained"
+              onClick={() => navigate("/matchmaking")}
+            >
+              Start
+            </Button>
+          )}
         </Box>
         <Card>
           <CardContent
@@ -91,7 +114,17 @@ const MatchmakingFind = () => {
               alignItems: "center",
             }}
           >
-            <CircularProgress variant="indeterminate" />
+            {!isMatchFound && <CircularProgress variant="indeterminate" />}
+            {isMatchFound && (
+              <>
+                <Avatar
+                  sx={{ width: 80, height: 80, marginBottom: 3 }}
+                  alt={matchedUser.name}
+                  src={matchedUser.profileImageUrl}
+                />
+                {matchedUser.name}
+              </>
+            )}
           </CardContent>
         </Card>
       </Stack>
