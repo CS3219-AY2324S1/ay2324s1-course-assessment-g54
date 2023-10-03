@@ -26,75 +26,18 @@ const MatchmakingFind = () => {
 
     const token = window.localStorage.getItem("token");
     const ws = new WebSocket(
-      `ws://localhost:3003?difficulty=${difficulty}`,
+      `${process.env.REACT_APP_MATCHMAKING_SERVICE_HOST}?difficulty=${difficulty}`,
       token
     );
+
+    ws.addEventListener("close", (event) => {
+      console.log(event);
+    });
+
+    return () => {
+      ws.close(1000, "Client has left the page");
+    };
   }, []);
-
-  // const [difficulty, setDifficulty] = useState("easy");
-  // const [isLoading, setIsLoading] = useState(false);
-  // const [msg, setMsg] = useState("");
-  // const [data, setData] = useState("");
-  // const [webSocket, setWebSocket] = useState({});
-  // const [matchedName, setMatchedName] = useState("");
-  // const [matchedProfileImageUrl, setMatchedProfileImageUrl] = useState("");
-
-  // const token = window.localStorage.getItem("token");
-
-  // async function connectToServer() {
-  // const ws = new WebSocket(
-  //   `ws://token:${token}@localhost:3003?difficulty=${difficulty}`,
-  //   token
-  // );
-  //   return ws;
-  // }
-
-  // async function handleSave() {
-  //   setIsLoading(true);
-  //   setMsg("sent");
-  //   setData("");
-  //   const ws = await connectToServer();
-  //   setWebSocket(ws);
-
-  //   ws.addEventListener("open", (event) => {
-  //     setMsg("Connected to matching server!");
-  //   });
-
-  //   ws.addEventListener("message", async (event) => {
-  //     console.log(event.data);
-  //     const matchedUserID = event.data;
-  //     try {
-  //       const usersServiceUrl = `${process.env.REACT_APP_USERS_SERVICE_HOST}/match/${matchedUserID}`;
-  //       const response = await axios.get(usersServiceUrl, {
-  //         headers: { Authorization: token },
-  //       });
-  //       console.log(response.data);
-  //       setMatchedName(response.data.name);
-  //       setMatchedProfileImageUrl(response.data.profileImageUrl);
-  //     } catch (error) {
-  //       console.log(error.response.data);
-  //       setMatchedName("");
-  //       setMatchedProfileImageUrl("");
-  //       throw new Error(error.response.data);
-  //     }
-  //     setData(`Message from socket: ${event.data}`);
-  //   });
-
-  //   ws.addEventListener("close", (event) => {
-  //     setIsLoading(false);
-  //     console.log(event.reason);
-  //     setWebSocket({});
-  //     setData(`Socket close with reason: ${event.reason}`);
-  //     setMsg("Connection to matching server closed");
-  //   });
-  // }
-
-  // // for debugging
-  // useEffect(() => {
-  //   if (webSocket !== undefined && webSocket.length !== 0) {
-  //     console.log(webSocket);
-  //   }
-  // }, [webSocket]);
 
   if (!user) return <LinearProgress variant="indeterminate" />;
 

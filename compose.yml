@@ -17,6 +17,7 @@ services:
     environment:
       REACT_APP_QUESTIONS_SERVICE_HOST: http://localhost:3001
       REACT_APP_USERS_SERVICE_HOST: http://localhost:3002
+      REACT_APP_MATCHMAKING_SERVICE_HOST: ws://localhost:3003
     volumes:
       - ./frontend-service:/app
     command: yarn start
