@@ -58,7 +58,13 @@ const Matchmaking = () => {
           spacing={3}
         >
           {difficulties.map((difficulty) => (
-            <Card key={difficulty} sx={{ width: "200px" }}>
+            <Card key={difficulty} sx={{
+              width : "200px",
+              transition: 'transform 0.3s ease',
+              '&:hover': {
+                transform: 'translateY(-15px)'
+              }
+            }}>
               <CardActionArea
                 onClick={() =>
                   navigate(`/matchmaking/find?difficulty=${difficulty}`)
