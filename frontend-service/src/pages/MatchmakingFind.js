@@ -107,7 +107,7 @@ const MatchmakingFind = () => {
 						</CardContent>
 					</Card>
 					<Stack
-						spacing={6}
+						spacing={3}
 						width="200px"
 						justifyContent="center"
 						alignItems="center"
@@ -117,6 +117,14 @@ const MatchmakingFind = () => {
 							{searchParams.get("difficulty").charAt(0).toUpperCase() +
 								searchParams.get("difficulty").substring(1)}
 						</Typography>
+            {!isMatchError && !isMatchFound && (
+								<>
+									<CircularProgress variant="indeterminate" />
+									<Typography marginTop={3}>
+										{searchTimeElapsed + "s"}
+									</Typography>
+								</>
+							)}
 						{!isMatchFound && (
 							<Button
 								variant="contained"
@@ -135,45 +143,6 @@ const MatchmakingFind = () => {
 							</Button>
 						)}
 					</Stack>
-					<Card>
-						<CardContent
-							sx={{
-								height: "200px",
-								width: "160px",
-								display: "flex",
-								flexDirection: "column",
-								justifyContent: "center",
-								alignItems: "center",
-							}}
-						>
-							{isMatchError && (
-								<>
-									<WarningIcon color="warning" fontSize="large" />
-									<Typography textAlign="center" marginTop={1}>
-										There was an error when searching for a match...
-									</Typography>
-								</>
-							)}
-							{!isMatchError && !isMatchFound && (
-								<>
-									<CircularProgress variant="indeterminate" />
-									<Typography marginTop={3}>
-										{searchTimeElapsed + "s"}
-									</Typography>
-								</>
-							)}
-							{!isMatchError && isMatchFound && (
-								<>
-									<Avatar
-										sx={{ width: 80, height: 80, marginBottom: 3 }}
-										alt={matchedUser.name}
-										src={matchedUser.profileImageUrl}
-									/>
-									{matchedUser.name}
-								</>
-							)}
-						</CardContent>
-					</Card>
 					<Card>
 						<CardContent sx={{
 								height: "200px",
@@ -205,7 +174,7 @@ const MatchmakingFind = () => {
 									<Box>
 										<Skeleton variant="circular">
 											<Avatar
-												sx={{ width: 80, height: 80, marginBottom: 3 }}
+												sx={{ width: 80, height: 80,marginTop:1, marginBottom: 3 }}
 											></Avatar>
 										</Skeleton>
 									</Box>
