@@ -24,6 +24,18 @@ const getDifficultyChipColor = (difficulty) => {
       return "primary";
   }
 };
+const getDifficultyStarColor = (difficulty) => {
+  switch (difficulty) {
+    case "easy":
+      return "green";
+    case "medium":
+      return "yellow";
+    case "hard":
+      return "red";
+    default:
+      return "blue";
+  }
+};
 
 const Matchmaking = () => {
   const navigate = useNavigate();
@@ -60,9 +72,9 @@ const Matchmaking = () => {
                   }}
                 >
                   <Stack spacing={1} direction="row">
-                    <StarIcon />
-                    {difficulty === "easy" ? <StarBorderIcon /> : <StarIcon />}
-                    {difficulty === "hard" ? <StarIcon /> : <StarBorderIcon />}
+                    <StarIcon style={{ color: getDifficultyStarColor(difficulty)}}/>
+                    {difficulty === "easy" ? <StarBorderIcon style={{ color: getDifficultyStarColor(difficulty)}}/> : <StarIcon style={{ color: getDifficultyStarColor(difficulty)}} />}
+                    {difficulty === "hard" ? <StarIcon style={{ color: getDifficultyStarColor(difficulty)}}/> : <StarBorderIcon style={{ color: getDifficultyStarColor(difficulty)}}/>}
                   </Stack>
                   <Chip
                     label={difficulty}
