@@ -19,7 +19,7 @@ const QuestionForm = ({
   onDescriptionChange,
 }) => {
   return (
-    <Stack height="calc(100% - 48px)" direction="row" spacing={1}>
+    <Stack height="100%" direction="row" spacing={1} border="1px solid pink">
       <Box width="50%" height="100%">
         <Stack width="100%" spacing={1}>
           <Card
