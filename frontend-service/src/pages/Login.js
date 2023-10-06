@@ -12,11 +12,14 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import WavingHandOutlinedIcon from "@mui/icons-material/WavingHandOutlined";
 
+import AcknowledgementToast from "../components/AcknowledgementToast";
+
 const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [toastOpen, setToastOpen] = useState(false);
 
   return (
     <Box
@@ -44,10 +47,14 @@ const Login = () => {
                     `${process.env.REACT_APP_USERS_SERVICE_HOST}/login`,
                     { email, password }
                   );
-                  if (request.status !== 200) return setIsSubmitting(false);
+                  if (request.status !== 200) {
+                    setToastOpen(true);
+                    return setIsSubmitting(false);
+                  }
                   window.localStorage.setItem("token", request.data.token);
                   navigate("/questions");
                 } catch (error) {
+                  setToastOpen(true);
                   console.error(error);
                   setIsSubmitting(false);
                 }
@@ -93,6 +100,12 @@ const Login = () => {
           </Stack>
         </CardContent>
       </Card>
+      <AcknowledgementToast
+        open={toastOpen}
+        message="Incorrect email or password."
+        onClose={() => setToastOpen(false)}
+        severity="error"
+      />
     </Box>
   );
 };
