@@ -12,6 +12,7 @@ import StarIcon from "@mui/icons-material/Star";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 
 const difficulties = ["easy", "medium", "hard"];
+
 const getDifficultyChipColor = (difficulty) => {
   switch (difficulty) {
     case "easy":
@@ -106,7 +107,7 @@ const Matchmaking = () => {
                     )}
                   </Stack>
                   <Chip
-                    label={difficulty}
+                    label={difficulty.charAt(0).toUpperCase() + difficulty.substring(1)}
                     color={getDifficultyChipColor(difficulty)}
                     sx={{ marginTop: "20px", color: "white" }}
                   />

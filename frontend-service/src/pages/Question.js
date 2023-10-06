@@ -24,6 +24,19 @@ import Typography from "@mui/material/Typography";
 
 marked.use({ breaks: true, gfm: true, silent: true });
 
+const getDifficultyChipColor = (difficulty) => {
+  switch (difficulty) {
+    case "easy":
+      return "success";
+    case "medium":
+      return "warning";
+    case "hard":
+      return "error";
+    default:
+      return "primary";
+  }
+};
+
 const Question = () => {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -59,19 +72,6 @@ const Question = () => {
 
   if (isLoading) return <LinearProgress variant="indeterminate" />;
 
-  const getDifficultyChipColor = (difficulty) => {
-    switch (difficulty) {
-      case "easy":
-        return "success";
-      case "medium":
-        return "warning";
-      case "hard":
-        return "error";
-      default:
-        return "primary";
-    }
-  };
-
   return (
     <>
       <Box height="calc(100vh - 64px)" width="100vw" >
@@ -93,9 +93,10 @@ const Question = () => {
                   {question.title}
                 </Typography>
                 <Chip
-                  label={question.complexity}
-                  sx={{backgroundColor: getDifficultyChipColor(question.complexity)}}
+                  label={question.complexity.charAt(0).toUpperCase() + question.complexity.substring(1)}
+                  color= {getDifficultyChipColor(question.complexity)}
                   size="small"
+                  sx={{ color: "white" }}
                 />
                 {user.isMaintainer && (
                   <Tooltip title="Edit question" placement="top" arrow>
@@ -150,7 +151,7 @@ const Question = () => {
               </Stack>
               <Editor
                 language={editorLanguage}
-                value={editorLanguage == "python" ? "# Insert your code here\n" : "// Insert your code here\n" }
+                value={editorLanguage === "python" ? "# Insert your code here\n" : "// Insert your code here\n" }
                 theme="vs-dark"
                 onMount={(editor) => {
                   editorRef.current = editor;
