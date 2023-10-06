@@ -15,6 +15,7 @@ import Skeleton from "@mui/material/Skeleton";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 
+import SentimentVeryDissatisfiedIcon from "@mui/icons-material/SentimentVeryDissatisfied";
 import WarningIcon from "@mui/icons-material/Warning";
 
 const difficulties = ["easy", "medium", "hard"];
@@ -23,10 +24,12 @@ const MatchmakingFind = () => {
   const user = useUser();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [searchTimeElapsed, setSearchTimeElapsed] = useState(0);
+  const [searchTimeElapsed, setSearchTimeElapsed] = useState(30);
   const [isMatchError, setIsMatchError] = useState(false);
   const [isMatchFinding, setIsMatchFinding] = useState(true);
   const [matchedUser, setMatchedUser] = useState(null);
+  const isMatchFailed = !isMatchFinding && matchedUser == null;
+  const isMatchPassed = !isMatchFinding && matchedUser;
 
   useEffect(() => {
     const difficulty = searchParams.get("difficulty");
@@ -39,10 +42,14 @@ const MatchmakingFind = () => {
       token
     );
 
-    const clock = setInterval(
-      () => setSearchTimeElapsed((prevState) => prevState + 1),
-      1000
-    );
+    const clock = setInterval(() => {
+      setSearchTimeElapsed((prevState) => {
+        if (prevState > 0) return prevState - 1;
+        setIsMatchFinding(false);
+        clearInterval(clock);
+        return 30;
+      });
+    }, 1000);
 
     const closeEventHandler = async (event) => {
       clearInterval(clock);
@@ -132,13 +139,13 @@ const MatchmakingFind = () => {
                 Cancel
               </Button>
             )}
-            {!isMatchFinding && (
-              <Button
-                variant="contained"
-                onClick={() => navigate("/matchmaking")}
-              >
-                Start
+            {isMatchFailed && (
+              <Button variant="contained" onClick={() => navigate(0)}>
+                Retry
               </Button>
+            )}
+            {isMatchPassed && (
+              <Button variant="contained">Go To Question</Button>
             )}
           </Stack>
           <Card>
@@ -160,7 +167,14 @@ const MatchmakingFind = () => {
                   </Typography>
                 </>
               )}
-
+              {!isMatchError && isMatchFailed && (
+                <>
+                  <SentimentVeryDissatisfiedIcon fontSize="large" />
+                  <Typography textAlign="center" marginTop={1}>
+                    Unable to find a match.
+                  </Typography>
+                </>
+              )}
               {!isMatchError && isMatchFinding && (
                 <Box
                   sx={{
@@ -197,7 +211,7 @@ const MatchmakingFind = () => {
                   </Box>
                 </Box>
               )}
-              {!isMatchError && !isMatchFinding && (
+              {!isMatchError && isMatchPassed && (
                 <Box
                   sx={{
                     height: "160px",
