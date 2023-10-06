@@ -122,11 +122,9 @@ const EditQuestion = () => {
               </IconButton>
             </Tooltip>
             <Box flexGrow={1} />
-            <Tooltip title="Save question" placement="top" arrow>
-              <Button variant="contained" onClick={handleSave}>
-                Save
-              </Button>
-            </Tooltip>
+            <Button variant="contained" onClick={handleSave}>
+              Save
+            </Button>
           </Box>
           <Box flexGrow={1} overflow="clip">
             <QuestionForm
