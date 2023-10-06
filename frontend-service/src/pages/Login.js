@@ -9,6 +9,7 @@ import CardContent from "@mui/material/CardContent";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import WavingHandOutlinedIcon from '@mui/icons-material/WavingHandOutlined';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -26,9 +27,13 @@ const Login = () => {
       <Card sx={{ padding: 3, backgroundColor: "transparent",}}>
         <CardContent>
           <Stack spacing={6}>
-            <Typography variant="h5" color="grey">
+            <Stack direction="row" spacing={2}>
+              <Typography variant="h5" color="skyblue">
               Welcome back, please login to your account.
             </Typography>
+            <WavingHandOutlinedIcon sx={{color: "skyblue"}}/>
+            </Stack>
+            
             <form
               onSubmit={async (event) => {
                 event.preventDefault();
@@ -49,6 +54,7 @@ const Login = () => {
             >
               <Stack spacing={3}>
                 <TextField
+              
                   label="Email"
                   variant="outlined"
                   type="email"
@@ -56,6 +62,7 @@ const Login = () => {
                   disabled={isSubmitting}
                   value={email}
                   onChange={(event) => setEmail(event.target.value)}
+                  
                 />
                 <TextField
                   label="Password"
@@ -66,7 +73,7 @@ const Login = () => {
                   value={password}
                   onChange={(event) => setPassword(event.target.value)}
                 />
-                <Button sx={{backgroundColor: "blue", color: "white"}} variant="contained" type="submit">
+                <Button sx={{backgroundColor: "skyblue", color: "black"}} variant="contained" type="submit">
                   Login
                 </Button>
               </Stack>
