@@ -63,11 +63,11 @@ const Matchmaking = () => {
               sx={{
                 transition: 'transform 0.3s ease',
                 '&:hover': {
-                  transform: 'translateY(-10px)', // Adjust the value to control the translation distance
+                  transform: 'translateY(-10px)',
                 },
-                border: `2px solid ${getDifficultyStarColor(difficulty)}`, // Border color (uses your theme's primary color)
-                backgroundColor: 'transparent', // Transparent background
-                boxShadow: 'none', // Remove any default shadow
+                border: `2px solid ${getDifficultyStarColor(difficulty)}`,
+                backgroundColor: 'transparent', 
+                boxShadow: 'none',
               }}
             >
               <CardActionArea
