@@ -61,13 +61,13 @@ const Matchmaking = () => {
             <Card
               key={difficulty}
               sx={{
-                transition: 'transform 0.3s ease',
-                '&:hover': {
-                  transform: 'translateY(-10px)',
+                transition: "transform 0.3s ease",
+                "&:hover": {
+                  transform: "translateY(-10px)",
                 },
                 border: `2px solid ${getDifficultyStarColor(difficulty)}`,
-                backgroundColor: 'transparent', 
-                boxShadow: 'none',
+                backgroundColor: "transparent",
+                boxShadow: "none",
               }}
             >
               <CardActionArea
@@ -108,7 +108,7 @@ const Matchmaking = () => {
                   <Chip
                     label={difficulty}
                     color={getDifficultyChipColor(difficulty)}
-                    sx={{ marginTop: "20px", color: "white"}}
+                    sx={{ marginTop: "20px", color: "white" }}
                   />
                 </CardContent>
               </CardActionArea>
