@@ -14,11 +14,11 @@ import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import SettingsModal from "./SettingsModal";
-import SettingsIcon from '@mui/icons-material/Settings';
-import LogoutIcon from '@mui/icons-material/ExitToApp';
+import SettingsIcon from "@mui/icons-material/Settings";
+import LogoutIcon from "@mui/icons-material/ExitToApp";
 import AvatarWithBadge from "./AvatarWithBadge";
-import MatchmakingIcon from '@mui/icons-material/PeopleOutline';
-import QuizIcon from '@mui/icons-material/Quiz';
+import MatchmakingIcon from "@mui/icons-material/PeopleOutline";
+import QuizIcon from "@mui/icons-material/Quiz";
 
 const NavBar = () => {
   const navigate = useNavigate();
@@ -33,45 +33,59 @@ const NavBar = () => {
   const handleOpenSettingsModal = () => setIsSettingsModalOpen(true);
 
   return (
-    <AppBar position="static" sx={{backgroundColor: theme => theme.palette.background.navBar}}>
-      <SettingsModal isModalOpen={isSettingsModalOpen} setIsModalOpen={setIsSettingsModalOpen}/>
-      <Toolbar disableGutters sx={{ paddingRight: 1.5}}>
-        <Button 
+    <AppBar
+      position="static"
+      sx={{ backgroundColor: (theme) => theme.palette.background.navBar }}
+    >
+      <SettingsModal
+        isModalOpen={isSettingsModalOpen}
+        setIsModalOpen={setIsSettingsModalOpen}
+      />
+      <Toolbar disableGutters sx={{ paddingRight: 1.5 }}>
+        <Button
           onClick={() => {
             navigate("/questions");
-          }} 
-          sx={{ borderRadius: 2, 
-                boxShadow: "none", 
-                py: "12px", 
-                px: 3, 
-                mx: 1, 
-                backgroundColor: location.pathname == "/questions" ? theme => theme.palette.navbarButtonSelected : "transparent", 
-                color: "white",
-                "&:hover": {
-                  backgroundColor: theme => theme.palette.navbarButtonHover, 
-                },
           }}
-          variant="contained" 
-          startIcon={<QuizIcon/>}
+          sx={{
+            borderRadius: 2,
+            boxShadow: "none",
+            py: "12px",
+            px: 3,
+            mx: 1,
+            backgroundColor:
+              location.pathname == "/questions"
+                ? (theme) => theme.palette.navbarButtonSelected
+                : "transparent",
+            color: "white",
+            "&:hover": {
+              backgroundColor: (theme) => theme.palette.navbarButtonHover,
+            },
+          }}
+          variant="contained"
+          startIcon={<QuizIcon />}
         >
           Questions
         </Button>
-        <Button 
+        <Button
           onClick={() => {
             navigate("/matchmaking");
-          }} 
-          sx={{ borderRadius: 2, 
-                boxShadow: "none", 
-                py: "12px", 
-                px: 3, 
-                backgroundColor: location.pathname == "/matchmaking" ? theme => theme.palette.navbarButtonSelected : "transparent", 
-                color: "white",
-                "&:hover": {
-                  backgroundColor: theme => theme.palette.navbarButtonHover, 
-                },
-              }}
-          variant="contained" 
-          startIcon={<MatchmakingIcon/>}
+          }}
+          sx={{
+            borderRadius: 2,
+            boxShadow: "none",
+            py: "12px",
+            px: 3,
+            backgroundColor:
+              location.pathname == "/matchmaking"
+                ? (theme) => theme.palette.navbarButtonSelected
+                : "transparent",
+            color: "white",
+            "&:hover": {
+              backgroundColor: (theme) => theme.palette.navbarButtonHover,
+            },
+          }}
+          variant="contained"
+          startIcon={<MatchmakingIcon />}
         >
           Find Match
         </Button>
@@ -79,7 +93,11 @@ const NavBar = () => {
         <Box sx={{ flexGrow: 0 }}>
           <Tooltip title={user.name}>
             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-              <Avatar alt={user.name} src={user.profileImageUrl}/>
+              {user.isMaintainer ? (
+                <AvatarWithBadge user={user} />
+              ) : (
+                <Avatar alt={user.name} src={user.profileImageUrl} />
+              )}
             </IconButton>
           </Tooltip>
           <Popover
@@ -91,12 +109,21 @@ const NavBar = () => {
               horizontal: "right",
             }}
           >
-            <Box border = "1px solid rgba(158, 158, 158, 0.1)" borderRadius={2} backgroundColor={theme => theme.palette.background.light}>
-              <Stack padding={3} spacing={1} alignItems="center" >
-                {user.isMaintainer
-                  ? <AvatarWithBadge />
-                  : <Avatar sx={{ width: 54, height: 54 }} alt={user.name} src={user.profileImageUrl} />
-                }
+            <Box
+              border="1px solid rgba(158, 158, 158, 0.1)"
+              borderRadius={2}
+              backgroundColor={(theme) => theme.palette.background.light}
+            >
+              <Stack padding={3} spacing={1} alignItems="center">
+                {user.isMaintainer ? (
+                  <AvatarWithBadge user={user} sx={{ width: 54, height: 54 }} />
+                ) : (
+                  <Avatar
+                    sx={{ width: 54, height: 54 }}
+                    alt={user.name}
+                    src={user.profileImageUrl}
+                  />
+                )}
                 <Typography variant="body1" align="center">
                   {user.name}
                 </Typography>
@@ -134,5 +161,5 @@ const NavBar = () => {
       </Toolbar>
     </AppBar>
   );
-}
+};
 export default NavBar;
