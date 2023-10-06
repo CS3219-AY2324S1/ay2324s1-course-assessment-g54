@@ -9,6 +9,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
+import Chip from "@mui/material/Chip";
 import CircularProgress from "@mui/material/CircularProgress";
 import LinearProgress from "@mui/material/LinearProgress";
 import Skeleton from "@mui/material/Skeleton";
@@ -19,6 +20,19 @@ import SentimentVeryDissatisfiedIcon from "@mui/icons-material/SentimentVeryDiss
 import WarningIcon from "@mui/icons-material/Warning";
 
 const difficulties = ["easy", "medium", "hard"];
+
+const getDifficultyChipColor = (difficulty) => {
+  switch (difficulty) {
+    case "easy":
+      return "success";
+    case "medium":
+      return "warning";
+    case "hard":
+      return "error";
+    default:
+      return "primary";
+  }
+};
 
 const MatchmakingFind = () => {
   const user = useUser();
@@ -114,16 +128,17 @@ const MatchmakingFind = () => {
             </CardContent>
           </Card>
           <Stack
-            spacing={3}
+            spacing={2.7}
             width="200px"
             justifyContent="center"
             alignItems="center"
           >
-            <Typography textAlign="center">
-              Question Level:{" "}
-              {searchParams.get("difficulty").charAt(0).toUpperCase() +
-                searchParams.get("difficulty").substring(1)}
-            </Typography>
+            <Chip
+                    label={searchParams.get("difficulty").charAt(0).toUpperCase() +
+                    searchParams.get("difficulty").substring(1)}
+                    color={getDifficultyChipColor(searchParams.get("difficulty").substring(0))}
+                    sx={{ fontSize: '15px', color: "white"}}
+                  />
             {!isMatchError && isMatchFinding && (
               <>
                 <CircularProgress variant="indeterminate" />
