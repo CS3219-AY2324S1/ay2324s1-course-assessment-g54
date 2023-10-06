@@ -133,7 +133,7 @@ const CategoryChipArray = (props) => {
                   );
                 })}
             </Box>
-            <Divider sx={{ marginY: 1 }} />
+            <Divider sx={{ marginY: 2 }} />
           </>
         )}
         <Box display="flex" flexWrap="wrap" gap={1}>
