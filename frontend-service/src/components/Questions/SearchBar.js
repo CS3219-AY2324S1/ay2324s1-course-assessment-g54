@@ -172,7 +172,6 @@ const SearchBar = ({
 }) => {
   const [difficultyChanged, setDifficultyChanged] = useState(false);
   const [categoriesChanged, setCategoriesChanged] = useState(false);
-  const [categoryChipValue, setCategoryChipValue] = useState("");
 
   const handleSearchOnEnter = (event) => {
     if (event.key === "Enter") filterData();
@@ -187,29 +186,6 @@ const SearchBar = ({
     setCategoriesQuery((prevCategories) =>
       prevCategories.filter((category) => category !== deletedCategory)
     );
-    setCategoriesChanged(true);
-  };
-
-  const handleAddChip = () => {
-    const valueToBeAdded = categoryChipValue
-      .trim()
-      .split(" ")
-      .map(
-        (word) =>
-          word.charAt(0).toUpperCase() + word.slice(1).toLocaleLowerCase()
-      )
-      .join(" ");
-    if (valueToBeAdded === "") return;
-    const isValueAlreadyAdded = categoriesQuery
-      .map((chip) => chip.toLowerCase())
-      .includes(categoryChipValue.toLowerCase());
-    if (isValueAlreadyAdded) return;
-    handleCategoriesAdded(valueToBeAdded);
-    setCategoryChipValue("");
-  };
-
-  const handleCategoriesAdded = (newCategory) => {
-    setCategoriesQuery((prevCategories) => [...prevCategories, newCategory]);
     setCategoriesChanged(true);
   };
 
@@ -243,7 +219,10 @@ const SearchBar = ({
           />
           <CategoryInput
             categoriesQuery={categoriesQuery}
-            setCategoriesQuery={setCategoriesQuery}
+            setCategoriesQuery={(query) => {
+              setCategoriesQuery(query);
+              setCategoriesChanged(true);
+            }}
           />
         </Stack>
         <AddButton />

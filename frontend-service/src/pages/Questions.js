@@ -5,7 +5,6 @@ import QuestionsTable from "../components/Questions/QuestionsTable";
 import SearchBar from "../components/Questions/SearchBar";
 
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 
 const Questions = () => {
@@ -60,14 +59,13 @@ const Questions = () => {
   return (
     <>
       <Box height="calc(100vh - 64px)" width="100%">
-        <Box display="flex" flexDirection="column" alignItems="center">
-          <Stack spacing={2} style={{ width: "80%" }}>
-            <Typography
-              variant="h3"
-              style={{ marginTop: "10px" }}
-            >
-              Questions
-            </Typography>
+        <Box
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          marginTop={8}
+        >
+          <Stack spacing={2} style={{ width: "80%", minHeight: "70vh" }}>
             <SearchBar
               searchQuery={searchQuery}
               setSearchQuery={setSearchQuery}
