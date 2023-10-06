@@ -1,15 +1,15 @@
-import {
-  Box,
-  Card,
-  CardActionArea,
-  CardContent,
-  Chip,
-  Stack,
-  Typography,
-} from "@mui/material";
-import StarIcon from "@mui/icons-material/Star";
-import StarBorderIcon from "@mui/icons-material/StarBorder";
 import { useNavigate } from "react-router-dom";
+
+import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import CardActionArea from "@mui/material/CardActionArea";
+import CardContent from "@mui/material/CardContent";
+import Chip from "@mui/material/Chip";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+
+import StarIcon from "@mui/icons-material/StarIcon";
+import StarBorderIcon from "@mui/icons-material/StarBorder";
 
 const difficulties = ["easy", "medium", "hard"];
 const getDifficultyChipColor = (difficulty) => {
@@ -58,13 +58,16 @@ const Matchmaking = () => {
           spacing={3}
         >
           {difficulties.map((difficulty) => (
-            <Card key={difficulty} sx={{
-              width : "200px",
-              transition: 'transform 0.3s ease',
-              '&:hover': {
-                transform: 'translateY(-15px)'
-              }
-            }}>
+            <Card
+              key={difficulty}
+              sx={{
+                width: "200px",
+                transition: "transform 0.3s ease",
+                "&:hover": {
+                  transform: "translateY(-15px)",
+                },
+              }}
+            >
               <CardActionArea
                 onClick={() =>
                   navigate(`/matchmaking/find?difficulty=${difficulty}`)
@@ -78,9 +81,27 @@ const Matchmaking = () => {
                   }}
                 >
                   <Stack spacing={1} direction="row">
-                    <StarIcon style={{ color: getDifficultyStarColor(difficulty)}}/>
-                    {difficulty === "easy" ? <StarBorderIcon style={{ color: getDifficultyStarColor(difficulty)}}/> : <StarIcon style={{ color: getDifficultyStarColor(difficulty)}} />}
-                    {difficulty === "hard" ? <StarIcon style={{ color: getDifficultyStarColor(difficulty)}}/> : <StarBorderIcon style={{ color: getDifficultyStarColor(difficulty)}}/>}
+                    <StarIcon
+                      style={{ color: getDifficultyStarColor(difficulty) }}
+                    />
+                    {difficulty === "easy" ? (
+                      <StarBorderIcon
+                        style={{ color: getDifficultyStarColor(difficulty) }}
+                      />
+                    ) : (
+                      <StarIcon
+                        style={{ color: getDifficultyStarColor(difficulty) }}
+                      />
+                    )}
+                    {difficulty === "hard" ? (
+                      <StarIcon
+                        style={{ color: getDifficultyStarColor(difficulty) }}
+                      />
+                    ) : (
+                      <StarBorderIcon
+                        style={{ color: getDifficultyStarColor(difficulty) }}
+                      />
+                    )}
                   </Stack>
                   <Chip
                     label={difficulty}
