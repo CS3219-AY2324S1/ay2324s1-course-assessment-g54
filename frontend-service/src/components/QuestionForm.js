@@ -1,12 +1,14 @@
-import React from "react";
 import SimpleMde from "react-simplemde-editor";
-import "easymde/dist/easymde.min.css";
+
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
+
 import Selector from "./Selector";
-import ChipArray from "./ChipArray";
+import CategoryChipArray from "./CategoryChipArray";
+
+import "easymde/dist/easymde.min.css";
 
 const QuestionForm = ({
   title,
@@ -19,12 +21,19 @@ const QuestionForm = ({
   onDescriptionChange,
 }) => {
   return (
-    <Stack height="100%" direction="row" spacing={1}>
+    <Stack height="100%" width="100%" direction="row" spacing={1}>
       <Box width="50%" height="100%">
-        <Stack width="100%" spacing={1}>
+        <Box
+          width="100%"
+          height="100%"
+          display="flex"
+          flexDirection="column"
+          gap={1}
+        >
           <Card
             variant="outlined"
             sx={{
+              minHeight: "74px",
               padding: 1,
               backgroundColor: (theme) => theme.palette.background.light,
             }}
@@ -50,6 +59,7 @@ const QuestionForm = ({
           <Card
             variant="outlined"
             sx={{
+              minHeight: "74px",
               padding: 1,
               backgroundColor: (theme) => theme.palette.background.light,
             }}
@@ -65,12 +75,12 @@ const QuestionForm = ({
           <Card
             variant="outlined"
             sx={{
+              flexGrow: 1,
               padding: 1,
               backgroundColor: (theme) => theme.palette.background.light,
             }}
-            height="100%"
           >
-            <ChipArray
+            <CategoryChipArray
               chips={categories}
               label="Categories"
               placeHolder="Filter categories"
@@ -89,7 +99,7 @@ const QuestionForm = ({
               }
             />
           </Card>
-        </Stack>
+        </Box>
       </Box>
       <Box width="50%" height="100%">
         <Card

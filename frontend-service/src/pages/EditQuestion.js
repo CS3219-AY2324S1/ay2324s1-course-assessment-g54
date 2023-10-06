@@ -107,21 +107,27 @@ const EditQuestion = () => {
   return (
     <>
       <Box height="calc(100vh - 64px)" width="100%">
-        <Box height="100%" display="flex">
-          <Stack height="100%" width="100%" spacing={1} padding={1}>
-            <Box display="flex">
-              <Tooltip title="Back to questions" placement="top" arrow>
-                <IconButton onClick={() => navigate(`/questions`)}>
-                  <ArrowBackIcon />
-                </IconButton>
-              </Tooltip>
-              <Box flexGrow={1} />
-              <Tooltip title="Save question" placement="top" arrow>
-                <Button variant="contained" onClick={handleSave}>
-                  Save
-                </Button>
-              </Tooltip>
-            </Box>
+        <Box
+          height="100%"
+          width="100%"
+          display="flex"
+          flexDirection="column"
+          padding={1}
+        >
+          <Box display="flex" marginBottom={1}>
+            <Tooltip title="Back to questions" placement="top" arrow>
+              <IconButton onClick={() => navigate(`/questions`)}>
+                <ArrowBackIcon />
+              </IconButton>
+            </Tooltip>
+            <Box flexGrow={1} />
+            <Tooltip title="Save question" placement="top" arrow>
+              <Button variant="contained" onClick={handleSave}>
+                Save
+              </Button>
+            </Tooltip>
+          </Box>
+          <Box flexGrow={1} overflow="clip">
             <QuestionForm
               title={title}
               complexity={complexity}
@@ -132,7 +138,7 @@ const EditQuestion = () => {
               onCategoriesChange={setCategories}
               onDescriptionChange={setDescription}
             />
-          </Stack>
+          </Box>
         </Box>
       </Box>
       <AcknowledgementToast
