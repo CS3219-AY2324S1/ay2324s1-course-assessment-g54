@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -93,9 +93,11 @@ const EditQuestion = () => {
       if (response.status === 200) {
         showToast("Question saved successfully!", "success");
       } else {
-        showToast("Unable to save the question. Please try again!", "error");
+        showToast(response.data, "error");
       }
     } catch (error) {
+      if (error instanceof AxiosError)
+        return showToast(error.response.data, "error");
       console.error(error);
       showToast("Unable to save the question. Please try again!", "error");
     }

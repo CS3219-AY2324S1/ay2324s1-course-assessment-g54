@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -11,7 +11,6 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 
 const NewQuestion = () => {
@@ -73,9 +72,11 @@ const NewQuestion = () => {
         );
         navigate(`/questions/${question_id}/edit`);
       } else {
-        showToast("Unable to save the question. Please try again!", "error");
+        showToast(response.data, "error");
       }
     } catch (error) {
+      if (error instanceof AxiosError)
+        return showToast(error.response.data, "error");
       console.error(error);
       showToast("Unable to save the question. Please try again!", "error");
     }
