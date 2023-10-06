@@ -27,10 +27,10 @@ const Signup = () => {
       justifyContent="center"
       alignItems="center"
     >
-      <Card sx={{ padding: 3 }}>
+      <Card sx={{ padding: 3, backgroundColor: "transparent" }}>
         <CardContent>
           <Stack spacing={6}>
-            <Typography variant="h5" color="grey">
+            <Typography variant="h5" color="skyblue">
               Welcome, please sign up for an account.
             </Typography>
             <form
@@ -91,6 +91,7 @@ const Signup = () => {
                   helperText={!isSamePassword ? "Passwords do not match." : ""}
                 />
                 <Button
+                  sx={{ backgroundColor: "skyblue", color: "black" }}
                   variant="contained"
                   type="submit"
                   disabled={isSubmitting}

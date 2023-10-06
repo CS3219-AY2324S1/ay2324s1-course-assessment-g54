@@ -24,7 +24,7 @@ const Login = () => {
       justifyContent="center"
       alignItems="center"
     >
-      <Card sx={{ padding: 3, backgroundColor: "transparent",}}>
+      <Card sx={{ padding: 3, backgroundColor: "transparent" }}>
         <CardContent>
           <Stack spacing={6}>
             <Stack direction="row" spacing={2}>
