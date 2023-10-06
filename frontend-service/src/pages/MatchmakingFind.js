@@ -11,9 +11,11 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CircularProgress from "@mui/material/CircularProgress";
 import LinearProgress from "@mui/material/LinearProgress";
+import Skeleton from "@mui/material/Skeleton";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 
+import SentimentVeryDissatisfiedIcon from "@mui/icons-material/SentimentVeryDissatisfied";
 import WarningIcon from "@mui/icons-material/Warning";
 
 const difficulties = ["easy", "medium", "hard"];
@@ -22,10 +24,12 @@ const MatchmakingFind = () => {
   const user = useUser();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [searchTimeElapsed, setSearchTimeElapsed] = useState(0);
+  const [searchTimeElapsed, setSearchTimeElapsed] = useState(30);
   const [isMatchError, setIsMatchError] = useState(false);
-  const [isMatchFound, setIsMatchFound] = useState(false);
+  const [isMatchFinding, setIsMatchFinding] = useState(true);
   const [matchedUser, setMatchedUser] = useState(null);
+  const isMatchFailed = !isMatchFinding && matchedUser == null;
+  const isMatchPassed = !isMatchFinding && matchedUser;
 
   useEffect(() => {
     const difficulty = searchParams.get("difficulty");
@@ -38,10 +42,14 @@ const MatchmakingFind = () => {
       token
     );
 
-    const clock = setInterval(
-      () => setSearchTimeElapsed((prevState) => prevState + 1),
-      1000
-    );
+    const clock = setInterval(() => {
+      setSearchTimeElapsed((prevState) => {
+        if (prevState > 0) return prevState - 1;
+        setIsMatchFinding(false);
+        clearInterval(clock);
+        return 30;
+      });
+    }, 1000);
 
     const closeEventHandler = async (event) => {
       clearInterval(clock);
@@ -56,7 +64,7 @@ const MatchmakingFind = () => {
         headers: { Authorization: token },
       });
       setMatchedUser(response.data);
-      setIsMatchFound(true);
+      setIsMatchFinding(false);
     };
 
     ws.addEventListener("close", closeEventHandler);
@@ -106,7 +114,7 @@ const MatchmakingFind = () => {
             </CardContent>
           </Card>
           <Stack
-            spacing={6}
+            spacing={3}
             width="200px"
             justifyContent="center"
             alignItems="center"
@@ -116,7 +124,13 @@ const MatchmakingFind = () => {
               {searchParams.get("difficulty").charAt(0).toUpperCase() +
                 searchParams.get("difficulty").substring(1)}
             </Typography>
-            {!isMatchFound && (
+            {!isMatchError && isMatchFinding && (
+              <>
+                <CircularProgress variant="indeterminate" />
+                <Typography marginTop={3}>{searchTimeElapsed + "s"}</Typography>
+              </>
+            )}
+            {isMatchFinding && (
               <Button
                 variant="contained"
                 color="error"
@@ -125,13 +139,13 @@ const MatchmakingFind = () => {
                 Cancel
               </Button>
             )}
-            {isMatchFound && (
-              <Button
-                variant="contained"
-                onClick={() => navigate("/matchmaking")}
-              >
-                Start
+            {isMatchFailed && (
+              <Button variant="contained" onClick={() => navigate(0)}>
+                Retry
               </Button>
+            )}
+            {isMatchPassed && (
+              <Button variant="contained">Go To Question</Button>
             )}
           </Stack>
           <Card>
@@ -153,23 +167,83 @@ const MatchmakingFind = () => {
                   </Typography>
                 </>
               )}
-              {!isMatchError && !isMatchFound && (
+              {!isMatchError && isMatchFailed && (
                 <>
-                  <CircularProgress variant="indeterminate" />
-                  <Typography marginTop={3}>
-                    {searchTimeElapsed + "s"}
+                  <SentimentVeryDissatisfiedIcon fontSize="large" />
+                  <Typography textAlign="center" marginTop={1}>
+                    Unable to find a match.
                   </Typography>
                 </>
               )}
-              {!isMatchError && isMatchFound && (
-                <>
-                  <Avatar
-                    sx={{ width: 80, height: 80, marginBottom: 3 }}
-                    alt={matchedUser.name}
-                    src={matchedUser.profileImageUrl}
-                  />
-                  {matchedUser.name}
-                </>
+              {!isMatchError && isMatchFinding && (
+                <Box
+                  sx={{
+                    height: "160px",
+                    width: "130px",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                  }}
+                >
+                  <Box>
+                    <Skeleton variant="circular">
+                      <Avatar
+                        sx={{
+                          width: 80,
+                          height: 80,
+                          marginTop: 1,
+                          marginBottom: 3,
+                        }}
+                      ></Avatar>
+                    </Skeleton>
+                  </Box>
+                  <Box
+                    sx={{
+                      width: "100%",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Skeleton width="100%" variant="rectangular">
+                      <Avatar></Avatar>
+                    </Skeleton>
+                  </Box>
+                </Box>
+              )}
+              {!isMatchError && isMatchPassed && (
+                <Box
+                  sx={{
+                    height: "160px",
+                    width: "130px",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                  }}
+                >
+                  <Box>
+                    <Avatar
+                      sx={{
+                        width: 80,
+                        height: 80,
+                        marginTop: 2,
+                        marginBottom: 3,
+                      }}
+                      alt={matchedUser.name}
+                      src={matchedUser.profileImageUrl}
+                    />
+                  </Box>
+                  <Box
+                    sx={{
+                      width: "100%",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                    }}
+                  >
+                    <>{matchedUser.name}</>
+                  </Box>
+                </Box>
               )}
             </CardContent>
           </Card>
