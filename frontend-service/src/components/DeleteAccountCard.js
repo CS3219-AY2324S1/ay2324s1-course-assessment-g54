@@ -34,7 +34,7 @@ const DeleteAccountCard = () => {
   return (
     <Box display="flex" justifyContent="center" flexDirection="column" >
       <Typography mb={3}>Deleting your account will remove all your information from our database. This action cannot be undone.</Typography>
-      <Typography>Please type in "{CONFIRM_DELETE_TEXT}" to confirm.</Typography>
+      <Typography>Please type in <strong>{CONFIRM_DELETE_TEXT}</strong> to confirm.</Typography>
       <TextField onChange={handleConfirmDeleteText} />
       {isConfirmed
         ? <Button onClick={handleDeleteAccount} variant="contained" color="error" sx={{ mt: 3 }}>Yes, I want to delete my account</Button>

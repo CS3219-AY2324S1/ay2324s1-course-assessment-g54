@@ -17,7 +17,7 @@ const EditProfileCard = () => {
   const [toastMessage, setToastMessage] = useState("");
   const [toastType, setToastType] = useState("info");
   
-  const handleUpdateName = async (event) => {
+  const updateProfile = async (event) => {
     event.preventDefault();
     const token = window.localStorage.getItem("token");
     try {
@@ -43,7 +43,7 @@ const EditProfileCard = () => {
 
   return (
     <Box sx={{ minWidth: 400, textAlign: 'center', p: 1, px: 2, py: 2 }}>
-      <form onSubmit={handleUpdateName}>
+      <form onSubmit={updateProfile}>
         <Stack spacing={3}>
           <TextField
             required
