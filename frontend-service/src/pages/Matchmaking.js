@@ -108,7 +108,7 @@ const Matchmaking = () => {
                   <Chip
                     label={difficulty}
                     color={getDifficultyChipColor(difficulty)}
-                    sx={{ marginTop: "20px" }}
+                    sx={{ marginTop: "20px", color: "black"}}
                   />
                 </CardContent>
               </CardActionArea>
