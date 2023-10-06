@@ -23,7 +23,7 @@ const Login = () => {
       justifyContent="center"
       alignItems="center"
     >
-      <Card sx={{ padding: 3 }}>
+      <Card sx={{ padding: 3, backgroundColor: "transparent",}}>
         <CardContent>
           <Stack spacing={6}>
             <Typography variant="h5" color="grey">
@@ -66,7 +66,7 @@ const Login = () => {
                   value={password}
                   onChange={(event) => setPassword(event.target.value)}
                 />
-                <Button variant="contained" type="submit">
+                <Button sx={{backgroundColor: "blue", color: "white"}} variant="contained" type="submit">
                   Login
                 </Button>
               </Stack>
