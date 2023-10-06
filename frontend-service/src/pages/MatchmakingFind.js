@@ -64,7 +64,7 @@ const MatchmakingFind = () => {
         headers: { Authorization: token },
       });
       setMatchedUser(response.data);
-      setIsMatchFinding(true);
+      setIsMatchFinding(false);
     };
 
     ws.addEventListener("close", closeEventHandler);
