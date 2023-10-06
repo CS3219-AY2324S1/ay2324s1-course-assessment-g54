@@ -33,7 +33,7 @@ const QuestionForm = ({
           <Card
             variant="outlined"
             sx={{
-              minHeight: "74px",
+              minHeight: title.trim().length < 3 ? "94px" : "74px",
               padding: 1,
               backgroundColor: (theme) => theme.palette.background.light,
             }}
