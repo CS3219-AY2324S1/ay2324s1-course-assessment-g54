@@ -27,7 +27,7 @@ const getDifficultyChipColor = (difficulty) => {
 const getDifficultyStarColor = (difficulty) => {
   switch (difficulty) {
     case "easy":
-      return "green";
+      return "lightgreen";
     case "medium":
       return "yellow";
     case "hard":
@@ -61,11 +61,13 @@ const Matchmaking = () => {
             <Card
               key={difficulty}
               sx={{
-                width: "200px",
                 transition: "transform 0.3s ease",
                 "&:hover": {
-                  transform: "translateY(-15px)",
+                  transform: "translateY(-10px)",
                 },
+                border: `2px solid ${getDifficultyStarColor(difficulty)}`,
+                backgroundColor: "transparent",
+                boxShadow: "none",
               }}
             >
               <CardActionArea
@@ -106,7 +108,7 @@ const Matchmaking = () => {
                   <Chip
                     label={difficulty}
                     color={getDifficultyChipColor(difficulty)}
-                    sx={{ marginTop: "20px" }}
+                    sx={{ marginTop: "20px", color: "white" }}
                   />
                 </CardContent>
               </CardActionArea>
