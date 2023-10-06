@@ -3,23 +3,23 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { styled } from '@mui/material/styles';
-import Chip from '@mui/material/Chip';
+import { styled } from "@mui/material/styles";
+import Chip from "@mui/material/Chip";
 import IconButton from "@mui/material/IconButton";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
-import TableCell, { tableCellClasses } from '@mui/material/TableCell';
+import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 
-import NoResults from "../../assets/NoResults.svg"
+import NoResults from "../../assets/NoResults.svg";
 import ConfirmationModal from "../ConfirmationModal";
 import AcknowledgementToast from "../AcknowledgementToast";
 import { useUser } from "../../contexts/UserContext";
@@ -27,31 +27,30 @@ import { useUser } from "../../contexts/UserContext";
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.questionTableHead,
-    color: "white"
+    color: "white",
   },
   [`&.${tableCellClasses.body}`]: {
-    fontSize: 14
+    fontSize: 14,
   },
 }));
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  '&:nth-of-type(odd)': {
+  "&:nth-of-type(odd)": {
     backgroundColor: theme.palette.questionRowEven,
   },
-  
-  '&:nth-of-type(even)': {
+
+  "&:nth-of-type(even)": {
     backgroundColor: theme.palette.questionRowOdd,
   },
-  '&:last-child td, &:last-child th': {
+  "&:last-child td, &:last-child th": {
     border: 0,
   },
 
-  cursor: 'pointer',
+  cursor: "pointer",
 
   "&:hover": {
     backgroundColor: theme.palette.questionRowHover,
-  }
-
+  },
 }));
 
 const QuestionsTable = ({ filteredQuestions, setFilteredQuestions }) => {
@@ -60,8 +59,9 @@ const QuestionsTable = ({ filteredQuestions, setFilteredQuestions }) => {
   const token = window.localStorage.getItem("token");
   const header = {
     headers: {
-      'Authorization': `${token}` 
-  }};
+      Authorization: `${token}`,
+    },
+  };
 
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [questionIdToDelete, setQuestionIdToDelete] = useState(null);
@@ -98,11 +98,11 @@ const QuestionsTable = ({ filteredQuestions, setFilteredQuestions }) => {
   const navigateToQuestion = (e, question) => {
     const isEditIcon = e.target.closest(".edit-icon");
     const isDeleteIcon = e.target.closest(".delete-icon");
-    
+
     if (!isEditIcon && !isDeleteIcon) {
       navigate(`/questions/${question.question_id}/`);
     }
-  }
+  };
 
   const getComplexityStyle = (complexity) => {
     const colorMap = {
@@ -110,19 +110,27 @@ const QuestionsTable = ({ filteredQuestions, setFilteredQuestions }) => {
       medium: "warning",
       hard: "error",
     };
-  
-    return colorMap[complexity] || "primary"
-  };
 
+    return colorMap[complexity] || "primary";
+  };
 
   if (filteredQuestions.length === 0) {
     return (
-      <div style={{ textAlign: "center" }}>
-        <img src={NoResults} alt="No Results Illustration" style={{ maxWidth: "100%" }} />
-        <Typography variant="h6" color="textSecondary" style={{ fontSize: '24px' }}>Oops! No matching questions found.</Typography>
+      <div style={{ textAlign: "center", marginTop: "64px" }}>
+        <img
+          src={NoResults}
+          alt="No Results Illustration"
+          style={{ maxWidth: "100%" }}
+        />
+        <Typography
+          variant="h6"
+          color="textSecondary"
+          style={{ fontSize: "24px" }}
+        >
+          Oops! No matching questions found.
+        </Typography>
       </div>
     );
-
   }
 
   const handleDeleteClick = (questionId) => {
@@ -140,10 +148,12 @@ const QuestionsTable = ({ filteredQuestions, setFilteredQuestions }) => {
     try {
       const url = `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions/${questionIdToDelete}`;
       const response = await axios.delete(url, header);
-      
-      const filtered = filteredQuestions.filter(q => q.question_id !== questionIdToDelete)
-      setFilteredQuestions(filtered)
-      handleCancelDelete()
+
+      const filtered = filteredQuestions.filter(
+        (q) => q.question_id !== questionIdToDelete
+      );
+      setFilteredQuestions(filtered);
+      handleCancelDelete();
 
       showToast("Question deleted successfully!", "success");
     } catch (err) {
@@ -168,7 +178,9 @@ const QuestionsTable = ({ filteredQuestions, setFilteredQuestions }) => {
               color="primary"
               aria-label="edit"
               size="large"
-              onClick={() => navigate(`/questions/${question.question_id}/edit`)}
+              onClick={() =>
+                navigate(`/questions/${question.question_id}/edit`)
+              }
             >
               <EditIcon fontSize="inherit" />
             </IconButton>
@@ -187,18 +199,38 @@ const QuestionsTable = ({ filteredQuestions, setFilteredQuestions }) => {
         </Stack>
       </StyledTableCell>
     );
-  };  
+  };
 
   return (
     <div style={{ display: "flex", justifyContent: "center", height: "auto" }}>
-      <TableContainer component={Paper} style={{ marginTop: "5px", maxHeight: tableHeight, maxWidth: tableWidth, overflowY: "auto" }}>
-        <Table stickyHeader aria-label="simple table" >
+      <TableContainer
+        component={Paper}
+        style={{
+          marginTop: "5px",
+          maxHeight: tableHeight,
+          maxWidth: tableWidth,
+          overflowY: "auto",
+        }}
+      >
+        <Table stickyHeader aria-label="simple table">
           <TableHead>
             <TableRow>
-              <StyledTableCell style={{ width: { xs: "5%"} }}>Difficulty</StyledTableCell>
-              <StyledTableCell style={{ width: { xs: "5%", md: "20%", lg: "40%"} }}>Title</StyledTableCell>
-              <StyledTableCell style={{ width: { xs: "5%", md: "20%", lg: "50%"} }}>Category</StyledTableCell>
-              {(user.isMaintainer) ? <StyledTableCell width="10%">Actions</StyledTableCell> : null}
+              <StyledTableCell style={{ width: { xs: "5%" } }}>
+                Difficulty
+              </StyledTableCell>
+              <StyledTableCell
+                style={{ width: { xs: "5%", md: "20%", lg: "40%" } }}
+              >
+                Title
+              </StyledTableCell>
+              <StyledTableCell
+                style={{ width: { xs: "5%", md: "20%", lg: "50%" } }}
+              >
+                Category
+              </StyledTableCell>
+              {user.isMaintainer ? (
+                <StyledTableCell width="10%">Actions</StyledTableCell>
+              ) : null}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -225,7 +257,7 @@ const QuestionsTable = ({ filteredQuestions, setFilteredQuestions }) => {
                         key={cat}
                         label={cat}
                         variant="outlined"
-                        style={{margin: "2px"}}
+                        style={{ margin: "2px" }}
                       />
                     ))}
                   </Stack>
