@@ -140,6 +140,14 @@ export const handleSignup = async (request, response) => {
   const passwordHash = await utils.hashPassword(body.password);
 
   try {
+    const usersWithEmail = await database
+      .select()
+      .where({ email })
+      .from("users");
+    if (usersWithEmail.length > 0)
+      return response
+        .status(400)
+        .send("Another user with this email already exists.");
     await database.insert({ name, email, passwordHash }).into("users");
     return response.status(200).send();
   } catch (error) {
