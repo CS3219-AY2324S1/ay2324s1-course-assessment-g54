@@ -27,7 +27,7 @@ const getDifficultyChipColor = (difficulty) => {
 const getDifficultyStarColor = (difficulty) => {
   switch (difficulty) {
     case "easy":
-      return "green";
+      return "lightgreen";
     case "medium":
       return "yellow";
     case "hard":
