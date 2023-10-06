@@ -59,13 +59,12 @@ const Questions = () => {
   return (
     <>
       <Box height="calc(100vh - 64px)" width="100%">
-        <Box
-          display="flex"
-          flexDirection="column"
-          alignItems="center"
-          marginTop={8}
-        >
-          <Stack spacing={2} style={{ width: "80%", minHeight: "70vh" }}>
+        <Box display="flex" flexDirection="column" alignItems="center">
+          <Stack
+            marginTop={8}
+            spacing={2}
+            style={{ width: "80%", minHeight: "70vh" }}
+          >
             <SearchBar
               searchQuery={searchQuery}
               setSearchQuery={setSearchQuery}
