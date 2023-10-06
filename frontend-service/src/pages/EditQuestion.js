@@ -35,7 +35,7 @@ const EditQuestion = () => {
     setToastSeverity(severity);
     setToastOpen(true);
   };
-  
+
   useEffect(() => {
     if (!user.isMaintainer) navigate("/questions");
 
@@ -56,7 +56,7 @@ const EditQuestion = () => {
 
       const successMessage = window.localStorage.getItem("successMessage");
       if (successMessage) {
-        showToast(successMessage, "success")
+        showToast(successMessage, "success");
       }
       window.localStorage.removeItem("successMessage");
     };
@@ -67,11 +67,14 @@ const EditQuestion = () => {
   const handleSave = async () => {
     try {
       if (title.trim() === "") {
-        showToast("Question title must have at least 3 characters.", "error")
+        showToast("Question title must have at least 3 characters.", "error");
         return;
       }
       if (description.trim().length < 3) {
-        showToast("Question description must have at least 3 characters.", "error")
+        showToast(
+          "Question description must have at least 3 characters.",
+          "error"
+        );
         return;
       }
       const url = `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions/${id}`;
@@ -84,18 +87,18 @@ const EditQuestion = () => {
         title: title.trim(),
         complexity: complexity,
         categories: categories,
-        description: description.trim()
-      }
+        description: description.trim(),
+      };
       const response = await axios.put(url, params, header);
 
       if (response.status === 200) {
-        showToast("Question saved successfully!", "success")
+        showToast("Question saved successfully!", "success");
       } else {
-        showToast("Unable to save the question. Please try again!", "error")
+        showToast("Unable to save the question. Please try again!", "error");
       }
     } catch (error) {
       console.error(error);
-      showToast("Unable to save the question. Please try again!", "error")
+      showToast("Unable to save the question. Please try again!", "error");
     }
   };
 
@@ -104,21 +107,27 @@ const EditQuestion = () => {
   return (
     <>
       <Box height="calc(100vh - 64px)" width="100%">
-        <Box height="100%" display="flex">
-          <Stack height="100%" width="100%" spacing={1} padding={1}>
-            <Box display="flex">
-              <Tooltip title="Back to questions" placement="top" arrow>
-                <IconButton onClick={() => navigate(`/questions`)}>
-                  <ArrowBackIcon />
-                </IconButton>
-              </Tooltip>
-              <Box flexGrow={1} />
-              <Tooltip title="Save question" placement="top" arrow>
-                <Button variant="contained" onClick={handleSave}>
-                  Save
-                </Button>
-              </Tooltip>
-            </Box>
+        <Box
+          height="100%"
+          width="100%"
+          display="flex"
+          flexDirection="column"
+          padding={1}
+        >
+          <Box display="flex" marginBottom={1}>
+            <Tooltip title="Back to questions" placement="top" arrow>
+              <IconButton onClick={() => navigate(`/questions`)}>
+                <ArrowBackIcon />
+              </IconButton>
+            </Tooltip>
+            <Box flexGrow={1} />
+            <Tooltip title="Save question" placement="top" arrow>
+              <Button variant="contained" onClick={handleSave}>
+                Save
+              </Button>
+            </Tooltip>
+          </Box>
+          <Box flexGrow={1} overflow="clip">
             <QuestionForm
               title={title}
               complexity={complexity}
@@ -129,7 +138,7 @@ const EditQuestion = () => {
               onCategoriesChange={setCategories}
               onDescriptionChange={setDescription}
             />
-          </Stack>
+          </Box>
         </Box>
       </Box>
       <AcknowledgementToast

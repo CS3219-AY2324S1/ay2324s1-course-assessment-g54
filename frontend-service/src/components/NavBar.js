@@ -93,11 +93,7 @@ const NavBar = () => {
         <Box sx={{ flexGrow: 0 }}>
           <Tooltip title={user.name}>
             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-              {user.isMaintainer ? (
-                <AvatarWithBadge user={user} />
-              ) : (
-                <Avatar alt={user.name} src={user.profileImageUrl} />
-              )}
+              <Avatar alt={user.name} src={user.profileImageUrl} />
             </IconButton>
           </Tooltip>
           <Popover

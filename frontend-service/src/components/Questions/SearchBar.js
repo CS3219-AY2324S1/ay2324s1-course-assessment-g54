@@ -1,27 +1,37 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import AddIcon from '@mui/icons-material/Add';
-import Button from '@mui/material/Button';
+import AddIcon from "@mui/icons-material/Add";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
 import Chip from "@mui/material/Chip";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
-import InputLabel from '@mui/material/InputLabel';
+import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import SearchIcon from "@mui/icons-material/Search";
-import FormControl from '@mui/material/FormControl';
+import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
+import Modal from "@mui/material/Modal";
 import Stack from "@mui/material/Stack";
 
 import { useUser } from "../../contexts/UserContext";
 
-const SearchInput = ({ searchQuery, setSearchQuery, handleSearchOnEnter, filterData }) => {
+import CategoryChipArray from "../CategoryChipArray";
+
+const SearchInput = ({
+  searchQuery,
+  setSearchQuery,
+  handleSearchOnEnter,
+  filterData,
+}) => {
   return (
     <TextField
       id="Search"
       label="Search Questions"
-      helperText={"Press enter to search by title"}
       type="search"
       variant="outlined"
       size="small"
@@ -61,23 +71,54 @@ const DifficultySelect = ({ difficultyQuery, handleDifficultyChange }) => {
   );
 };
 
-const CategoryInput = ({ categoryChipValue, setCategoryChipValue, handleAddChip }) => {
+const CategoryInput = ({ categoriesQuery, setCategoriesQuery }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
-    <TextField
-      fullWidth
-      variant="outlined"
-      size="small"
-      style={{ width: "40%" }}
-      label={"Categories"}
-      id="Categories"
-      value={categoryChipValue}
-      helperText={"Press enter to add a new category"}
-      onChange={(event) => setCategoryChipValue(event.target.value)}
-      onKeyUp={(event) => {
-        if (event.key !== "Enter") return;
-        handleAddChip();
-      }}
-    />
+    <>
+      <TextField
+        variant="outlined"
+        size="small"
+        style={{ width: "20%" }}
+        label="Categories"
+        InputProps={{ readOnly: true }}
+        onClick={(event) => {
+          setIsModalOpen(true);
+        }}
+      />
+      <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <Card
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            height: "70vh",
+            padding: 1,
+            backgroundColor: (theme) => theme.palette.background.light,
+          }}
+        >
+          <CategoryChipArray
+            chips={categoriesQuery}
+            label="Categories"
+            placeHolder="Filter categories"
+            onAddChip={(newCategory) =>
+              setCategoriesQuery((prevCategories) => [
+                ...prevCategories,
+                newCategory,
+              ])
+            }
+            onDeleteChip={(deletedCategory) =>
+              setCategoriesQuery((prevCategories) =>
+                prevCategories.filter(
+                  (category) => category !== deletedCategory
+                )
+              )
+            }
+          />
+        </Card>
+      </Modal>
+    </>
   );
 };
 
@@ -108,9 +149,13 @@ const AddButton = () => {
   const handleAddClick = () => navigate(`/questions/new`);
 
   if (!user.isMaintainer) return null;
-  
+
   return (
-    <Button variant="contained" startIcon={<AddIcon />} onClick={handleAddClick}>
+    <Button
+      variant="contained"
+      startIcon={<AddIcon />}
+      onClick={handleAddClick}
+    >
       Add
     </Button>
   );
@@ -123,14 +168,14 @@ const SearchBar = ({
   difficultyQuery,
   setDifficultyQuery,
   categoriesQuery,
-  setCategoriesQuery
+  setCategoriesQuery,
 }) => {
   const [difficultyChanged, setDifficultyChanged] = useState(false);
   const [categoriesChanged, setCategoriesChanged] = useState(false);
   const [categoryChipValue, setCategoryChipValue] = useState("");
 
   const handleSearchOnEnter = (event) => {
-    if (event.key === 'Enter') filterData()
+    if (event.key === "Enter") filterData();
   };
 
   const handleDifficultyChange = (event) => {
@@ -142,16 +187,19 @@ const SearchBar = ({
     setCategoriesQuery((prevCategories) =>
       prevCategories.filter((category) => category !== deletedCategory)
     );
-    setCategoriesChanged(true)
+    setCategoriesChanged(true);
   };
 
   const handleAddChip = () => {
     const valueToBeAdded = categoryChipValue
-    .trim()
-    .split(" ")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLocaleLowerCase())
-    .join(" ");;
-    if (valueToBeAdded === "") return;    
+      .trim()
+      .split(" ")
+      .map(
+        (word) =>
+          word.charAt(0).toUpperCase() + word.slice(1).toLocaleLowerCase()
+      )
+      .join(" ");
+    if (valueToBeAdded === "") return;
     const isValueAlreadyAdded = categoriesQuery
       .map((chip) => chip.toLowerCase())
       .includes(categoryChipValue.toLowerCase());
@@ -161,10 +209,7 @@ const SearchBar = ({
   };
 
   const handleCategoriesAdded = (newCategory) => {
-    setCategoriesQuery((prevCategories) => [
-      ...prevCategories,
-      newCategory,
-    ]);
+    setCategoriesQuery((prevCategories) => [...prevCategories, newCategory]);
     setCategoriesChanged(true);
   };
 
@@ -184,28 +229,22 @@ const SearchBar = ({
 
   return (
     <div>
-      <Stack
-        direction="row"
-        spacing={1}
-        alignItems="flex-start"
-        justifyContent="space-between"
-      >
-        <Stack direction="row" spacing={1} alignItems="flex-start" width={"70%"}>
-        <SearchInput
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          handleSearchOnEnter={handleSearchOnEnter}
-          filterData={filterData}
-        />
-        <DifficultySelect
-          difficultyQuery={difficultyQuery}
-          handleDifficultyChange={handleDifficultyChange}
-        />
-        <CategoryInput
-          categoryChipValue={categoryChipValue}
-          setCategoryChipValue={setCategoryChipValue}
-          handleAddChip={handleAddChip}
-        />
+      <Stack direction="row" spacing={1} justifyContent="space-between">
+        <Stack direction="row" spacing={1} width={"70%"}>
+          <SearchInput
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            handleSearchOnEnter={handleSearchOnEnter}
+            filterData={filterData}
+          />
+          <DifficultySelect
+            difficultyQuery={difficultyQuery}
+            handleDifficultyChange={handleDifficultyChange}
+          />
+          <CategoryInput
+            categoriesQuery={categoriesQuery}
+            setCategoriesQuery={setCategoriesQuery}
+          />
         </Stack>
         <AddButton />
       </Stack>
