@@ -6,16 +6,20 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
+import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import WavingHandOutlinedIcon from "@mui/icons-material/WavingHandOutlined";
+
+import AcknowledgementToast from "../components/AcknowledgementToast";
 
 const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [toastOpen, setToastOpen] = useState(false);
 
   return (
     <Box
@@ -43,10 +47,14 @@ const Login = () => {
                     `${process.env.REACT_APP_USERS_SERVICE_HOST}/login`,
                     { email, password }
                   );
-                  if (request.status !== 200) return setIsSubmitting(false);
+                  if (request.status !== 200) {
+                    setToastOpen(true);
+                    return setIsSubmitting(false);
+                  }
                   window.localStorage.setItem("token", request.data.token);
                   navigate("/questions");
                 } catch (error) {
+                  setToastOpen(true);
                   console.error(error);
                   setIsSubmitting(false);
                 }
@@ -78,11 +86,26 @@ const Login = () => {
                 >
                   Login
                 </Button>
+                <Typography variant="body2">
+                  Don't have an account?{" "}
+                  <Link
+                    onClick={() => navigate("/signup")}
+                    style={{ cursor: "pointer" }}
+                  >
+                    Sign up
+                  </Link>
+                </Typography>
               </Stack>
             </form>
           </Stack>
         </CardContent>
       </Card>
+      <AcknowledgementToast
+        open={toastOpen}
+        message="Incorrect email or password."
+        onClose={() => setToastOpen(false)}
+        severity="error"
+      />
     </Box>
   );
 };
