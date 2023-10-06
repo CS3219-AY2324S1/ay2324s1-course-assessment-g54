@@ -12,19 +12,20 @@ const EditProfileCard = () => {
   const user = useUser();
   const dispatch = useUserDispatch();
   const [inputName, setInputName] = useState(user.name);
-  const [inputProfileImageUrl, setInputProfileImageUrl] = useState(user.profileImageUrl);
+  const [inputProfileImageUrl, setInputProfileImageUrl] = useState(
+    user.profileImageUrl
+  );
   const [toastOpen, setToastOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastType, setToastType] = useState("info");
-  
+
   const updateProfile = async (event) => {
     event.preventDefault();
     const token = window.localStorage.getItem("token");
     try {
-      
       await axios.put(
         `${process.env.REACT_APP_USERS_SERVICE_HOST}/profile`,
-        { name: inputName, profileImageUrl: inputProfileImageUrl, },
+        { name: inputName, profileImageUrl: inputProfileImageUrl },
         { headers: { Authorization: token } }
       );
       showToast("Profile saved succesfully!", "success");
@@ -32,8 +33,11 @@ const EditProfileCard = () => {
       showToast("Error in saving profile. Please try again!", "error");
       console.error(error.message);
     }
-    dispatch({ type: "set", user: { ...user, name: inputName, profileImageUrl: inputProfileImageUrl} })
-  }
+    dispatch({
+      type: "set",
+      user: { ...user, name: inputName, profileImageUrl: inputProfileImageUrl },
+    });
+  };
 
   const showToast = (message, type) => {
     setToastMessage(message);
@@ -42,7 +46,7 @@ const EditProfileCard = () => {
   };
 
   return (
-    <Box sx={{ minWidth: 400, textAlign: 'center', p: 1, px: 2, py: 2 }}>
+    <Box sx={{ minWidth: 400, textAlign: "center", p: 1, px: 2, py: 2 }}>
       <form onSubmit={updateProfile}>
         <Stack spacing={3}>
           <TextField
@@ -67,7 +71,9 @@ const EditProfileCard = () => {
           />
         </Stack>
         <Stack direction="row" justifyContent="flex-end" pt={4} spacing={2}>
-          <Button variant="contained" type='submit' sx={{ minWidth: 100 }}>Save</Button>
+          <Button variant="contained" type="submit" sx={{ minWidth: 100 }}>
+            Save
+          </Button>
         </Stack>
       </form>
       <AcknowledgementToast
@@ -77,7 +83,7 @@ const EditProfileCard = () => {
         severity={toastType}
       />
     </Box>
-  )
-}
+  );
+};
 
 export default EditProfileCard;
