@@ -67,11 +67,11 @@ const EditQuestion = () => {
   const handleSave = async () => {
     try {
       if (title.trim() === "") {
-        showToast("Question title must be at least 3 characters.", "error")
+        showToast("Question title must have at least 3 characters.", "error")
         return;
       }
       if (description.trim().length < 3) {
-        showToast("Question description must be at least 3 characters.", "error")
+        showToast("Question description must have at least 3 characters.", "error")
         return;
       }
       const url = `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions/${id}`;
