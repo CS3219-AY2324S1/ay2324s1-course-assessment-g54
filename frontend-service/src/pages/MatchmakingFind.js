@@ -25,7 +25,7 @@ const MatchmakingFind = () => {
   const [searchParams] = useSearchParams();
   const [searchTimeElapsed, setSearchTimeElapsed] = useState(0);
   const [isMatchError, setIsMatchError] = useState(false);
-  const [isMatchFound, setIsMatchFound] = useState(false);
+  const [isMatchFinding, setIsMatchFinding] = useState(true);
   const [matchedUser, setMatchedUser] = useState(null);
 
   useEffect(() => {
@@ -57,7 +57,7 @@ const MatchmakingFind = () => {
         headers: { Authorization: token },
       });
       setMatchedUser(response.data);
-      setIsMatchFound(true);
+      setIsMatchFinding(true);
     };
 
     ws.addEventListener("close", closeEventHandler);
@@ -117,13 +117,13 @@ const MatchmakingFind = () => {
               {searchParams.get("difficulty").charAt(0).toUpperCase() +
                 searchParams.get("difficulty").substring(1)}
             </Typography>
-            {!isMatchError && !isMatchFound && (
+            {!isMatchError && isMatchFinding && (
               <>
                 <CircularProgress variant="indeterminate" />
                 <Typography marginTop={3}>{searchTimeElapsed + "s"}</Typography>
               </>
             )}
-            {!isMatchFound && (
+            {isMatchFinding && (
               <Button
                 variant="contained"
                 color="error"
@@ -132,7 +132,7 @@ const MatchmakingFind = () => {
                 Cancel
               </Button>
             )}
-            {isMatchFound && (
+            {!isMatchFinding && (
               <Button
                 variant="contained"
                 onClick={() => navigate("/matchmaking")}
@@ -161,7 +161,7 @@ const MatchmakingFind = () => {
                 </>
               )}
 
-              {!isMatchError && !isMatchFound && (
+              {!isMatchError && isMatchFinding && (
                 <Box
                   sx={{
                     height: "160px",
@@ -197,7 +197,7 @@ const MatchmakingFind = () => {
                   </Box>
                 </Box>
               )}
-              {!isMatchError && isMatchFound && (
+              {!isMatchError && !isMatchFinding && (
                 <Box
                   sx={{
                     height: "160px",
