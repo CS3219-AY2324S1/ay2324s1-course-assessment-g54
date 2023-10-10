@@ -21,6 +21,7 @@
     "react-router-dom": "^6.15.0",
     "react-scripts": "5.0.1",
     "react-simplemde-editor": "^5.2.0",
+    "serve": "^14.2.1",
     "simplemde": "^1.11.2",
     "socket.io-client": "^4.7.2",
     "web-vitals": "^2.1.4"
