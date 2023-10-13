@@ -4,15 +4,14 @@ import { findMatchRequestHandler } from "./handlers.js";
 const FIND_MATCH_QUEUE = "find-match";
 const MATCH_RESULTS_EXCHANGE = "match-results";
 
-
 async function getConnection() {
   try {
     const connection = await amqp.connect(`${process.env.RABBITMQ_HOST}`);
-    console.log("Connected to RabbitMQ successfully!");
+    console.log("[Server]", "Connected to RabbitMQ successfully!");
     return connection;
   } catch (error) {
-    console.log("Failed to connect to RabbitMQ!")
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    console.log("[Server]", "Failed to connect to RabbitMQ!");
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     return getConnection();
   }
 }
@@ -47,7 +46,6 @@ export const publishMatchResponse = async (result) => {
 
 export const enqueueFindMatch = async (userId, difficulty) => {
   if (!channel) throw new Error("RabbitMQ channel cannot be found.");
-  console.log("enqueueFindMatch");
   await channel.assertQueue(FIND_MATCH_QUEUE);
   const isMessageQueued = channel.sendToQueue(
     FIND_MATCH_QUEUE,
@@ -72,7 +70,6 @@ export const subscribeFindMatch = async (requestHandler) => {
 
 export const subscribeMatchResponse = async (userId, responseHandler) => {
   if (!channel) throw new Error("RabbitMQ channel cannot be found.");
-  console.log("subscribeMatchResponse");
   await channel.assertExchange(MATCH_RESULTS_EXCHANGE, "direct");
   const queueName = `${userId}-result-queue`;
   const { queue } = await channel.assertQueue(queueName, { exclusive: true });
