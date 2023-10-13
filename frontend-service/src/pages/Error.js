@@ -12,7 +12,7 @@ const Example = () => {
         PAGE NOT FOUND
       </Typography>
       <Button 
-        onClick={() => navigate("/questions")}
+        onClick={() => navigate(-1)}
         sx={{
           backgroundColor: (theme) => theme.palette.navbarButtonSelected, 
           fontSize: 20,
