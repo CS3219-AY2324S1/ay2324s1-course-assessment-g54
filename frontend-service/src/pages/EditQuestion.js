@@ -107,7 +107,7 @@ const EditQuestion = () => {
   if (isLoading) return <LinearProgress variant="indeterminate" />;
 
   return (
-    <Page>
+    <Page title="Edit Question">
       <Box height="calc(100vh - 64px)" width="100%">
         <Box
           height="100%"
