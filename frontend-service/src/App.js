@@ -1,17 +1,17 @@
 import { CssBaseline } from "@mui/material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
 import { UserProvider } from "./contexts/UserContext";
 
 import AuthGuard from "./components/AuthGuard";
 import EditQuestion from "./pages/EditQuestion";
-import Example from "./pages/Example";
 import Login from "./pages/Login";
 import NewQuestion from "./pages/NewQuestion";
 import Question from "./pages/Question";
 import Questions from "./pages/Questions";
 import Signup from "./pages/Signup";
+import Error from "./pages/Error";
 import Matchmaking from "./pages/Matchmaking";
 import MatchmakingFind from "./pages/MatchmakingFind";
 import NavBar from "./components/NavBar";
@@ -39,9 +39,10 @@ const darkTheme = createTheme({
 });
 
 const unprotectedRoutes = [
-  { path: "/", element: <Example /> },
+  { path: "/", element: <Navigate to="/questions" replace /> },
   { path: "/login", element: <Login /> },
   { path: "/signup", element: <Signup /> },
+  { path: "*", element: <Error /> },
 ];
 
 const protectedRoutes = [
