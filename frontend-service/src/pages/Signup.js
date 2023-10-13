@@ -25,6 +25,11 @@ const Signup = () => {
 
   const isSamePassword = password === confirmPassword;
 
+  useEffect(() => {
+    document.title = "Signup | PeerPrep";  
+  }, []);
+
+
   return (
     <>
       <Box
