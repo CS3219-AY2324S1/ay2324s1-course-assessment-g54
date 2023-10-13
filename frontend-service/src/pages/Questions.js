@@ -14,6 +14,10 @@ const Questions = () => {
   const [categoriesQuery, setCategoriesQuery] = useState([]);
 
   useEffect(() => {
+    document.title = "Questions | PeerPrep";  
+  }, []);
+
+  useEffect(() => {
     const fetchData = async () => {
       try {
         const url = `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions/`;
