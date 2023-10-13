@@ -36,6 +36,11 @@ const EditQuestion = () => {
   };
 
   useEffect(() => {
+    document.title = "Edit Question | PeerPrep";  
+  }, []);
+
+
+  useEffect(() => {
     if (!user.isMaintainer) navigate("/questions");
 
     const getQuestion = async () => {
