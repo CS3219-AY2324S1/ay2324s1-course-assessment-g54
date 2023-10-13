@@ -5,7 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import AcknowledgementToast from "../components/AcknowledgementToast";
 
 import { useUser } from "../contexts/UserContext";
-import Page from "../components/Page"
+import Page from "../components/Page";
 import QuestionForm from "../components/QuestionForm";
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";

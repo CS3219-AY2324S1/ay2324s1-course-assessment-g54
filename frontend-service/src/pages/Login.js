@@ -7,13 +7,14 @@ import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Link from "@mui/material/Link";
-import Page from "../components/Page"
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import WavingHandOutlinedIcon from "@mui/icons-material/WavingHandOutlined";
 
 import AcknowledgementToast from "../components/AcknowledgementToast";
+import Page from "../components/Page";
+
 
 const Login = () => {
   const navigate = useNavigate();
