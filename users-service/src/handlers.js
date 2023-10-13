@@ -13,6 +13,10 @@ export const handleDeleteProfile = async (request, response) => {
   let id;
   try {
     const user = utils.verifyJsonWebToken(jsonWebToken);
+    if (!user.issuedAt) return response.status(401).send();
+    const timeDifference = new Date() - user.issuedAt;
+    if (timeDifference > process.env.JWT_EXPIRY_SECONDS)
+      return response.status(401).send();
     id = user.id;
   } catch (error) {
     console.error(error);
@@ -39,6 +43,10 @@ export const handleGetOwnProfile = async (request, response) => {
   let id;
   try {
     const user = utils.verifyJsonWebToken(jsonWebToken);
+    if (!user.issuedAt) return response.status(401).send();
+    const timeDifference = new Date() - user.issuedAt;
+    if (timeDifference > process.env.JWT_EXPIRY_SECONDS)
+      return response.status(401).send();
     id = user.id;
   } catch (error) {
     return response.status(200).json(null);
@@ -65,7 +73,11 @@ export const handleGetProfile = async (request, response) => {
   if (!request.headers.authorization) return response.status(401).send();
   const jsonWebToken = request.headers.authorization;
   try {
-    utils.verifyJsonWebToken(jsonWebToken);
+    const user = utils.verifyJsonWebToken(jsonWebToken);
+    if (!user.issuedAt) return response.status(401).send();
+    const timeDifference = new Date() - user.issuedAt;
+    if (timeDifference > process.env.JWT_EXPIRY_SECONDS)
+      return response.status(401).send();
   } catch (error) {
     return response.status(401).send();
   }
@@ -113,7 +125,7 @@ export const handleLogin = async (request, response) => {
   }
 
   const { id, name, isMaintainer } = user;
-  const token = utils.signJsonWebToken({ id });
+  const token = utils.signJsonWebToken({ id, issuedAt: new Date() });
   console.log(`Token for ${user.name} is ${token}`);
   return response
     .status(200)
@@ -167,6 +179,10 @@ export const handleUpdateProfile = async (request, response) => {
   let id;
   try {
     const user = utils.verifyJsonWebToken(jsonWebToken);
+    if (!user.issuedAt) return response.status(401).send();
+    const timeDifference = new Date() - user.issuedAt;
+    if (timeDifference > process.env.JWT_EXPIRY_SECONDS)
+      return response.status(401).send();
     id = user.id;
   } catch (error) {
     return response.status(200).json(null).send();
