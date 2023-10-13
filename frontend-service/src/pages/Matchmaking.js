@@ -41,6 +41,11 @@ const getDifficultyStarColor = (difficulty) => {
 const Matchmaking = () => {
   const navigate = useNavigate();
 
+  useEffect(() => {
+    document.title = "Matchmaking | PeerPrep";  
+  }, []);
+
+
   return (
     <Box height="calc(100vh - 64px)" width="100vw">
       <Stack
