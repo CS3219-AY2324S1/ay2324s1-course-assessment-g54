@@ -1,6 +1,6 @@
 import { CssBaseline } from "@mui/material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
 import { UserProvider } from "./contexts/UserContext";
 
@@ -39,6 +39,7 @@ const darkTheme = createTheme({
 });
 
 const unprotectedRoutes = [
+  { path: "/", element: <Navigate to="/questions" replace /> },
   { path: "/login", element: <Login /> },
   { path: "/signup", element: <Signup /> },
   { path: "*", element: <Error /> },

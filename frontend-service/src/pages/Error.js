@@ -3,13 +3,13 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { useNavigate } from "react-router-dom";
 
-const Example = () => {
+const Error = () => {
   const navigate = useNavigate();
 
   return (
-    <Box sx={{ my: 4, display: "grid", placeContent: "center" }}>
-      <Typography textAlign="center" variant="h3" fontWeight="bold">
-        PAGE NOT FOUND
+    <Box height="100vh" width="100vw" display="flex" flexDirection="column" justifyContent="center" alignItems="center">
+      <Typography textAlign="center" variant="h4" fontWeight="bold">
+        Page not found
       </Typography>
       <img
         src={"PageNotFound.svg"}
@@ -18,15 +18,7 @@ const Example = () => {
       />
       <Button 
         onClick={() => navigate(-1)}
-        sx={{
-          backgroundColor: (theme) => theme.palette.navbarButtonSelected, 
-          fontSize: 20,
-          py:2,
-          color: "white",
-          "&:hover": {
-            backgroundColor: (theme) => theme.palette.navbarButtonHover,
-          },
-        }} 
+        variant="contained"
       >
         Go back
       </Button>
@@ -34,4 +26,4 @@ const Example = () => {
   );
 };
 
-export default Example;
+export default Error;
