@@ -22,7 +22,7 @@ export const handleDeleteProfile = async (request, response) => {
   try {
     const user = utils.verifyJsonWebToken(jsonWebToken);
     if (!user.issuedAt) return response.status(401).send(INVALID_JWT_ERROR_MSG);
-    const timeDifference = new Date() - user.issuedAt;
+    const timeDifference = new Date() - new Date(user.issuedAt);
     if (timeDifference > process.env.JWT_EXPIRY_SECONDS)
       return response.status(401).send(INVALID_JWT_ERROR_MSG);
     id = user.id;
@@ -53,7 +53,7 @@ export const handleGetOwnProfile = async (request, response) => {
   try {
     const user = utils.verifyJsonWebToken(jsonWebToken);
     if (!user.issuedAt) return response.status(401).send(INVALID_JWT_ERROR_MSG);
-    const timeDifference = new Date() - user.issuedAt;
+    const timeDifference = new Date() - new Date(user.issuedAt);
     if (timeDifference > process.env.JWT_EXPIRY_SECONDS)
       return response.status(401).send(INVALID_JWT_ERROR_MSG);
     id = user.id;
@@ -85,7 +85,7 @@ export const handleGetProfile = async (request, response) => {
   try {
     const user = utils.verifyJsonWebToken(jsonWebToken);
     if (!user.issuedAt) return response.status(401).send(INVALID_JWT_ERROR_MSG);
-    const timeDifference = new Date() - user.issuedAt;
+    const timeDifference = new Date() - new Date(user.issuedAt);
     if (timeDifference > process.env.JWT_EXPIRY_SECONDS)
       return response.status(401).send(INVALID_JWT_ERROR_MSG);
   } catch (error) {
@@ -191,7 +191,7 @@ export const handleUpdateProfile = async (request, response) => {
   try {
     const user = utils.verifyJsonWebToken(jsonWebToken);
     if (!user.issuedAt) return response.status(401).send(INVALID_JWT_ERROR_MSG);
-    const timeDifference = new Date() - user.issuedAt;
+    const timeDifference = new Date() - new Date(user.issuedAt);
     if (timeDifference > process.env.JWT_EXPIRY_SECONDS)
       return response.status(401).send(INVALID_JWT_ERROR_MSG);
     id = user.id;
