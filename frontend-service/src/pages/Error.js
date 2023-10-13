@@ -1,7 +1,6 @@
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import PageNotFound from "../assets/PageNotFound.svg";
 
 const Example = () => {
   return (
@@ -10,7 +9,7 @@ const Example = () => {
         PAGE NOT FOUND
       </Typography>
       <img
-        src={PageNotFound}
+        src={"PageNotFound.svg"}
         alt="Page not found"
         style={{ maxWidth: "100%" }}
       />
