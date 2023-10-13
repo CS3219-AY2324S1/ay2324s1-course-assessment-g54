@@ -21,6 +21,11 @@ const Login = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [toastOpen, setToastOpen] = useState(false);
 
+  useEffect(() => {
+    document.title = "Login | PeerPrep";  
+  }, []);
+
+
   return (
     <Box
       height="100vh"
