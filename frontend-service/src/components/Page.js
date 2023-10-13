@@ -6,7 +6,7 @@ const Page = (props) => {
   return <>
     <Helmet>
       <meta charSet="utf-8" />
-      <title>{`${title} | PeerPrep`}</title>
+      <title>{`${title} | OmegaLOLCode`}</title>
     </Helmet>
     {children}
   </>
