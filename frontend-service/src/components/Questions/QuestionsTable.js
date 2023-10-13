@@ -19,7 +19,6 @@ import EditIcon from "@mui/icons-material/Edit";
 import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 
-import NoResults from "../../assets/NoResults.svg";
 import ConfirmationModal from "../ConfirmationModal";
 import AcknowledgementToast from "../AcknowledgementToast";
 import { useUser } from "../../contexts/UserContext";
@@ -118,7 +117,7 @@ const QuestionsTable = ({ filteredQuestions, setFilteredQuestions }) => {
     return (
       <div style={{ textAlign: "center", marginTop: "64px" }}>
         <img
-          src={NoResults}
+          src={"NoResults.svg"}
           alt="No Results Illustration"
           style={{ maxWidth: "100%" }}
         />
