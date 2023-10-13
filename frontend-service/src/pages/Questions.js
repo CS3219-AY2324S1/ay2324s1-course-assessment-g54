@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 
+import Page from "../components/Page";
 import QuestionsTable from "../components/Questions/QuestionsTable";
 import SearchBar from "../components/Questions/SearchBar";
 
@@ -57,7 +58,7 @@ const Questions = () => {
   };
 
   return (
-    <>
+    <Page title="Questions">
       <Box height="calc(100vh - 64px)" width="100%">
         <Box display="flex" flexDirection="column" alignItems="center">
           <Stack
@@ -81,7 +82,7 @@ const Questions = () => {
           </Stack>
         </Box>
       </Box>
-    </>
+    </Page>
   );
 };
 export default Questions;

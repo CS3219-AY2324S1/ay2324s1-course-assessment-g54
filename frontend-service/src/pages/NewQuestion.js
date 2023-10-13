@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import AcknowledgementToast from "../components/AcknowledgementToast";
+import Page from "../components/Page";
 import QuestionForm from "../components/QuestionForm";
 
 import { useUser } from "../contexts/UserContext";
@@ -83,7 +84,7 @@ const NewQuestion = () => {
   };
 
   return (
-    <>
+    <Page title="New Question">
       <Box height="calc(100vh - 64px)" width="100%">
         <Box
           height="100%"
@@ -123,7 +124,7 @@ const NewQuestion = () => {
         onClose={() => setToastOpen(false)}
         severity={toastSeverity}
       />
-    </>
+    </Page>
   );
 };
 

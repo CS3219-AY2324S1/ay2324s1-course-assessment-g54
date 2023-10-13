@@ -5,6 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import AcknowledgementToast from "../components/AcknowledgementToast";
 
 import { useUser } from "../contexts/UserContext";
+import Page from "../components/Page";
 import QuestionForm from "../components/QuestionForm";
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -106,7 +107,7 @@ const EditQuestion = () => {
   if (isLoading) return <LinearProgress variant="indeterminate" />;
 
   return (
-    <>
+    <Page>
       <Box height="calc(100vh - 64px)" width="100%">
         <Box
           height="100%"
@@ -146,7 +147,7 @@ const EditQuestion = () => {
         onClose={() => setToastOpen(false)}
         severity={toastSeverity}
       />
-    </>
+    </Page>
   );
 };
 

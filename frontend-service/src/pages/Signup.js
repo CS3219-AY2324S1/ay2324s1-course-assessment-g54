@@ -7,11 +7,13 @@ import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Link from "@mui/material/Link";
+
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 
 import AcknowledgementToast from "../components/AcknowledgementToast";
+import Page from "../components/Page";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -25,8 +27,8 @@ const Signup = () => {
 
   const isSamePassword = password === confirmPassword;
 
-  return (
-    <>
+    return (
+    <Page title="Signup">
       <Box
         height="100vh"
         display="flex"
@@ -131,7 +133,7 @@ const Signup = () => {
         open={isToastOpen}
         severity="error"
       />
-    </>
+      </Page>
   );
 };
 

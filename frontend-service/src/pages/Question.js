@@ -8,6 +8,8 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { useUser } from "../contexts/UserContext";
 
+import Page from "../components/Page";
+
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Box from "@mui/material/Box";
 import MenuItem from '@mui/material/MenuItem';
@@ -46,7 +48,7 @@ const Question = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [question, setQuestion] = useState(null);
   const [editorLanguage, setEditorLanguage] = useState("javascript");
-
+ 
   useEffect(() => {
     const getQuestion = async () => {
       const url = `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions/${id}`;
@@ -73,7 +75,7 @@ const Question = () => {
   if (isLoading) return <LinearProgress variant="indeterminate" />;
 
   return (
-    <>
+    <Page title="Question">
       <Box height="calc(100vh - 64px)" width="100vw" >
         <Box height="100%" display="flex">
           <Box width="50%" height="100%" padding={1}>
@@ -162,7 +164,7 @@ const Question = () => {
           </Box>
         </Box>
       </Box>
-    </>
+    </Page>
   );
 };
 
