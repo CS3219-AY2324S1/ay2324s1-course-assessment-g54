@@ -1,17 +1,20 @@
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import Link from "@mui/material/Link";
+import PageNotFound from "../assets/PageNotFound.svg";
 
 const Example = () => {
   return (
-    <Container maxWidth="sm">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          Error 404 page not found
-        </Typography>
-      </Box>
-    </Container>
+    <Box sx={{ my: 4, display: "grid", placeContent: "center" }}>
+      <Typography textAlign="center" variant="h3" fontWeight="bold">
+        PAGE NOT FOUND
+      </Typography>
+      <img
+        src={PageNotFound}
+        alt="Page not found"
+        style={{ maxWidth: "100%" }}
+      />
+    </Box>
   );
 };
 
