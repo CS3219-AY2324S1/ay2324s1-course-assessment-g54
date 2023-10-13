@@ -46,6 +46,11 @@ const Question = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [question, setQuestion] = useState(null);
   const [editorLanguage, setEditorLanguage] = useState("javascript");
+  
+  useEffect(() => {
+    document.title = "Question | PeerPrep";  
+  }, []);
+
 
   useEffect(() => {
     const getQuestion = async () => {
