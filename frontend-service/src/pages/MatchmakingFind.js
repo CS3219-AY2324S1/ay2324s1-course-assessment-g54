@@ -46,6 +46,10 @@ const MatchmakingFind = () => {
   const isMatchPassed = !isMatchFinding && matchedUser;
 
   useEffect(() => {
+    document.title = "Find Matchmaking | PeerPrep";  
+  }, []);
+
+  useEffect(() => {
     const difficulty = searchParams.get("difficulty");
     if (!difficulty || !difficulties.includes(difficulty))
       return navigate("/matchmaking");
