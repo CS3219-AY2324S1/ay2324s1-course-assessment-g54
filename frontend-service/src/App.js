@@ -1,6 +1,7 @@
 import { CssBaseline } from "@mui/material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import {  useEffect } from "react";
 
 import { UserProvider } from "./contexts/UserContext";
 
@@ -54,6 +55,11 @@ const protectedRoutes = [
 ];
 
 function App() {
+
+  useEffect(() => {
+    document.title = "PeerPrep";  
+  }, []);
+
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
