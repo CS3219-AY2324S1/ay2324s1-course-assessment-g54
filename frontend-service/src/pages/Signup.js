@@ -28,7 +28,7 @@ const Signup = () => {
   const isSamePassword = password === confirmPassword;
 
     return (
-    <Page title="Signup">
+    <Page title="Sign Up">
       <Box
         height="100vh"
         display="flex"
