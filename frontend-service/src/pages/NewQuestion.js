@@ -27,6 +27,10 @@ const NewQuestion = () => {
   const [description, setDescription] = useState("");
 
   useEffect(() => {
+    document.title = "New Question | PeerPrep";  
+  }, []);
+
+  useEffect(() => {
     if (!user.isMaintainer) navigate("/questions");
   }, [navigate, user.isMaintainer]);
 
