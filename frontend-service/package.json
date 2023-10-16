@@ -28,7 +28,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "set-env": "export REACT_APP_QUESTIONS_SERVICE_HOST=http://peerprep.bryanlohxz.com/api/questions-service REACT_APP_USERS_SERVICE_HOST=http://peerprep.bryanlohxz.com/api/users-service REACT_APP_MATCHMAKING_SERVICE_HOST=http://peerprep.bryanlohxz.com/api/matchmaking-service",
+    "build": "yarn set-env && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
