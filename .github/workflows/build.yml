@@ -1,0 +1,33 @@
+name: Build and Deploy to Production Branch
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code (master)
+        uses: actions/checkout@v4
+        with:
+          ref: master
+        working-directory: ./frontend-service
+
+      - name: Build frontend (master)
+        run: yarn build
+        working-directory: ./frontend-service
+
+      - name: Checkout code (production)
+        uses: actions/checkout@v4
+        with:
+          ref: production
+        working-directory: ./frontend-service
+
+      - name: Update build in production
+        run: |
+          rm -rf build
+          git checkout master -- ./build
+          git add ./build
+          git commit -m "Update build"
+        working-directory: ./frontend-service
