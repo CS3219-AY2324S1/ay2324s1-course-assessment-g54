@@ -6,7 +6,7 @@ on:
 permissions: write-all
 
 jobs:
-  deploy-frontend:
+  deploy:
     runs-on: ubuntu-latest
     defaults:
       run:
