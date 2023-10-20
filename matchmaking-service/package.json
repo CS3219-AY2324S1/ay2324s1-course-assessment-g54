@@ -5,7 +5,8 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "start": "nodemon ./src/index.js"
+    "start": "nodemon ./src/index.js",
+    "start:production": "node ./src/index.js"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
