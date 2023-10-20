@@ -16,6 +16,7 @@ jobs:
         run: |
           git config --global user.email "gowri.bhat@u.nus.edu"
           git config --global user.name "gowribhat"
+        working-directory: .
 
       - name: Checkout code (master)
         uses: actions/checkout@v4
