@@ -1,0 +1,15 @@
+services:
+  frontend-service:
+    command: yarn start:production
+
+  question-service:
+    command: yarn start:production
+
+  users-service:
+    command: yarn start:production
+
+  collab-service:
+    command: yarn start:production
+
+  matchmaking-service:
+    command: yarn start:production
