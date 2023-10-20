@@ -12,7 +12,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: master
-        working-directory: ./frontend-service
 
       - name: Build frontend (master)
         run: yarn build
@@ -22,7 +21,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: production-actions-test
-        working-directory: ./frontend-service
 
       - name: Update build in production
         run: |
