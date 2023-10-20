@@ -6,21 +6,17 @@ on:
 permissions: write-all
 
 jobs:
-  git-configure:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Set up Git
-        run: |
-          git config --global user.email "gowri.bhat@u.nus.edu"
-          git config --global user.name "gowribhat"
-  
   deploy-frontend:
-    needs: git-configure
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ./frontend-service
     steps:
+      - name: Set up Git
+        run: |
+          git config --global user.email "gowri.bhat@u.nus.edu"
+          git config --global user.name "gowribhat"
+
       - name: Checkout code (master)
         uses: actions/checkout@v4
         with:
