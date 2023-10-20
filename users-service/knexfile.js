@@ -6,7 +6,7 @@ export default {
   connection: {
     host: "localhost",
     port: 5432,
-    database: "postgres",
+    database: "users",
     user: "postgres",
     password: "postgres",
   },

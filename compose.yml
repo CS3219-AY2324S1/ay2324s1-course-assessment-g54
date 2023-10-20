@@ -53,7 +53,7 @@ services:
       DB_PORT: 5432
       DB_USER: postgres
       DB_PASSWORD: postgres
-      DB_NAME: postgres
+      DB_NAME: users
     volumes:
       - ./users-service:/app
     command: yarn start
@@ -99,12 +99,13 @@ services:
     image: postgres:15-alpine
     container_name: postgresql
     volumes:
+      - ./create-multiple-postgresql-databases.sh:/docker-entrypoint-initdb.d/create-multiple-postgresql-databases.sh
       - "postgres:/var/lib/postgresql/data"
     ports:
       - 5432:5432
     restart: always
     environment:
-      POSTGRES_DB: postgres
+      POSTGRES_MULTIPLE_DATABASES: users,history
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
 
