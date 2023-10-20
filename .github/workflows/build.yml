@@ -13,6 +13,11 @@ jobs:
           git config --global user.email "gowri.bhat@u.nus.edu"
           git config --global user.name "gowribhat"
 
+      - name: Checkout code (production)
+        uses: actions/checkout@v4
+        with:
+          ref: production-actions-test
+
       - name: Checkout code (master)
         uses: actions/checkout@v4
         with:
@@ -36,5 +41,4 @@ jobs:
           git add -f build
           git commit -m "Update build"
           git push origin production-actions-test
-          
         working-directory: ./frontend-service
