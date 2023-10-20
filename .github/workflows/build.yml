@@ -38,7 +38,12 @@ jobs:
 
       - name: Update build in production
         run: |
-          git add -f build
-          git commit -m "Update build"
-          git push origin production-actions-test
+          if [[ $(git status --porcelain) ]]; then
+            echo "Changes detected in build folder."
+            git add -f build
+            git commit -m "Update build"
+            git push origin production-actions-test
+          else
+            echo "No changes in build folder. Skipping commit and push."
+          fi
         working-directory: ./frontend-service
