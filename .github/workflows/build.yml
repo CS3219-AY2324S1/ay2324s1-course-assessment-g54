@@ -1,4 +1,4 @@
-name: Build and Deploy Frontend to Production Branch
+name: Deploy to Production Branch
 
 on:
   workflow_dispatch: {}
@@ -6,15 +6,21 @@ on:
 permissions: write-all
 
 jobs:
-  build:
+  git-configure:
     runs-on: ubuntu-latest
-
     steps:
       - name: Set up Git
         run: |
           git config --global user.email "gowri.bhat@u.nus.edu"
           git config --global user.name "gowribhat"
-
+  
+  deploy-frontend:
+    needs: git-configure
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend-service
+    steps:
       - name: Checkout code (master)
         uses: actions/checkout@v4
         with:
@@ -23,7 +29,6 @@ jobs:
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
-        working-directory: ./frontend-service
 
       - uses: actions/cache@v3
         id: yarn-cache
@@ -35,7 +40,6 @@ jobs:
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
-        working-directory: ./frontend-service
 
       - name: Build frontend (master)
         run: |
@@ -44,11 +48,9 @@ jobs:
           export REACT_APP_MATCHMAKING_SERVICE_HOST=http://peerprep.bryanlohxz.com/api/matchmaking-service
           export CI=false
           yarn build
-        working-directory: ./frontend-service
 
       - name: Update build in production
         run: |
           git add -f build
           git commit -m "Update build"
           git push -f origin HEAD:production-actions-test
-        working-directory: ./frontend-service
