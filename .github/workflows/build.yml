@@ -40,5 +40,5 @@ jobs:
         run: |
           git add -f build
           git commit -m "Update build"
-          git push origin production-actions-test
+          git push -f origin HEAD:production-actions-test
         working-directory: ./frontend-service
