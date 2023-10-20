@@ -21,7 +21,7 @@ jobs:
       - name: Checkout code (production)
         uses: actions/checkout@v4
         with:
-          ref: production
+          ref: production-actions-test
         working-directory: ./frontend-service
 
       - name: Update build in production
