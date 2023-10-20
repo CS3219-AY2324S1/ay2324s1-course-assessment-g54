@@ -3,6 +3,8 @@ name: Build and Deploy Frontend to Production Branch
 on:
   workflow_dispatch: {}
 
+permissions: write-all
+
 jobs:
   build:
     runs-on: ubuntu-latest
