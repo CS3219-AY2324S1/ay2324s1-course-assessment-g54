@@ -1,4 +1,4 @@
-name: Build and Deploy to Production Branch
+name: Build and Deploy Frontend to Production Branch
 
 on:
   workflow_dispatch: {}
@@ -12,6 +12,10 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: master
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+        working-directory: ./frontend-service
 
       - name: Build frontend (master)
         run: yarn build
