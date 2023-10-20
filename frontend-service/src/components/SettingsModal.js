@@ -41,8 +41,8 @@ const SettingsModal = ({ isModalOpen, setIsModalOpen }) => {
             <Tab label="Delete Account" value="1" icon={<DeleteIcon />} iconPosition="start" />
           </Tabs>
           <Box sx={{ mx: "auto", maxWidth: 400, height: 500 }}>
-            {value == "0" && <EditProfileCard />}
-            {value == "1" && <DeleteAccountCard />}
+            {value === "0" && <EditProfileCard />}
+            {value === "1" && <DeleteAccountCard />}
           </Box>
         </Box>
       </Card>
