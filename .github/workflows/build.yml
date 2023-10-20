@@ -15,15 +15,23 @@ jobs:
           git config --global user.email "gowri.bhat@u.nus.edu"
           git config --global user.name "gowribhat"
 
-      - name: Checkout code (production)
-        uses: actions/checkout@v4
-        with:
-          ref: production-actions-test
-
       - name: Checkout code (master)
         uses: actions/checkout@v4
         with:
           ref: master
+      
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
+        working-directory: ./frontend-service
+
+      - uses: actions/cache@v3
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('frontend-service/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
