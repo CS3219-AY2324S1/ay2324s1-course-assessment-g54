@@ -45,9 +45,16 @@ jobs:
           export REACT_APP_MATCHMAKING_SERVICE_HOST=http://peerprep.bryanlohxz.com/api/matchmaking-service
           export CI=false
           yarn build
-
-      - name: Update build in production
-        run: |
           git add -f build
-          git commit -m "Update build"
+
+      - name: Update other services
+        run: |
+          git add -A :^frontend-service
+        working-directory: .
+
+      - name: Deploy to production
+        run: |
+          git commit -m "Deploy master to production"
           git push -f origin HEAD:production-actions-test
+        working-directory: .
+        
