@@ -23,6 +23,7 @@ import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
+import Button from '@mui/material/Button';
 
 marked.use({ breaks: true, gfm: true, silent: true });
 
@@ -139,17 +140,20 @@ const Question = () => {
               sx={{ height: "100%", width: "100%", overflow: "hidden" }}
               elevation={2}
             >
-              <Stack direction="row" justifyContent="end" alignItems="center">
-                <Typography>Editor Language:</Typography>
-                <Select
-                  value={editorLanguage}
-                  onChange={handleEditorLanguageChange}
-                  sx={{height: 20, width: 130,m: 1}}
-                >
-                  <MenuItem value="javascript">Javascript</MenuItem>
-                  <MenuItem value="python">Python</MenuItem>
-                  <MenuItem value="java">Java</MenuItem>
-                </Select>
+              <Stack direction="row" alignItems="center" justifyContent="space-between" px={1}>
+                <Stack direction="row" alignItems="center">
+                  <Typography>Editor Language:</Typography>
+                  <Select
+                    value={editorLanguage}
+                    onChange={handleEditorLanguageChange}
+                    sx={{height: 20, width: 130,m: 1}}
+                  >
+                    <MenuItem value="javascript">Javascript</MenuItem>
+                    <MenuItem value="python">Python</MenuItem>
+                    <MenuItem value="java">Java</MenuItem>
+                  </Select>
+                </Stack>
+                <Button variant="contained">Submit</Button>
               </Stack>
               <Editor
                 language={editorLanguage}
