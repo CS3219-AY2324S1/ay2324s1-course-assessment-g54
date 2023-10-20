@@ -31,19 +31,10 @@ jobs:
           yarn build
         working-directory: ./frontend-service
 
-      - name: Checkout code (production)
-        uses: actions/checkout@v4
-        with:
-          ref: production-actions-test
-
       - name: Update build in production
         run: |
-          if [[ $(git status --porcelain) ]]; then
-            echo "Changes detected in build folder."
-            git add -f build
-            git commit -m "Update build"
-            git push origin production-actions-test
-          else
-            echo "No changes in build folder. Skipping commit and push."
-          fi
+          git add -f build
+          git commit -m "Update build"
+          git push origin production-actions-test
+          
         working-directory: ./frontend-service
