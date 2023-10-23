@@ -25,10 +25,6 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME}
 
-      - name: Stop Docker containers...
-        run: |
-          docker compose down
-
       - name: Update local production branch to match remote
         run: |
           cd app &&
@@ -52,4 +48,5 @@ jobs:
 
       - name: Restart Docker containers
         run: |
+          docker compose down
           docker compose up --detach
