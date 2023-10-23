@@ -1,7 +1,9 @@
 name: Deploy to Production Branch
 
 on:
-  workflow_dispatch: {}
+  push:
+    branches:
+      - master
 
 permissions: write-all
 
