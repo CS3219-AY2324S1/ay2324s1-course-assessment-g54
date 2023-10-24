@@ -26,27 +26,29 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
             echo "Entered EC2 instance"
 
-            echo "Step 1: Pull and update local production branch to match remote"
-            cd app &&
-            git reset --hard origin/production &&
-            git pull origin production
-            echo "Production branch updated"
+            echo "Step 1: Change directory to /app..."
+            cd app
+
+            echo "Step 2: Shutting down containers..."
+            cd app
+
+            echo "Step 3: Pull and update local production branch to match remote..."
+            git checkout production &&
+            git reset --hard origin/production
             
-            echo "Step 2: Install dependencies for all microservices"
+            echo "Step 4: Install dependencies for all microservices..."
             services=("frontend-service" "question-service" "users-service" "matchmaking-service" "collab-service")
             for service in "${services[@]}"; do
               echo "Installing dependencies for $service..."
-              cd "$service" && yarn install --frozen-lockfile
-              if [ "$service" == "users-service" ]; then
-                echo "Running yarn knex migrate:latest for $service..."
-                yarn knex migrate:latest
-              fi
+              cd "$service" && yarn install --frozen-lockfile &&
               cd ..
             done
-            echo "Dependencies installed"
-            
-            echo "Step 3: Stopping Docker containers..."
-            docker compose down
-            echo "Step 4: Restarting Docker containers..."
+
+            echo "Step 5: Restarting docker containers..."
             bash start-prod.sh
+
+            echo "Step 6: Migrating database to match latest..."
+            cd users-service &&
+            yarn knex migrate:latest &&
+            cd ..
           '
