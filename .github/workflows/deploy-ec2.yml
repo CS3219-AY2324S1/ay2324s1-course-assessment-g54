@@ -26,6 +26,8 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
             echo "Entered EC2 instance"
 
+            hostname
+
             echo "Step 1: Change directory to /app..."
             cd app
 
