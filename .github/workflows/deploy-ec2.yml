@@ -18,35 +18,35 @@ jobs:
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
           echo "SSH access configured."
 
-      - name: SSH into EC2 instance
+      - name: Run in EC2 instance
         env:
           USER_NAME: ${{ secrets.USER_NAME }}
           HOSTNAME: ${{ secrets.SSH_HOST }}
         run: |
-          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME}
+          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
+            echo "Entered EC2 instance"
 
-      - name: Update local production branch to match remote
-        run: |
-          cd app &&
-          git reset --hard origin/production &&
-          git pull origin production
-          echo "Production branch updated"
-
-      - name: Install dependencies for all microservices
-        run: |
-          services=("frontend-service" "question-service" "users-service" "matchmaking-service" "collab-service")
-          for service in "${services[@]}"; do
-            echo "Installing dependencies for $service..."
-            cd "$service" && yarn install --frozen-lockfile
-            if [ "$service" == "users-service" ]; then
-              echo "Running yarn knex migrate:latest for $service..."
-              yarn knex migrate:latest
-            fi
-            cd ..
-          done
-          echo "Dependencies installed"
-
-      - name: Restart Docker containers
-        run: |
-          docker compose down
-          bash start-prod.sh
+            echo "Step 1: Pull and update local production branch to match remote"
+            cd app &&
+            git reset --hard origin/production &&
+            git pull origin production
+            echo "Production branch updated"
+            
+            echo "Step 2: Install dependencies for all microservices"
+            services=("frontend-service" "question-service" "users-service" "matchmaking-service" "collab-service")
+            for service in "${services[@]}"; do
+              echo "Installing dependencies for $service..."
+              cd "$service" && yarn install --frozen-lockfile
+              if [ "$service" == "users-service" ]; then
+                echo "Running yarn knex migrate:latest for $service..."
+                yarn knex migrate:latest
+              fi
+              cd ..
+            done
+            echo "Dependencies installed"
+            
+            echo "Step 3: Stopping Docker containers..."
+            docker compose down
+            echo "Step 4: Restarting Docker containers..."
+            bash start-prod.sh
+          '
