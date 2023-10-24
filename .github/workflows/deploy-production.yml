@@ -14,12 +14,6 @@ jobs:
       run:
         working-directory: frontend-service
     steps:
-      - name: Set up Git
-        run: |
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-        working-directory: .
-
       - name: Checkout code (master)
         uses: actions/checkout@v4
         with:
@@ -47,7 +41,12 @@ jobs:
           export REACT_APP_MATCHMAKING_SERVICE_HOST=ws://peerprep.bryanlohxz.com/api/matchmaking-service
           export CI=false
           yarn build
-
+      - name: Set up Git
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+        working-directory: .
+        
       - name: Add and commit changes
         run: |
           git add frontend-service/build/
