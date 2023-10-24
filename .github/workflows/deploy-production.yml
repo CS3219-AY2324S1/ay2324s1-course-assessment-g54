@@ -1,7 +1,9 @@
 name: Deploy to Production Branch
 
 on:
-  workflow_dispatch: {}
+  push:
+    branches:
+      - master
 
 permissions: write-all
 
@@ -14,8 +16,8 @@ jobs:
     steps:
       - name: Set up Git
         run: |
-          git config --global user.email "gowri.bhat@u.nus.edu"
-          git config --global user.name "gowribhat"
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
         working-directory: .
 
       - name: Checkout code (master)
@@ -42,14 +44,16 @@ jobs:
         run: |
           export REACT_APP_QUESTIONS_SERVICE_HOST=http://peerprep.bryanlohxz.com/api/questions-service
           export REACT_APP_USERS_SERVICE_HOST=http://peerprep.bryanlohxz.com/api/users-service
-          export REACT_APP_MATCHMAKING_SERVICE_HOST=http://peerprep.bryanlohxz.com/api/matchmaking-service
+          export REACT_APP_MATCHMAKING_SERVICE_HOST=ws://peerprep.bryanlohxz.com/api/matchmaking-service
           export CI=false
           yarn build
 
-      - name: Commit frontend build
+      - name: Add and commit changes
         run: |
-          git add -f build
-          git commit -m "Add frontend build"
+          git add frontend-service/build/
+          git add users-service/ collab-service/ matchmaking-service/
+          git commit -m "Add changes"
+        working-directory: .
 
       - name: Deploy to production
         run: |

@@ -1,0 +1,52 @@
+name: Deploy to EC2
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  Deploy:
+    name: Deploy to EC2
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up SSH access
+        env:
+          PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+          echo "SSH access configured."
+
+      - name: SSH into EC2 instance
+        env:
+          USER_NAME: ${{ secrets.USER_NAME }}
+          HOSTNAME: ${{ secrets.SSH_HOST }}
+        run: |
+          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME}
+
+      - name: Update local production branch to match remote
+        run: |
+          cd app &&
+          git reset --hard origin/production &&
+          git pull origin production
+          echo "Production branch updated"
+
+      - name: Install dependencies for all microservices
+        run: |
+          services=("frontend-service" "question-service" "users-service" "matchmaking-service" "collab-service")
+          for service in "${services[@]}"; do
+            echo "Installing dependencies for $service..."
+            cd "$service" && yarn install --frozen-lockfile
+            if [ "$service" == "users-service" ]; then
+              echo "Running yarn knex migrate:latest for $service..."
+              yarn knex migrate:latest
+            fi
+            cd ..
+          done
+          echo "Dependencies installed"
+
+      - name: Restart Docker containers
+        run: |
+          docker compose down
+          bash start-prod.sh
