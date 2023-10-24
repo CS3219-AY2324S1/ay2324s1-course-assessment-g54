@@ -34,6 +34,7 @@ jobs:
 
             echo "Step 3: Pull and update local production branch to match remote..." &&
             git checkout production &&
+            git fetch --prune &&
             git reset --hard origin/production &&
             
             echo "Step 4: Install dependencies for all microservices..." &&
