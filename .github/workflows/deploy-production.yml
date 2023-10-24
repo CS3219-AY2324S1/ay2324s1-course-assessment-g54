@@ -56,6 +56,6 @@ jobs:
 
       - name: Deploy to production
         run: |
-          git push -f origin HEAD:production-actions-test
+          git push -f origin HEAD:production
         working-directory: .
         
