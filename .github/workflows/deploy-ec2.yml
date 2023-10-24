@@ -49,4 +49,4 @@ jobs:
       - name: Restart Docker containers
         run: |
           docker compose down
-          docker compose up --detach
+          bash start-prod.sh
