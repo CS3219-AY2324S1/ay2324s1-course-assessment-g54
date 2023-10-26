@@ -51,7 +51,6 @@ jobs:
       - name: Add and commit changes
         run: |
           git add -f frontend-service/build/
-          git add users-service/ collab-service/ matchmaking-service/
           git commit -m "Add changes"
         working-directory: .
 
