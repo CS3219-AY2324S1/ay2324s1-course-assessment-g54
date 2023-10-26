@@ -77,11 +77,11 @@ services:
       - 3004:3004
     depends_on:
       - users-service
-      - collab-redis
+      - redis
     environment:
       PORT: 3004
       REDIS_PW: test
-      REDIS_NAME: collab-redis
+      REDIS_NAME: redis
       REDIS_PORT: 6379
       USERS_SERVICE_HOST: http://users-service:3002
       QUESTION_SERVICE_HOST: http://question-service:3001
@@ -109,7 +109,7 @@ services:
     volumes:
       - "mongodb-data:/data/db"
     ports:
-      - "27017:27017"
+      - 27017:27017
     environment:
       MONGO_INITDB_ROOT_USERNAME: test
       MONGO_INITDB_ROOT_PASSWORD: testpw
@@ -126,17 +126,14 @@ services:
       - 5672:5672
       - 15672:15672
 
-  collab-redis:
-    image: redis
-    container_name: collab-redis
-    volumes:
-      - "collab-redis-data:/data"
+  redis:
+    image: redis:alpine
+    container_name: redis
     restart: always
-    command: redis-server --requirepass test
+    command: redis-server --loglevel warning
     ports:
       - 6379:6379
 
 volumes:
   postgres:
   mongodb-data:
-  collab-redis-data:
