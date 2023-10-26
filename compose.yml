@@ -18,6 +18,7 @@ services:
       REACT_APP_QUESTIONS_SERVICE_HOST: http://localhost:3001
       REACT_APP_USERS_SERVICE_HOST: http://localhost:3002
       REACT_APP_MATCHMAKING_SERVICE_HOST: ws://localhost:3003
+      REACT_APP_HISTORY_SERVICE_HOST: http://localhost:3005
     volumes:
       - ./frontend-service:/app
     command: yarn start
@@ -56,6 +57,26 @@ services:
       DB_NAME: users
     volumes:
       - ./users-service:/app
+    command: yarn start
+
+  history-service:
+    build:
+      context: ./history-service
+    container_name: history-service
+    ports:
+      - 3005:3005
+    depends_on:
+      - postgresql
+      - mongodb
+    environment:
+      PORT: 3005
+      DB_HOST: postgresql
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: history
+    volumes:
+      - ./history-service:/app
     command: yarn start
 
   collab-service:

@@ -72,6 +72,19 @@ const Question = () => {
   }, [editorLanguage]);
 
   const handleEditorLanguageChange = (event) => setEditorLanguage(event.target.value);
+  const handleSubmitClick = async () => {
+      const token = window.localStorage.getItem("token");
+      const config = {
+        headers: { Authorization: token },
+      };
+      const url = `${process.env.REACT_APP_USERS_SERVICE_HOST}/profile`;
+      const response = await axios.get(url, config);
+      const {id: user_id, name} = response.data;
+      const {question_id, title} = question;
+
+      const history_url = `${process.env.REACT_APP_HISTORY_SERVICE_HOST}/history`; 
+      await axios.post(history_url, {user_id, name, question_id, title})
+  }
 
   if (isLoading) return <LinearProgress variant="indeterminate" />;
 
@@ -153,7 +166,7 @@ const Question = () => {
                     <MenuItem value="java">Java</MenuItem>
                   </Select>
                 </Stack>
-                <Button variant="contained">Submit</Button>
+                <Button variant="contained" onClick={handleSubmitClick}>Submit</Button>
               </Stack>
               <Editor
                 language={editorLanguage}
