@@ -4,10 +4,10 @@
  */
 export function up(knex) {
   return knex.schema.createTable("history", function (table) {
-    table.uuid("user_id").primary();
-    table.text("name").notNullable();
-    table.text("question_id").notNullable().unique();
-    table.text("title").notNullable();
+    table.uuid("user_id").notNullable();
+    table.integer("question_id").notNullable();
+    table.datetime("attempt_datetime").notNullable().defaultTo(knex.fn.now());
+    table.text("attempt").notNullable();
   });
 }
 

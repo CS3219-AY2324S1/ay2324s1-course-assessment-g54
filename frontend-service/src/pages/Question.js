@@ -79,11 +79,12 @@ const Question = () => {
       };
       const url = `${process.env.REACT_APP_USERS_SERVICE_HOST}/profile`;
       const response = await axios.get(url, config);
-      const {id: user_id, name} = response.data;
-      const {question_id, title} = question;
+      const {id: user_id} = response.data;
+      const {question_id} = question;
+      const attempt = editorRef.current.getValue();
 
       const history_url = `${process.env.REACT_APP_HISTORY_SERVICE_HOST}/history`; 
-      await axios.post(history_url, {user_id, name, question_id, title})
+      await axios.post(history_url, {user_id, question_id, attempt})
   }
 
   if (isLoading) return <LinearProgress variant="indeterminate" />;
