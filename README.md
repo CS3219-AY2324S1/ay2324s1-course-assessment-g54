@@ -11,7 +11,7 @@ yarn install --frozen-lockfile
 ```
 To start the development server, ensure that you already have docker installed and that your current directory is the `root` folder of the project. Then, start the docker containers by running the following command in your terminal.
 ```bash
-docker compose up
+docker compose -f compose.yml -f compose.development.yml up
 ```
 If you have not, or there has been an update to the `postgresql` database migrations, go into the `users-service` folder and run the migrations by using the following commands. If you are facing an issue with the migration, it is quite likely that you previously already have an instance of PostgreSQL running on your device. Kill that instance of PostgreSQL and start the containers again before migrating your database. 
 ```bash
@@ -52,7 +52,7 @@ yarn install --frozen-lockfile
 Get the .env file from Juliet and paste it in the `question-service` folder.
 To start the development server on `http://localhost:3002`, ensure that you already have docker installed and that your current directory is the `root` folder of the project. Then, start the docker containers by running the following command in your terminal.
 ```bash
-docker compose up
+docker compose -f compose.yml -f compose.development.yml up
 ```
 If you are only working on the question-service, you can run this:
 ```bash
@@ -72,7 +72,7 @@ yarn install --frozen-lockfile
 ```
 To start the development server on `http://localhost:3002`, ensure that you already have docker installed and that your current directory is the `root` folder of the project. Then, start the docker containers by running the following command in your terminal.
 ```bash
-docker compose up
+docker compose -f compose.yml -f compose.development.yml up
 ```
 To run the postgresql migrations in `/users/migrations`, ensure that your current directory is the `users` folder of the project, then run the following command in the terminal.
 ```bash
