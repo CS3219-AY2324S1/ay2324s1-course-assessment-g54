@@ -45,7 +45,7 @@ jobs:
             git reset --hard origin/production &&
 
             echo "Step 5: Install dependencies for all microservices..." &&
-            bash install-dependencies.sh &&
+            bash install-deps-prod.sh &&
 
             echo "Step 6: Restarting docker containers..." &&
             bash start-prod.sh &&
