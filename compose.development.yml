@@ -12,7 +12,7 @@ services:
       ME_CONFIG_MONGODB_ADMINPASSWORD: test
       ME_CONFIG_MONGODB_URL: mongodb://test:testpw@mongodb:27017/
 
-  pgadmin:
+  postgresql-ui:
     image: dpage/pgadmin4
     container_name: pg-admin
     restart: always
@@ -24,3 +24,15 @@ services:
       PGADMIN_DEFAULT_EMAIL: test@gmail.com
       PGADMIN_DEFAULT_PASSWORD: test
       PGADMIN_LISTEN_PORT: 80
+
+  redis-ui:
+    image: redislabs/redisinsight:latest
+    ports:
+      - '8083:8001'
+    depends_on:
+      - redis
+    volumes:
+      - redis-ui:/db 
+
+volumes:
+  redis-ui:

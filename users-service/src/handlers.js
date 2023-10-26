@@ -54,8 +54,10 @@ export const handleGetOwnProfile = async (request, response) => {
     const user = utils.verifyJsonWebToken(jsonWebToken);
     if (!user.issuedAt) return response.status(401).send(INVALID_JWT_ERROR_MSG);
     const timeDifference = new Date() - new Date(user.issuedAt);
-    if (timeDifference > process.env.JWT_EXPIRY_SECONDS)
+    if (timeDifference > process.env.JWT_EXPIRY_SECONDS) {
+      console.error("Token has expired!");
       return response.status(401).send(INVALID_JWT_ERROR_MSG);
+    }
     id = user.id;
   } catch (error) {
     return response.status(401).json(INVALID_JWT_ERROR_MSG);
