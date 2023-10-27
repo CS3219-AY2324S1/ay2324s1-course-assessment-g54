@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { io } from "socket.io-client";
 
 import { useUser } from "../contexts/UserContext";
 
@@ -44,6 +45,7 @@ const MatchmakingFind = () => {
   const [isMatchError, setIsMatchError] = useState(false);
   const [isMatchFinding, setIsMatchFinding] = useState(true);
   const [matchedUser, setMatchedUser] = useState(null);
+  const [roomId, setRoomId] = useState(null);
   const isMatchFailed = !isMatchFinding && matchedUser == null;
   const isMatchPassed = !isMatchFinding && matchedUser;
 
@@ -53,10 +55,10 @@ const MatchmakingFind = () => {
       return navigate("/matchmaking");
 
     const token = window.localStorage.getItem("token");
-    const ws = new WebSocket(
-      `${process.env.REACT_APP_MATCHMAKING_SERVICE_HOST}?difficulty=${difficulty}`,
-      token
-    );
+    const socket = io(`${process.env.REACT_APP_MATCHMAKING_SERVICE_HOST}`, {
+      query: { difficulty, token },
+      path: "/api/matchmaking-service",
+    });
 
     const clock = setInterval(() => {
       setSearchTimeElapsed((prevState) => {
@@ -67,28 +69,26 @@ const MatchmakingFind = () => {
       });
     }, 1000);
 
-    const closeEventHandler = async (event) => {
+    let isUserMatched = false;
+    socket.on("user-matched", async ({ matchedUser, roomId }) => {
+      isUserMatched = true;
       clearInterval(clock);
-      if (event.code !== 1000) {
-        console.error(event.reason);
-        return setIsMatchError(true);
-      }
-      const result = JSON.parse(event.reason);
-      const matchedUserId = result.matchedUser;
-      const getProfielUrl = `${process.env.REACT_APP_USERS_SERVICE_HOST}/profile/${matchedUserId}`;
+      const getProfielUrl = `${process.env.REACT_APP_USERS_SERVICE_HOST}/profile/${matchedUser}`;
       const response = await axios.get(getProfielUrl, {
         headers: { Authorization: token },
       });
       setMatchedUser(response.data);
+      setRoomId(roomId);
       setIsMatchFinding(false);
-    };
+    });
 
-    ws.addEventListener("close", closeEventHandler);
+    socket.on("disconnect", () => {
+      if (!isUserMatched) setIsMatchError(true);
+    });
 
     return async () => {
       clearInterval(clock);
-      ws.removeEventListener("close", closeEventHandler);
-      ws.close(1000, "Client has left the page");
+      socket.disconnect();
     };
   }, [navigate, searchParams]);
 
@@ -137,15 +137,21 @@ const MatchmakingFind = () => {
               alignItems="center"
             >
               <Chip
-                      label={searchParams.get("difficulty").charAt(0).toUpperCase() +
-                      searchParams.get("difficulty").substring(1)}
-                      color={getDifficultyChipColor(searchParams.get("difficulty").substring(0))}
-                      sx={{ fontSize: '15px', color: "white"}}
-                    />
+                label={
+                  searchParams.get("difficulty").charAt(0).toUpperCase() +
+                  searchParams.get("difficulty").substring(1)
+                }
+                color={getDifficultyChipColor(
+                  searchParams.get("difficulty").substring(0)
+                )}
+                sx={{ fontSize: "15px", color: "white" }}
+              />
               {!isMatchError && isMatchFinding && (
                 <>
                   <CircularProgress variant="indeterminate" />
-                  <Typography marginTop={3}>{searchTimeElapsed + "s"}</Typography>
+                  <Typography marginTop={3}>
+                    {searchTimeElapsed + "s"}
+                  </Typography>
                 </>
               )}
               {isMatchFinding && (
@@ -163,7 +169,18 @@ const MatchmakingFind = () => {
                 </Button>
               )}
               {isMatchPassed && (
-                <Button variant="contained">Go To Question</Button>
+                <Button
+                  variant="contained"
+                  onClick={() =>
+                    navigate(
+                      `/collaboration?roomId=${roomId}&difficulty=${searchParams.get(
+                        "difficulty"
+                      )}`
+                    )
+                  }
+                >
+                  Go To Question
+                </Button>
               )}
             </Stack>
             <Card>
@@ -267,7 +284,8 @@ const MatchmakingFind = () => {
             </Card>
           </Stack>
           <Typography textAlign="center">
-            Please hold on for a moment while we are searching for your partner...
+            Please hold on for a moment while we are searching for your
+            partner...
           </Typography>
         </Stack>
       </Box>
