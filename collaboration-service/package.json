@@ -1,0 +1,14 @@
+{
+  "name": "collaboration-service",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "start": "nodemon ./src/index.js",
+    "start:production": "node ./src/index.js"
+  },
+  "dependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
