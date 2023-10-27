@@ -1,11 +1,11 @@
 import { WebSocketServer } from "ws";
 import { getUserFromToken } from "./authorization.js";
-import { cancelFindMatchRequest } from "./handlers.js";
 import {
+  enqueueCancelFindMatch,
   enqueueFindMatch,
   subscribeMatchResponse,
   unsubscribeMatchResponse,
-} from "./rabbitmq.js";
+} from "./redis.js";
 
 const wss = new WebSocketServer({ port: process.env.PORT });
 const difficulties = ["easy", "medium", "hard"];
@@ -39,6 +39,7 @@ wss.on("connection", async (ws, request) => {
       return ws.close(1008, errorMsg);
     }
 
+    let isFindMatchSuccess = false;
     const matchResponseHandler = async (response) => {
       console.log(`[${requestId}]`, "Matchmaking response received.");
       const { users, difficulty } = response;
@@ -47,23 +48,27 @@ wss.on("connection", async (ws, request) => {
       ws.send(matchedUser);
       console.log(`[${requestId}]`, "Closing websocket.");
       ws.close(1000, JSON.stringify({ matchedUser, difficulty }));
-      return true;
+      isFindMatchSuccess = true;
     };
 
     console.log(`[${requestId}]`, "Subscribing to matchmaking responses.");
-    await subscribeMatchResponse(user.id, matchResponseHandler);
+    const subscriber = await subscribeMatchResponse(
+      user.id,
+      matchResponseHandler
+    );
     console.log(`[${requestId}]`, "Enqueing matchmaking request.");
     await enqueueFindMatch(user.id, difficulty.toLowerCase());
     console.log(`[${requestId}]`, "Waiting for matchmaking response.");
 
     ws.on("close", async () => {
+      if (isFindMatchSuccess) return;
       console.log(`[${requestId}]`, "Cancelling matchmaking request.");
-      await cancelFindMatchRequest(user.id, difficulty);
+      await enqueueCancelFindMatch(user.id, difficulty.toLowerCase());
       console.log(
         `[${requestId}]`,
         "Unsubscribing from matchmaking responses."
       );
-      await unsubscribeMatchResponse(user.id);
+      await unsubscribeMatchResponse(subscriber);
       console.log(`[${requestId}]`, "Closing websocket.");
     });
   } catch (error) {

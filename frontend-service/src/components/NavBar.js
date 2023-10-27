@@ -53,7 +53,7 @@ const NavBar = () => {
             px: 3,
             mx: 1,
             backgroundColor:
-              location.pathname == "/questions"
+              location.pathname === "/questions"
                 ? (theme) => theme.palette.navbarButtonSelected
                 : "transparent",
             color: "white",
@@ -76,7 +76,7 @@ const NavBar = () => {
             py: "12px",
             px: 3,
             backgroundColor:
-              location.pathname == "/matchmaking"
+              location.pathname === "/matchmaking"
                 ? (theme) => theme.palette.navbarButtonSelected
                 : "transparent",
             color: "white",

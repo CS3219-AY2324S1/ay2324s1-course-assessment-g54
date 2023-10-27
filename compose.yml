@@ -1,9 +1,3 @@
-x-logging: &default-logging
-  logging:
-    driver: json-file
-    options:
-      max-size: 100m
-
 services:
   frontend-service:
     build:
@@ -78,6 +72,24 @@ services:
     volumes:
       - ./history-service:/app
     command: yarn start
+  
+    matchmaking-service:
+      build:
+        context: ./matchmaking-service
+      container_name: matchmaking-service
+      ports:
+        - 3003:3003
+      depends_on:
+        - users-service
+        - redis
+      environment:
+        PORT: 3003
+        REDIS_HOST: redis
+        REDIS_PORT: 6379
+        USERS_SERVICE_HOST: http://users-service:3002
+      volumes:
+        - ./matchmaking-service:/app
+      command: yarn start
 
   collab-service:
     build:
@@ -87,33 +99,16 @@ services:
       - 3004:3004
     depends_on:
       - users-service
-      - collab-redis
+      - redis
     environment:
       PORT: 3004
       REDIS_PW: test
-      REDIS_NAME: collab-redis
+      REDIS_NAME: redis
       REDIS_PORT: 6379
       USERS_SERVICE_HOST: http://users-service:3002
       QUESTION_SERVICE_HOST: http://question-service:3001
     volumes:
       - ./collab-service:/app
-    command: yarn start
-
-  matchmaking-service:
-    build:
-      context: ./matchmaking-service
-    container_name: matchmaking-service
-    ports:
-      - 3003:3003
-    depends_on:
-      - users-service
-      - rabbitmq
-    environment:
-      PORT: 3003
-      RABBITMQ_HOST: amqp://rabbitmq:5672
-      USERS_SERVICE_HOST: http://users-service:3002
-    volumes:
-      - ./matchmaking-service:/app
     command: yarn start
 
   postgresql:
@@ -137,116 +132,20 @@ services:
     volumes:
       - "mongodb-data:/data/db"
     ports:
-      - "27017:27017"
+      - 27017:27017
     environment:
       MONGO_INITDB_ROOT_USERNAME: test
       MONGO_INITDB_ROOT_PASSWORD: testpw
       MONGO_INITDB_DATABASE: peerprep-database
 
-  rabbitmq:
-    image: rabbitmq:management-alpine
-    container_name: rabbitmq
+  redis:
+    image: redis:alpine
+    container_name: redis
     restart: always
-    environment:
-      - RABBITMQ_DEFAULT_USER=guest
-      - RABBITMQ_DEFAULT_PASS=guest
-    ports:
-      - 5672:5672
-      - 15672:15672
-
-  collab-redis:
-    image: redis
-    container_name: collab-redis
-    volumes:
-      - "collab-redis-data:/data"
-    restart: always
-    command: redis-server --requirepass test
+    command: redis-server --loglevel warning
     ports:
       - 6379:6379
-
-  mongo-ui:
-    image: mongo-express
-    container_name: mongo-ui
-    restart: always
-    ports:
-      - 8081:8081
-    depends_on:
-      - mongodb
-    environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: testpw
-      ME_CONFIG_MONGODB_ADMINPASSWORD: test
-      ME_CONFIG_MONGODB_URL: mongodb://test:testpw@mongodb:27017/
-
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: pg-admin
-    restart: always
-    ports:
-      - 8082:80
-    depends_on:
-      - postgresql
-    environment:
-      PGADMIN_DEFAULT_EMAIL: test@gmail.com
-      PGADMIN_DEFAULT_PASSWORD: test
-      PGADMIN_LISTEN_PORT: 80
-
-  judge0-server:
-    image: judge0/judge0:1.13.0
-    container_name: judge0-server
-    volumes:
-      - ./code-execution-service/judge0.conf:/judge0.conf:ro
-    ports:
-      - 2358:2358
-    restart: always
-    privileged: true
-    depends_on:
-      - db
-      - redis
-    <<: *default-logging
-
-  judge0-workers:
-    image: judge0/judge0:1.13.0
-    volumes:
-      - ./code-execution-service/judge0.conf:/judge0.conf:ro
-    command: ["./scripts/workers"]
-    restart: always
-    privileged: true
-    depends_on:
-      - db
-      - redis
-    <<: *default-logging
-
-  db:
-    image: postgres:13.0
-    container_name: judge0-db
-    env_file: ./code-execution-service/judge0.conf
-    volumes:
-      - judge0-postgres:/var/lib/postgresql/data/
-    ports:
-      - 5433:5432
-    restart: always
-    <<: *default-logging
-
-  redis:
-    image: redis:6.0
-    container_name: judge0-redis
-    volumes:
-      - judge0-redis-data:/data
-    ports:
-      - 6380:6379
-    restart: always
-    command:
-      [
-        "bash",
-        "-c",
-        'docker-entrypoint.sh --appendonly yes --requirepass "$$REDIS_PASSWORD"',
-      ]
-    env_file: ./code-execution-service/judge0.conf
-    <<: *default-logging
 
 volumes:
   postgres:
   mongodb-data:
-  collab-redis-data:
-  judge0-postgres:
-  judge0-redis-data:
