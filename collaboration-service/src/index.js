@@ -1,8 +1,10 @@
 import axios from "axios";
+import { createServer } from "http";
 import NodeCache from "node-cache";
 import { Server } from "socket.io";
 
-const io = new Server();
+const httpServer = createServer();
+const io = new Server(httpServer, { cors: { origin: "*" } });
 const roomQuestionsCache = new NodeCache();
 
 const clientEvents = {
@@ -86,7 +88,6 @@ io.on("connection", async (socket) => {
   });
 
   socket.on(serverEvents.BROADCAST_CODE, (code) => {
-    console.log(`[${id}] Broadcasting code from ${user.id} to room ${roomId}.`);
     socket.broadcast.to(roomId).emit(clientEvents.UPDATE_CODE, code);
   });
 
@@ -101,5 +102,5 @@ io.on("connection", async (socket) => {
   });
 });
 
-io.listen(process.env.PORT);
+httpServer.listen(process.env.PORT);
 console.log(`Server is listening on port ${process.env.PORT}`);
