@@ -73,6 +73,7 @@ const Question = () => {
 
   const handleEditorLanguageChange = (event) => setEditorLanguage(event.target.value);
   const handleSubmitClick = async () => {
+    try {
       const token = window.localStorage.getItem("token");
       const config = {
         headers: { Authorization: token },
@@ -84,7 +85,10 @@ const Question = () => {
       const attempt = editorRef.current.getValue();
 
       const history_url = `${process.env.REACT_APP_HISTORY_SERVICE_HOST}/history`; 
-      await axios.post(history_url, {user_id, question_id, attempt})
+      await axios.post(history_url, {user_id, question_id, attempt});
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   if (isLoading) return <LinearProgress variant="indeterminate" />;
