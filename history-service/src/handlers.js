@@ -41,11 +41,13 @@ export const handleGetOwnHistoryRecords = async (request, response) => {
     const userServiceUrl = "http://users-service:3002/profile"
     // const userServiceUrl = `${process.env.USERS_SERVICE_HOST}/profile`;
     const token = request.headers.authorization;
+    console.log(token);
     const config = {
       headers: { Authorization: token },
     };
     const userServiceResponse = await axios.get(userServiceUrl, config);
     const user_id = userServiceResponse.data.id;
+    console.log(user_id);
 
     const historyRecords = await database.select().from("history").where({ user_id });
     return response.status(200).send(historyRecords);

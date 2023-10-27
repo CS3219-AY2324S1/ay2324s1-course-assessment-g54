@@ -14,9 +14,9 @@ app.use(cors());
 app.use(express.json());
 if (process.env.NODE_ENV === "development") app.use(morgan("tiny"));
 
-app.get("/history/:id", handlers.handleGetOwnHistoryRecords);
+app.get("/ownHistory", handlers.handleGetOwnHistoryRecords);
 
-app.post("/history", handlers.handleCreateHistoryRecord);
+app.post("/addHistory", handlers.handleCreateHistoryRecord);
 
 app.listen(PORT, () => {
   console.log(`Users app listening on port ${PORT}`);
