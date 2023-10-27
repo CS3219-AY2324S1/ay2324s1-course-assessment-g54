@@ -1,6 +1,7 @@
+import axios from "axios";
 import database from "./database.js";
 import * as schema from "./schema.js";
-import { INVALID_CREATE_HISTORY_RECORD_BODY_MESSAGE } from "./errors.js";
+import { INVALID_CREATE_HISTORY_RECORD_BODY_MESSAGE, INVALID_JWT_ERROR_MSG } from "./errors.js";
 
 /**
  * @param { import("express").Request } request
@@ -11,14 +12,24 @@ export const handleCreateHistoryRecord = async (request, response) => {
   const { body } = request;
 
   try {
-    await schema.createHistoryRecordRequestBodySchema.validate(body);
+    const userServiceUrl = "http://users-service:3002/profile"
+    // const userServiceUrl = `${process.env.USERS_SERVICE_HOST}/profile`;
+    console.log(userServiceUrl);
+    const token = request.headers.authorization;
+    const config = {
+      headers: { Authorization: token },
+    };
+    const userServiceResponse = await axios.get(userServiceUrl, config);
+    const user_id = userServiceResponse.data.id;
+
+    await schema.createHistoryRecordRequestBodySchema.validate({...body, user_id});
+    await database.insert({...body, user_id}).into("history");
+    return response.status(200).send();
   } catch (error) {
     console.error(error.message);
     return response.status(400).send(INVALID_CREATE_HISTORY_RECORD_BODY_MESSAGE);
   }
 
-  await database.insert(body).into("history");
-  return response.status(200).send();
 };
 
 /**

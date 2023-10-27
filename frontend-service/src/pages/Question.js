@@ -78,14 +78,11 @@ const Question = () => {
       const config = {
         headers: { Authorization: token },
       };
-      const url = `${process.env.REACT_APP_USERS_SERVICE_HOST}/profile`;
-      const response = await axios.get(url, config);
-      const {id: user_id} = response.data;
       const {question_id} = question;
       const attempt = editorRef.current.getValue();
 
       const history_url = `${process.env.REACT_APP_HISTORY_SERVICE_HOST}/history`; 
-      await axios.post(history_url, {user_id, question_id, attempt});
+      await axios.post(history_url, {question_id, attempt}, config);
     } catch (error) {
       console.error(error);
     }
