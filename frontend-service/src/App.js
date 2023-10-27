@@ -14,6 +14,7 @@ import Signup from "./pages/Signup";
 import Error from "./pages/Error";
 import Matchmaking from "./pages/Matchmaking";
 import MatchmakingFind from "./pages/MatchmakingFind";
+import History from "./pages/History";
 import NavBar from "./components/NavBar";
 
 import "@fontsource/roboto/300.css";
@@ -52,6 +53,7 @@ const protectedRoutes = [
   { path: "/questions/:id/edit", element: <EditQuestion /> },
   { path: "/matchmaking", element: <Matchmaking /> },
   { path: "/matchmaking/find", element: <MatchmakingFind /> },
+  { path: "/history", element: <History /> },
 ];
 
 function App() {

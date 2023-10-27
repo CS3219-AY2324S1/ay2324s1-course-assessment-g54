@@ -81,7 +81,7 @@ const Question = () => {
       const {question_id} = question;
       const attempt = editorRef.current.getValue();
 
-      const history_url = `${process.env.REACT_APP_HISTORY_SERVICE_HOST}/history`; 
+      const history_url = `${process.env.REACT_APP_HISTORY_SERVICE_HOST}/addHistory`; 
       await axios.post(history_url, {question_id, attempt}, config);
     } catch (error) {
       console.error(error);
