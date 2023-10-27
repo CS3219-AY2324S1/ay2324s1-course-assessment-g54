@@ -8,15 +8,17 @@ import { io } from "socket.io-client";
 
 import Page from "../components/Page";
 
+import Avatar from "@mui/material/Avatar";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Box from "@mui/material/Box";
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
 import Card from "@mui/material/Card";
+import CircularProgress from "@mui/material/CircularProgress";
 import Chip from "@mui/material/Chip";
 import IconButton from "@mui/material/IconButton";
 import LinearProgress from "@mui/material/LinearProgress";
+import MenuItem from "@mui/material/MenuItem";
 import Paper from "@mui/material/Paper";
+import Select from "@mui/material/Select";
 import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
@@ -47,6 +49,7 @@ const Collaboration = () => {
   const [isToastOpen, setIsToastOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [question, setQuestion] = useState(null);
+  const [collaboratingUser, setCollaboratingUser] = useState(null);
   const [editorLanguage, setEditorLanguage] = useState("javascript");
   const [code, setCode] = useState(
     editorLanguage === "python"
@@ -80,6 +83,15 @@ const Collaboration = () => {
       setQuestion(question);
       setIsLoading(false);
       socket.emit("retrieve-code");
+    });
+
+    socket.on("set-collaborating-user", async (userId) => {
+      if (!userId) return setCollaboratingUser(null);
+      const url = `${process.env.REACT_APP_USERS_SERVICE_HOST}/profile/${userId}`;
+      const response = await axios.get(url, {
+        headers: { Authorization: token },
+      });
+      if (response.status === 200) setCollaboratingUser(response.data);
     });
 
     socket.on("broadcast-your-code", () => {
@@ -118,6 +130,39 @@ const Collaboration = () => {
         {isLoading && <LinearProgress variant="indeterminate" />}
         {!isLoading && (
           <Box height="100%" display="flex">
+            <Box position="fixed" bottom={40} right={40} zIndex={10}>
+              <Card
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  paddingX: 3,
+                  paddingY: 1,
+                  backgroundColor: (theme) => theme.palette.background.light,
+                }}
+              >
+                {!collaboratingUser && "Waiting for your partner to join..."}
+                {!collaboratingUser && (
+                  <CircularProgress
+                    variant="indeterminate"
+                    sx={{ marginLeft: 3 }}
+                  />
+                )}
+                {collaboratingUser && "Collaborating with"}
+                {collaboratingUser && (
+                  <Tooltip
+                    title={collaboratingUser.name}
+                    placement="top-end"
+                    arrow
+                  >
+                    <Avatar
+                      sx={{ marginLeft: 2 }}
+                      alt={collaboratingUser.name}
+                      src={collaboratingUser.profileImageUrl}
+                    />
+                  </Tooltip>
+                )}
+              </Card>
+            </Box>
             <Box width="50%" height="100%" padding={1}>
               <Stack height="100%" spacing={1}>
                 <Stack direction="row" spacing={2} alignItems="center">
