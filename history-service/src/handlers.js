@@ -14,7 +14,6 @@ export const handleCreateHistoryRecord = async (request, response) => {
   try {
     const userServiceUrl = "http://users-service:3002/profile"
     // const userServiceUrl = `${process.env.USERS_SERVICE_HOST}/profile`;
-    console.log(userServiceUrl);
     const token = request.headers.authorization;
     const config = {
       headers: { Authorization: token },
@@ -38,7 +37,20 @@ export const handleCreateHistoryRecord = async (request, response) => {
  * @returns { Promise<void> }
  */
 export const handleGetOwnHistoryRecords = async (request, response) => {
-  const user_id = request.params.id;
-  const historyRecords = await database.select().from("history").where({ user_id });
-  return response.status(200).send(historyRecords);
+  try{
+    const userServiceUrl = "http://users-service:3002/profile"
+    // const userServiceUrl = `${process.env.USERS_SERVICE_HOST}/profile`;
+    const token = request.headers.authorization;
+    const config = {
+      headers: { Authorization: token },
+    };
+    const userServiceResponse = await axios.get(userServiceUrl, config);
+    const user_id = userServiceResponse.data.id;
+
+    const historyRecords = await database.select().from("history").where({ user_id });
+    return response.status(200).send(historyRecords);
+  } catch (error) {
+    console.error(error.message);
+    return response.status(400).send(INVALID_CREATE_HISTORY_RECORD_BODY_MESSAGE);
+  }
 };
