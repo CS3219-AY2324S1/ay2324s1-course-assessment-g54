@@ -1,6 +1,5 @@
 import database from "./database.js";
 import * as schema from "./schema.js";
-
 import { INVALID_CREATE_HISTORY_RECORD_BODY_MESSAGE } from "./errors.js";
 
 /**
@@ -22,7 +21,6 @@ export const handleCreateHistoryRecord = async (request, response) => {
   return response.status(200).send();
 };
 
-
 /**
  * @param { import("express").Request } request
  * @param { import("express").Response } response
@@ -30,13 +28,6 @@ export const handleCreateHistoryRecord = async (request, response) => {
  */
 export const handleGetOwnHistoryRecords = async (request, response) => {
   const user_id = request.params.id;
-  // try {
-  //   await schema.createHistoryRecordRequestBodySchema.validate(body);
-  // } catch (error) {
-  //   console.error(error.message);
-  //   return response.status(400).send(INVALID_CREATE_HISTORY_RECORD_BODY_MESSAGE);
-  // }
-
   const historyRecords = await database.select().from("history").where({ user_id });
   return response.status(200).send(historyRecords);
 };
