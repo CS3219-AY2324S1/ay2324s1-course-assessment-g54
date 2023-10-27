@@ -61,6 +61,7 @@ const Collaboration = () => {
     const token = window.localStorage.getItem("token");
     const socket = io(`${process.env.REACT_APP_COLLABORATION_SERVICE_HOST}`, {
       query: { difficulty, roomId, token },
+      path: "/api/collaboration-service",
     });
     setSocket(socket);
 
@@ -92,6 +93,10 @@ const Collaboration = () => {
     socket.on("disconnect", () => {
       return navigate("/matchmaking");
     });
+
+    return async () => {
+      socket.disconnect();
+    };
   }, [navigate, searchParams]);
 
   useEffect(() => {
