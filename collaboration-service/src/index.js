@@ -4,7 +4,10 @@ import NodeCache from "node-cache";
 import { Server } from "socket.io";
 
 const httpServer = createServer();
-const io = new Server(httpServer, { cors: { origin: "*" } });
+const io = new Server(httpServer, {
+  cors: { origin: "*" },
+  path: "/api/collaboration-service",
+});
 const roomQuestionsCache = new NodeCache();
 
 const clientEvents = {

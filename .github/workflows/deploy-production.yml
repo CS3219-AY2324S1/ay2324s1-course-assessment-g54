@@ -40,7 +40,7 @@ jobs:
           export REACT_APP_QUESTIONS_SERVICE_HOST=http://peerprep.bryanlohxz.com/api/questions-service
           export REACT_APP_USERS_SERVICE_HOST=http://peerprep.bryanlohxz.com/api/users-service
           export REACT_APP_MATCHMAKING_SERVICE_HOST=ws://peerprep.bryanlohxz.com/api/matchmaking-service
-          export REACT_APP_COLLABORATION_SERVICE_HOST=ws://peerprep.bryanlohxz.com/api/collaboration-service
+          export REACT_APP_COLLABORATION_SERVICE_HOST=http://peerprep.bryanlohxz.com
           export CI=false
           yarn build
       - name: Set up Git
