@@ -70,10 +70,10 @@ services:
       - ./matchmaking-service:/app
     command: yarn start
 
-  collab-service:
+  collaboration-service:
     build:
-      context: ./collab-service
-    container_name: collab-service
+      context: ./collaboration-service
+    container_name: collaboration-service
     ports:
       - 3004:3004
     depends_on:
@@ -87,7 +87,7 @@ services:
       USERS_SERVICE_HOST: http://users-service:3002
       QUESTION_SERVICE_HOST: http://question-service:3001
     volumes:
-      - ./collab-service:/app
+      - ./collaboration-service:/app
     command: yarn start
 
   postgresql:
