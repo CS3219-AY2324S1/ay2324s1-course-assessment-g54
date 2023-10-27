@@ -8,12 +8,16 @@ import { io } from "socket.io-client";
 
 import Page from "../components/Page";
 
+import { styled } from "@mui/material/styles";
+
 import Avatar from "@mui/material/Avatar";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import Badge from "@mui/material/Badge";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CircularProgress from "@mui/material/CircularProgress";
 import Chip from "@mui/material/Chip";
+import Fab from "@mui/material/Fab";
 import IconButton from "@mui/material/IconButton";
 import LinearProgress from "@mui/material/LinearProgress";
 import MenuItem from "@mui/material/MenuItem";
@@ -23,6 +27,8 @@ import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import AcknowledgementToast from "../components/AcknowledgementToast";
+
+import VideocamIcon from "@mui/icons-material/Videocam";
 
 marked.use({ breaks: true, gfm: true, silent: true });
 
@@ -130,7 +136,13 @@ const Collaboration = () => {
         {isLoading && <LinearProgress variant="indeterminate" />}
         {!isLoading && (
           <Box height="100%" display="flex">
-            <Box position="fixed" bottom={40} right={40} zIndex={10}>
+            <Box
+              position="fixed"
+              bottom={40}
+              right={40}
+              zIndex={10}
+              display="flex"
+            >
               <Card
                 sx={{
                   display: "flex",
@@ -140,28 +152,47 @@ const Collaboration = () => {
                   backgroundColor: (theme) => theme.palette.background.light,
                 }}
               >
-                {!collaboratingUser && "Waiting for your partner to join..."}
+                {!collaboratingUser && (
+                  <Typography color="gray">
+                    Waiting for your partner to join...
+                  </Typography>
+                )}
                 {!collaboratingUser && (
                   <CircularProgress
                     variant="indeterminate"
                     sx={{ marginLeft: 3 }}
                   />
                 )}
-                {collaboratingUser && "Collaborating with"}
+                {collaboratingUser && (
+                  <Typography color="gray">Collaborating with</Typography>
+                )}
                 {collaboratingUser && (
                   <Tooltip
                     title={collaboratingUser.name}
                     placement="top-end"
                     arrow
                   >
-                    <Avatar
-                      sx={{ marginLeft: 2 }}
-                      alt={collaboratingUser.name}
-                      src={collaboratingUser.profileImageUrl}
-                    />
+                    <StyledBadge
+                      overlap="circular"
+                      anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                      variant="dot"
+                    >
+                      <Avatar
+                        sx={{ marginLeft: 2 }}
+                        alt={collaboratingUser.name}
+                        src={collaboratingUser.profileImageUrl}
+                      />
+                    </StyledBadge>
                   </Tooltip>
                 )}
               </Card>
+              {collaboratingUser && (
+                <Tooltip title={"Start video call"} placement="top-end" arrow>
+                  <Fab sx={{ marginLeft: 2 }} color="primary">
+                    <VideocamIcon fontSize="large" />
+                  </Fab>
+                </Tooltip>
+              )}
             </Box>
             <Box width="50%" height="100%" padding={1}>
               <Stack height="100%" spacing={1}>
@@ -256,3 +287,32 @@ const Collaboration = () => {
 };
 
 export default Collaboration;
+
+const StyledBadge = styled(Badge)(({ theme }) => ({
+  "& .MuiBadge-badge": {
+    backgroundColor: "#44b700",
+    color: "#44b700",
+    boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
+    "&::after": {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+      borderRadius: "50%",
+      animation: "ripple 1.2s infinite ease-in-out",
+      border: "1px solid currentColor",
+      content: '""',
+    },
+  },
+  "@keyframes ripple": {
+    "0%": {
+      transform: "scale(.8)",
+      opacity: 1,
+    },
+    "100%": {
+      transform: "scale(2.4)",
+      opacity: 0,
+    },
+  },
+}));
