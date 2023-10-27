@@ -1,4 +1,6 @@
-import { WebSocketServer } from "ws";
+import { createServer } from "http";
+import { Server } from "socket.io";
+
 import { getUserFromToken } from "./authorization.js";
 import {
   enqueueCancelFindMatch,
@@ -7,72 +9,68 @@ import {
   unsubscribeMatchResponse,
 } from "./redis.js";
 
-const wss = new WebSocketServer({ port: process.env.PORT });
+const httpServer = createServer();
+const io = new Server(httpServer, {
+  cors: { origin: "*" },
+  path: "/api/matchmaking-service",
+});
+
 const difficulties = ["easy", "medium", "hard"];
 
-wss.on("connection", async (ws, request) => {
-  const requestId = Math.floor(Math.random() * 100 + 1);
-  console.log(`[${requestId}]`, "Connection received.");
-  try {
-    console.log(`[${requestId}]`, "Retrieving authorization token.");
-    const token = request.headers["sec-websocket-protocol"];
-    if (!token) {
-      console.error("Token cannot be found in authorization header.");
-      return ws.close(1008, "Unauthorized");
-    }
+io.on("connection", async (socket) => {
+  const { id, handshake } = socket;
+  const { difficulty, token } = handshake.query;
+  if (!difficulty || !difficulties.includes(difficulty) || !token) {
+    if (!difficulty) console.error(`[${id}] Difficulty cannot be found.`);
+    if (!difficulties.includes(difficulty))
+      console.error(`[${id}] Difficulty found is not recgonized.`);
+    if (!token) console.error(`[${id}] Token cannot be found.`);
+    return socket.disconnect();
+  }
 
-    console.log(`[${requestId}]`, "Verifying authorization token.");
+  console.log(`[${id}]`, "Connection received.");
+  try {
+    console.log(`[${id}]`, "Verifying authorization token.");
     let user = await getUserFromToken(token);
     if (!user) {
-      console.error("Invalid token found in authorization header.");
-      return ws.close(1008, "Unauthorized");
-    }
-
-    console.log(`[${requestId}]`, "Retrieving matchmaking difficulty.");
-    const urlSearchParams = new URLSearchParams(request.url.split("?")[1]);
-    const difficulty = urlSearchParams.get("difficulty");
-    console.log(`[${requestId}]`, "Validating matchmaking difficulty.");
-    if (!difficulty || !difficulties.includes(difficulty.toLowerCase())) {
-      const errorMsg =
-        "Difficulty is missing from search params or is incorrect.";
-      console.error(errorMsg);
-      return ws.close(1008, errorMsg);
+      console.error(`[${id}] Invalid token found in authorization header.`);
+      return socket.disconnect();
     }
 
     let isFindMatchSuccess = false;
     const matchResponseHandler = async (response) => {
-      console.log(`[${requestId}]`, "Matchmaking response received.");
-      const { users, difficulty } = response;
+      console.log(`[${id}]`, "Matchmaking response received.");
+      const { users, difficulty, roomId } = response;
       const matchedUser = users.filter((userId) => userId !== user.id)[0];
-      console.log(`[${requestId}]`, "Sending matchmaking response to caller.");
-      ws.send(matchedUser);
-      console.log(`[${requestId}]`, "Closing websocket.");
-      ws.close(1000, JSON.stringify({ matchedUser, difficulty }));
+      console.log(`[${id}]`, "Sending matchmaking response to caller.");
+      socket.emit("user-matched", { matchedUser, difficulty, roomId });
+      console.log(`[${id}]`, "Closing websocket.");
       isFindMatchSuccess = true;
+      socket.disconnect();
     };
 
-    console.log(`[${requestId}]`, "Subscribing to matchmaking responses.");
+    console.log(`[${id}]`, "Subscribing to matchmaking responses.");
     const subscriber = await subscribeMatchResponse(
       user.id,
       matchResponseHandler
     );
-    console.log(`[${requestId}]`, "Enqueing matchmaking request.");
+    console.log(`[${id}]`, "Enqueing matchmaking request.");
     await enqueueFindMatch(user.id, difficulty.toLowerCase());
-    console.log(`[${requestId}]`, "Waiting for matchmaking response.");
+    console.log(`[${id}]`, "Waiting for matchmaking response.");
 
-    ws.on("close", async () => {
+    socket.on("disconnect", async () => {
       if (isFindMatchSuccess) return;
-      console.log(`[${requestId}]`, "Cancelling matchmaking request.");
+      console.log(`[${id}]`, "Cancelling matchmaking request.");
       await enqueueCancelFindMatch(user.id, difficulty.toLowerCase());
-      console.log(
-        `[${requestId}]`,
-        "Unsubscribing from matchmaking responses."
-      );
+      console.log(`[${id}]`, "Unsubscribing from matchmaking responses.");
       await unsubscribeMatchResponse(subscriber);
-      console.log(`[${requestId}]`, "Closing websocket.");
+      console.log(`[${id}]`, "Closing websocket.");
     });
   } catch (error) {
-    console.error(error);
-    return ws.close(1011, "Internal Server Error");
+    console.error(`[${id}]`, error);
+    return socket.disconnect();
   }
 });
+
+httpServer.listen(process.env.PORT);
+console.log(`Server is listening on port ${process.env.PORT}`);
