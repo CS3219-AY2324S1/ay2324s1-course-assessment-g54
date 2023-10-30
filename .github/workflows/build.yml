@@ -15,7 +15,7 @@ jobs:
       run:
         working-directory: frontend-service
     steps:
-      - name: Checkout code (master)
+      - name: Checkout code
         uses: actions/checkout@v4
         with:
           ref: master
@@ -35,7 +35,33 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile --production=false
 
-      - name: Build frontend (master)
+      - name: Build frontend for testing
+        run: |
+          export REACT_APP_QUESTIONS_SERVICE_HOST=http://peerpreptest.bryanlohxz.com/api/questions-service
+          export REACT_APP_USERS_SERVICE_HOST=http://peerpreptest.bryanlohxz.com/api/users-service
+          export REACT_APP_MATCHMAKING_SERVICE_HOST=http://peerpreptest.bryanlohxz.com
+          export REACT_APP_COLLABORATION_SERVICE_HOST=http://peerpreptest.bryanlohxz.com
+          export CI=false
+          yarn build
+          
+      - name: Set up Git
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+        working-directory: .
+        
+      - name: Add and commit changes
+        run: |
+          git add -f frontend-service/build/
+          git commit -m "Add changes"
+        working-directory: .
+
+      - name: Deploy to testing
+        run: |
+          git push -f origin HEAD:testing
+        working-directory: .
+
+      - name: Build frontend for production
         run: |
           export REACT_APP_QUESTIONS_SERVICE_HOST=http://peerprep.bryanlohxz.com/api/questions-service
           export REACT_APP_USERS_SERVICE_HOST=http://peerprep.bryanlohxz.com/api/users-service
@@ -43,11 +69,6 @@ jobs:
           export REACT_APP_COLLABORATION_SERVICE_HOST=http://peerprep.bryanlohxz.com
           export CI=false
           yarn build
-      - name: Set up Git
-        run: |
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-        working-directory: .
         
       - name: Add and commit changes
         run: |
