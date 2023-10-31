@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 name: Build and Deploy Frontend to Production Branch
 
 on:
@@ -38,3 +39,88 @@ jobs:
           git push origin production-actions-test
           
         working-directory: ./frontend-service
+=======
+name: Build for Testing and Production
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches:
+      - master
+
+permissions: write-all
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend-service
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: master
+      
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
+
+      - uses: actions/cache@v3
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('frontend-service/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile --production=false
+
+      - name: Build frontend for testing
+        run: |
+          export REACT_APP_QUESTIONS_SERVICE_HOST=http://peerpreptest.bryanlohxz.com/api/questions-service
+          export REACT_APP_USERS_SERVICE_HOST=http://peerpreptest.bryanlohxz.com/api/users-service
+          export REACT_APP_MATCHMAKING_SERVICE_HOST=http://peerpreptest.bryanlohxz.com
+          export REACT_APP_COLLABORATION_SERVICE_HOST=http://peerpreptest.bryanlohxz.com
+          export CI=false
+          yarn build
+          
+      - name: Set up Git
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+        working-directory: .
+        
+      - name: Add and commit changes
+        run: |
+          git add -f frontend-service/build/
+          git commit -m "Add changes"
+        working-directory: .
+
+      - name: Deploy to testing
+        run: |
+          git push -f origin HEAD:testing
+        working-directory: .
+
+      - name: Build frontend for production
+        run: |
+          export REACT_APP_QUESTIONS_SERVICE_HOST=http://peerprep.bryanlohxz.com/api/questions-service
+          export REACT_APP_USERS_SERVICE_HOST=http://peerprep.bryanlohxz.com/api/users-service
+          export REACT_APP_MATCHMAKING_SERVICE_HOST=http://peerprep.bryanlohxz.com
+          export REACT_APP_COLLABORATION_SERVICE_HOST=http://peerprep.bryanlohxz.com
+          export CI=false
+          yarn build
+        
+      - name: Add and commit changes
+        run: |
+          git add -f frontend-service/build/
+          git commit -m "Add changes"
+        working-directory: .
+
+      - name: Deploy to production
+        run: |
+          git push -f origin HEAD:production
+        working-directory: .
+        
+>>>>>>> master

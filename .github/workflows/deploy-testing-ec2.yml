@@ -1,10 +1,10 @@
-name: Deploy to EC2
+name: Deploy to Testing EC2
 
 on:
   workflow_dispatch: {}
   push:
     branches:
-      - production
+      - testing
 
 jobs:
   Deploy:
@@ -24,7 +24,7 @@ jobs:
       - name: Run in EC2 instance
         env:
           USER_NAME: ${{ secrets.USER_NAME }}
-          HOSTNAME: ${{ secrets.SSH_HOST }}
+          HOSTNAME: ${{ secrets.SSH_HOST_TESTING }}
         run: |
           ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
             echo "Entered EC2 instance" &&
@@ -33,16 +33,16 @@ jobs:
             export NVM_DIR=~/.nvm
             source ~/.nvm/nvm.sh
 
-            echo "Step 2: Change directory to /app..." &&
-            cd ~/app &&
+            echo "Step 2: Change directory to /testapp..." &&
+            cd ~/testapp &&
 
             echo "Step 3: Shutting down containers..." &&
             docker compose down &&
 
-            echo "Step 4: Pull and update local production branch to match remote..." &&
-            git checkout production &&
+            echo "Step 4: Pull and update local testing branch to match remote..." &&
+            git checkout testing &&
             git fetch --prune &&
-            git reset --hard origin/production &&
+            git reset --hard origin/testing &&
 
             echo "Step 5: Install dependencies for all microservices..." &&
             bash install-deps-prod.sh &&

@@ -1,0 +1,57 @@
+name: Deploy to Production EC2
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches:
+      - production
+
+jobs:
+  Deploy:
+    name: Deploy to EC2
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up SSH access
+        env:
+          PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+          echo "SSH access configured."
+
+      - name: Run in EC2 instance
+        env:
+          USER_NAME: ${{ secrets.USER_NAME }}
+          HOSTNAME: ${{ secrets.SSH_HOST }}
+        run: |
+          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
+            echo "Entered EC2 instance" &&
+
+            echo "Step 1: Set node path..." &&
+            export NVM_DIR=~/.nvm
+            source ~/.nvm/nvm.sh
+
+            echo "Step 2: Change directory to /app..." &&
+            cd ~/app &&
+
+            echo "Step 3: Shutting down containers..." &&
+            docker compose down &&
+
+            echo "Step 4: Pull and update local production branch to match remote..." &&
+            git checkout production &&
+            git fetch --prune &&
+            git reset --hard origin/production &&
+
+            echo "Step 5: Install dependencies for all microservices..." &&
+            bash install-deps-prod.sh &&
+
+            echo "Step 6: Restarting docker containers..." &&
+            bash start-prod.sh &&
+
+            echo "Step 7: Migrating database to match latest..." &&
+            cd users-service &&
+            yarn knex migrate:latest &&
+            cd ..
+          '

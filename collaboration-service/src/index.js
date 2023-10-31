@@ -1,12 +1,20 @@
 import axios from "axios";
+import { createServer } from "http";
 import NodeCache from "node-cache";
 import { Server } from "socket.io";
 
-const io = new Server();
+const httpServer = createServer();
+const io = new Server(httpServer, {
+  cors: { origin: "*" },
+  path: "/api/collaboration-service",
+});
+
 const roomQuestionsCache = new NodeCache();
+const roomUsersCache = new NodeCache();
 
 const clientEvents = {
   BROADCAST_YOUR_CODE: "broadcast-your-code",
+  SET_COLLABORATING_USER: "set-collaborating-user",
   SET_QUESTION: "set-question",
   SHOW_NOTIFICATION: "show-notification",
   UPDATE_CODE: "update-code",
@@ -47,8 +55,18 @@ io.on("connection", async (socket) => {
         clientEvents.SHOW_NOTIFICATION,
         `${user.name} has joined the room.`
       );
+    socket.broadcast
+      .to(roomId)
+      .emit(clientEvents.SET_COLLABORATING_USER, user.id);
     socket.emit(clientEvents.SHOW_NOTIFICATION, "You have joined the room.");
     console.log(`[${id}] User ${user.id} has connected to room ${roomId}.`);
+    const roomUsers = roomUsersCache.get(roomId);
+    if (!roomUsers || roomUsers.length < 1)
+      roomUsersCache.set(roomId, [user.id]);
+    else {
+      roomUsersCache.set(roomId, [...roomUsers, user.id]);
+      socket.emit(clientEvents.SET_COLLABORATING_USER, roomUsers[0]);
+    }
   } catch (error) {
     console.error(error);
     return socket.disconnect();
@@ -86,7 +104,6 @@ io.on("connection", async (socket) => {
   });
 
   socket.on(serverEvents.BROADCAST_CODE, (code) => {
-    console.log(`[${id}] Broadcasting code from ${user.id} to room ${roomId}.`);
     socket.broadcast.to(roomId).emit(clientEvents.UPDATE_CODE, code);
   });
 
@@ -95,11 +112,19 @@ io.on("connection", async (socket) => {
     socket.broadcast
       .to(roomId)
       .emit(clientEvents.SHOW_NOTIFICATION, `${user.name} has left the room.`);
+    socket.broadcast.to(roomId).emit(clientEvents.SET_COLLABORATING_USER, null);
     socket.leave(roomId);
+    roomUsersCache.set(
+      roomId,
+      roomUsersCache.get(roomId).filter((id) => id !== user.id)
+    );
     const room = io.sockets.adapter.rooms.get(roomId);
-    if (!room) roomQuestionsCache.del(roomId);
+    if (!room) {
+      roomQuestionsCache.del(roomId);
+      roomUsersCache.del(roomId);
+    }
   });
 });
 
-io.listen(process.env.PORT);
+httpServer.listen(process.env.PORT);
 console.log(`Server is listening on port ${process.env.PORT}`);
