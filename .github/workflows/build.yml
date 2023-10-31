@@ -1,4 +1,4 @@
-name: Deploy to Production Branch
+name: Build from Testing and Production
 
 on:
   workflow_dispatch: {}
