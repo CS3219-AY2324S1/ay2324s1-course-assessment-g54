@@ -1,4 +1,4 @@
-name: Build from Testing and Production
+name: Build for Testing and Production
 
 on:
   workflow_dispatch: {}
