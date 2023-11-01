@@ -7,7 +7,7 @@ on:
       - testing
 
 jobs:
-  Deploy:
+  Deploy Testing:
     name: Deploy to EC2
     runs-on: ubuntu-latest
 
