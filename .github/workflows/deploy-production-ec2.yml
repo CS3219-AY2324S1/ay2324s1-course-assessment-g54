@@ -7,7 +7,7 @@ on:
       - production
 
 jobs:
-  Deploy:
+  Deploy Production:
     name: Deploy to EC2
     runs-on: ubuntu-latest
 
