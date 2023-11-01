@@ -24,11 +24,11 @@ const io = new Server(httpServer, {
 app.get('/', (req, res) => res.status(200).json({status: "OK"}));
 
 io.on("connection", (socket) => {
-    socket.on("smth", (roomId, userId) => {
+    socket.on("video-call", (userId, roomId) => {
         socket.join(roomId)
-        socket.br
+        socket.broadcast.to(roomId).emit("call-user", userId)
     })
-})
+});
 
 httpServer.listen(PORT, () => {
     console.log(`Video service listening on port ${PORT}`);

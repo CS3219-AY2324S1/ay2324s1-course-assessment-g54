@@ -7,6 +7,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { io } from "socket.io-client";
 
 import Page from "../components/Page";
+import VideoChat from "../components/VideoChat";
 
 import { styled } from "@mui/material/styles";
 
@@ -29,6 +30,7 @@ import Typography from "@mui/material/Typography";
 import AcknowledgementToast from "../components/AcknowledgementToast";
 
 import VideocamIcon from "@mui/icons-material/Videocam";
+
 
 marked.use({ breaks: true, gfm: true, silent: true });
 
@@ -192,12 +194,12 @@ const Collaboration = () => {
               {collaboratingUser && (
                 <Tooltip title={"Start video call"} placement="top-end" arrow>
                   <Fab sx={{ marginLeft: 2 }} color="primary">
-                    <VideocamIcon fontSize="large" onClick={() => { setIsVideoCalling(!isVideoCalling)}}/>
+                    <VideocamIcon fontSize="large" onClick={() => { setIsVideoCalling(true)}}/>
                   </Fab>
                 </Tooltip>
               )}
             </Box>
-            <Box width="50%" height="100%" padding={1}>
+            {/* <Box width="50%" height="100%" padding={1}>
               <Stack height="100%" spacing={1}>
                 <Stack direction="row" spacing={2} alignItems="center">
                   <Tooltip title="Back to questions" placement="top" arrow>
@@ -249,8 +251,8 @@ const Collaboration = () => {
                   />
                 </Card>
               </Stack>
-            </Box>
-            <Box width="50%" height= {isVideoCalling ?"70%" :"100%"} padding={1}>
+            </Box> */}
+            {/* <Box width="50%" height= {isVideoCalling ?"70%" :"100%"} padding={1}>
               <Paper
                 sx={{ height: "100%", width: "100%", overflow: "hidden" }}
                 elevation={2}
@@ -281,6 +283,9 @@ const Collaboration = () => {
                   }}
                 />
               </Paper>
+            </Box> */}
+            <Box>
+              {isVideoCalling && <VideoChat/>}
             </Box>
           </Box>
         )}
