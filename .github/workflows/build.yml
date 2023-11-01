@@ -1,45 +1,3 @@
-<<<<<<< HEAD
-name: Build and Deploy Frontend to Production Branch
-
-on:
-  workflow_dispatch: {}
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Set up Git
-        run: |
-          git config --global user.email "gowri.bhat@u.nus.edu"
-          git config --global user.name "gowribhat"
-
-      - name: Checkout code (master)
-        uses: actions/checkout@v4
-        with:
-          ref: master
-
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
-        working-directory: ./frontend-service
-
-      - name: Build frontend (master)
-        run: |
-          export REACT_APP_QUESTIONS_SERVICE_HOST=http://peerprep.bryanlohxz.com/api/questions-service
-          export REACT_APP_USERS_SERVICE_HOST=http://peerprep.bryanlohxz.com/api/users-service
-          export REACT_APP_MATCHMAKING_SERVICE_HOST=http://peerprep.bryanlohxz.com/api/matchmaking-service
-          export CI=false
-          yarn build
-        working-directory: ./frontend-service
-
-      - name: Update build in production
-        run: |
-          git add -f build
-          git commit -m "Update build"
-          git push origin production-actions-test
-          
-        working-directory: ./frontend-service
-=======
 name: Build for Testing and Production
 
 on:
@@ -122,5 +80,3 @@ jobs:
         run: |
           git push -f origin HEAD:production
         working-directory: .
-        
->>>>>>> master

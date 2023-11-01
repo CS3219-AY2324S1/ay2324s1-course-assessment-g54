@@ -12,7 +12,6 @@ import Login from "./pages/Login";
 import NewQuestion from "./pages/NewQuestion";
 import Question from "./pages/Question";
 import Questions from "./pages/Questions";
-import Room from "./pages/Room";
 import Signup from "./pages/Signup";
 
 import Matchmaking from "./pages/Matchmaking";
@@ -56,7 +55,6 @@ const protectedRoutes = [
   { path: "/questions/:id/edit", element: <EditQuestion /> },
   { path: "/matchmaking", element: <Matchmaking /> },
   { path: "/matchmaking/find", element: <MatchmakingFind /> },
-  { path: "/room", element: <Room /> },
 ];
 
 function App() {
