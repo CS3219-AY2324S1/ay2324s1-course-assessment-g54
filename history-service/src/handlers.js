@@ -12,8 +12,7 @@ export const handleCreateHistoryRecord = async (request, response) => {
   const { body } = request;
 
   try {
-    const userServiceUrl = "http://users-service:3002/profile"
-    // const userServiceUrl = `${process.env.USERS_SERVICE_HOST}/profile`;
+    const userServiceUrl = `${process.env.USERS_SERVICE_HOST}/profile`;
     const token = request.headers.authorization;
     const config = {
       headers: { Authorization: token },
@@ -38,8 +37,7 @@ export const handleCreateHistoryRecord = async (request, response) => {
  */
 export const handleGetOwnHistoryRecords = async (request, response) => {
   try{
-    const userServiceUrl = "http://users-service:3002/profile"
-    // const userServiceUrl = `${process.env.USERS_SERVICE_HOST}/profile`;
+    const userServiceUrl = `${process.env.USERS_SERVICE_HOST}/profile`;
     const token = request.headers.authorization;
     console.log(token);
     const config = {
