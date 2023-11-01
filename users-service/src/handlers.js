@@ -16,7 +16,7 @@ import * as utils from "./utils.js";
  */
 export const handleDeleteProfile = async (request, response) => {
   if (!request.headers.authorization)
-    return res.status(401).send(INVALID_JWT_ERROR_MSG);
+    return response.status(401).send(INVALID_JWT_ERROR_MSG);
   const jsonWebToken = request.headers.authorization;
   let id;
   try {
