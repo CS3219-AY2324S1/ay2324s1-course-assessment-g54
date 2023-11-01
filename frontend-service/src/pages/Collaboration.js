@@ -62,6 +62,7 @@ const Collaboration = () => {
       ? "# Insert your code here\n"
       : "// Insert your code here\n"
   );
+  const [isVideoCalling, setIsVideoCalling] = useState(false); 
 
   useEffect(() => {
     const roomId = searchParams.get("roomId");
@@ -111,6 +112,8 @@ const Collaboration = () => {
     socket.on("disconnect", () => {
       return navigate("/matchmaking");
     });
+
+
 
     return async () => {
       socket.disconnect();
@@ -189,7 +192,7 @@ const Collaboration = () => {
               {collaboratingUser && (
                 <Tooltip title={"Start video call"} placement="top-end" arrow>
                   <Fab sx={{ marginLeft: 2 }} color="primary">
-                    <VideocamIcon fontSize="large" />
+                    <VideocamIcon fontSize="large" onClick={() => { setIsVideoCalling(!isVideoCalling)}}/>
                   </Fab>
                 </Tooltip>
               )}
@@ -247,7 +250,7 @@ const Collaboration = () => {
                 </Card>
               </Stack>
             </Box>
-            <Box width="50%" height="100%" padding={1}>
+            <Box width="50%" height= {isVideoCalling ?"70%" :"100%"} padding={1}>
               <Paper
                 sx={{ height: "100%", width: "100%", overflow: "hidden" }}
                 elevation={2}
