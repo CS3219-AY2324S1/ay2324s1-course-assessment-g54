@@ -10,10 +10,11 @@ dotenv.config();
 const PORT = process.env.PORT;
 
 const app = express();
-const httpServer = createServer(app);
 
 app.use(cors());
 app.use(express.json());
+
+const httpServer = createServer(app);
 
 const io = new Server(httpServer, {
     cors: { origin: "*" },
