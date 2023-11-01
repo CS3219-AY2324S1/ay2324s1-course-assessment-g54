@@ -78,11 +78,14 @@ const Question = () => {
       const config = {
         headers: { Authorization: token },
       };
-      const {question_id} = question;
+      const {question_id, title} = question;
       const attempt = editorRef.current.getValue();
+      const partner_id = null;
+      const language = editorLanguage;
+      const status = "accepted";
 
       const history_url = `${process.env.REACT_APP_HISTORY_SERVICE_HOST}/addHistory`; 
-      await axios.post(history_url, {question_id, attempt}, config);
+      await axios.post(history_url, {question_id, attempt, title, language, partner_id, status}, config);
     } catch (error) {
       console.error(error);
     }

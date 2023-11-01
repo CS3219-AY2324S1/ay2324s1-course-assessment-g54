@@ -1,8 +1,6 @@
-import { useNavigate } from "react-router-dom";
 import Page from "../components/Page";
 import HistoryTable from "../components/HistoryTable";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
 import axios from "axios";
 import { useState, useEffect } from "react";
 
@@ -23,11 +21,10 @@ const History = () => {
   }, []);
 
   return (
-    <Page title="Error 404">
-      <HistoryTable rows={rows}/>
-      <Typography>
-        {JSON.stringify(rows)}
-      </Typography>
+    <Page title="History" >
+      <Box display="flex" justifyContent="center">
+        <HistoryTable rows={rows}/>
+      </Box>
     </Page>
   );
 };
