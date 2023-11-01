@@ -91,6 +91,20 @@ services:
       - ./collaboration-service:/app
     command: yarn start
 
+  video-service:
+    build:
+      context: ./video-service
+    container_name: video-service
+    ports:
+      - 3006:3006
+    environment:
+      PORT: 3006
+      USERS_SERVICE_HOST: http://users-service:3002
+      QUESTION_SERVICE_HOST: http://question-service:3001
+    volumes:
+      - ./video-service:/app
+    command: yarn start
+
   postgresql:
     image: postgres:15-alpine
     container_name: postgresql

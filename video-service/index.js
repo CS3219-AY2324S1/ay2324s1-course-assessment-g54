@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import express from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
-import { v4 as uuidV4 } from "uuid";
+
 
 dotenv.config();
 
@@ -20,17 +20,7 @@ const io = new Server(httpServer, {
     methods: ["GET", "POST"],
 });
 
-
-app.set('view engine', 'ejs')
-app.use(express.static('public'))
-
-app.get('/', (req, res) => {
-    res.redirect(`/${uuidV4()}`)
-})
-
-app.get('/:room', (req, res) => {
-    res.render('room', { roomId: req.params.room })
-})
+app.get('/', (req, res) => res.status(200).json({status: "OK"}));
 
 io.on("connection", (socket) => {
     socket.on("smth", (roomId, userId) => {
@@ -39,6 +29,6 @@ io.on("connection", (socket) => {
     })
 })
 
-server.listen(PORT, () => {
+httpServer.listen(PORT, () => {
     console.log(`Video service listening on port ${PORT}`);
 });
