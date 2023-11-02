@@ -1,6 +1,7 @@
 import Page from "../components/Page";
 import HistoryTable from "../components/HistoryTable";
 import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import axios from "axios";
 import { useState, useEffect } from "react";
 

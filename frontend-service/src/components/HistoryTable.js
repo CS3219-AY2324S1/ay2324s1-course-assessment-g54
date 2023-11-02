@@ -1,8 +1,10 @@
 import { DataGrid, GridToolbarQuickFilter } from '@mui/x-data-grid';
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
-
+import Avatar from "@mui/material/Avatar";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useEffect, useState } from 'react';
 
 const formatDatetime = (params) => {
   const isoDateString = params.value;
@@ -21,17 +23,42 @@ const formatDatetime = (params) => {
   return formattedDate;
 }
 
-const formatPartnerId = (params) => {
-  if (!params.value) {
-    return "None";
-  }
+const renderPartnerInfo = (params) => {
+  // if (!params.value) {
+  //   return "None";
+  // }
+ // get partner uuid. if partner uuid is deleted/does not exist, just return "none"
+  return (
+    <Stack alignItems="center">
+      <img src="javascript.svg" width={36} style={{borderRadius:"50%"}}/>
+      <Typography display="block" noWrap width="100px" >fasaaaaaaaaaaa</Typography>
+    </Stack>
+  )
 }
 
-// const capitalizeFirstLetter = (params) => {
-//   return params.value.charAt(0).toUpperCase() + params.value.slice(1);
-// }
-const renderLanguageLogo = (params) => {
-  switch (params.value) {
+const QuestionTitleCell = ({ questionId }) => {
+  const [questionTitle, setQuestionTitle] = useState("...");
+
+  useEffect(() => {
+    const getQuestionTitle = async () => {
+      const url = `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions/${questionId}`;
+
+      const token = window.localStorage.getItem("token");
+      const config = {
+        headers: { Authorization: token },
+      };
+      const response = await axios.get(url, config);
+      const { title } = response.data;
+      setQuestionTitle(title);
+    };
+    getQuestionTitle();
+  },[questionId]);
+
+  return questionTitle;
+};
+
+const LanguageLogo = ({language}) => {
+  switch (language) {
     case "java":
       return <img src="java.svg" width={60} alt="Java" />;
     case "javascript":
@@ -43,38 +70,57 @@ const renderLanguageLogo = (params) => {
   }
 }
 
-const renderStatus = (params) => {
+const Status = ({status}) => {
   return (
     <Typography
       fontWeight="bold"
-      color={params.value == "accepted" ? "lightgreen" : "error"}
+      color={status == "accepted" ? "lightgreen" : "error"}
       textTransform="capitalize"
     >
-      {params.value}
+      {status}
     </Typography>
   )
 }
 
-const renderPartnerInfo = (params) => {
-  // if (!params.value) {
-  //   return "None";
-  // }
+const PartnerInfo = ({partnerId}) => {
+  const [partnerName, setPartnerName] = useState("...");
+  const [partnerProfileImageUrl, setPartnerProfileImageUrl] = useState("...");
+  
+  useEffect(() => {
+    if (!partnerId) return;
+
+    const getPartnerNameAndProfileImageUrl = async () => {
+      const url = `${process.env.REACT_APP_USERS_SERVICE_HOST}/profile/${partnerId}`;
+      const token = window.localStorage.getItem("token");
+      const config = {
+        headers: { Authorization: token },
+      };
+      const response = await axios.get(url, config);
+      const { name, profileImageUrl } = response.data;
+      setPartnerName(name);
+      setPartnerProfileImageUrl(profileImageUrl);
+    };
+
+    getPartnerNameAndProfileImageUrl();
+  },[partnerId]);
+
+  if (!partnerId) return "None";
   
   return (
     <Stack alignItems="center">
-      <img src="javascript.svg" width={36} style={{borderRadius:"50%"}}/>
-      <Typography display="block" noWrap width="100px" >fasaaaaaaaaaaa</Typography>
+      <Avatar alt={partnerName} src={partnerProfileImageUrl}/>
+      <Typography fontSize={12} textAlign="center" noWrap width="100px">{partnerName}</Typography>
     </Stack>
   )
-
+  
 }
 
 const columns = [
   { field: 'attempt_datetime', headerName: 'Date submitted', flex: 3, valueFormatter: formatDatetime },
-  { field: 'title', headerName: 'Question Title', flex: 3 },
-  { field: 'status', headerName: 'Status', flex: 1, renderCell: renderStatus, headerAlign: "center", align: "center"},
-  { field: 'language', headerName: 'Language', flex: 1, renderCell: renderLanguageLogo, headerAlign: "center", align: "center"},
-  { field: 'partner_id', headerName: 'Partner', flex: 1, minWidth: 100, renderCell: renderPartnerInfo, headerAlign: "center", align: "center"},
+  { field: 'question_id', headerName: 'Question Title', renderCell: (params) => <QuestionTitleCell questionId={params.value}/>, flex: 3, },
+  { field: 'status', headerName: 'Status', flex: 1, renderCell: (params) => <Status status={params.value}/>, headerAlign: "center", align: "center" },
+  { field: 'language', headerName: 'Language', flex: 1, renderCell: (params) => <LanguageLogo language={params.value}/>, headerAlign: "center", align: "center" },
+  { field: 'partner_id', headerName: 'Partner', flex: 1, minWidth: 100, renderCell: (params) => <PartnerInfo partnerId={params.value}/>, headerAlign: "center", align: "center" },
   // { field: 'attempt', headerName: 'Attempt'},
 ];
 
@@ -94,8 +140,14 @@ const QuickSearchToolbar = () => {
 }
 
 const HistoryTable = ({ rows }) => {
+  const navigate = useNavigate();
+  const handleRowClick = (params) => {
+    navigate(`/questions/${params.row.question_id}`);
+  }
+
   return (
       <DataGrid
+        onRowClick={handleRowClick}
         rows={rows}
         columns={columns}
         getRowId={(row) => row.user_id + row.attempt_datetime}
@@ -125,6 +177,9 @@ const HistoryTable = ({ rows }) => {
           },
           '& .MuiDataGrid-columnHeader, & .MuiDataGrid-footerContainer, & .MuiTablePagination-displayedRows ': {
             backgroundColor: (theme) => theme.palette.questionRowEven,
+          },
+          '& .MuiInputBase-root': {
+            height: "45px",
           },
           border: "none",
           mt:8,
