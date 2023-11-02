@@ -9,11 +9,8 @@ test('Sign up for new user profile', async () => {
     email: 'testuser@example.com',
     password: 'testuser',
   });
-  
+
   expect(response.status).toBe(200)
-  expect(response.data.token).not.toBeNull();
-  token = response.data.token
-  console.log(token)
 });
 
 test('Login into PeerPrepTest', async () => {
@@ -21,17 +18,20 @@ test('Login into PeerPrepTest', async () => {
     email: 'testuser@example.com',
     password: 'testuser',
   });
+  expect(response.data.token).not.toBeNull();
   expect(response.status).toBe(200);
+  expect(response.data.token).not.toBeNull();
+  token = response.data.token
 });
 
-// test('Delete user profile with a valid token', async () => {
+test('Delete user profile with a valid token', async () => {
 
-//   // Make a request to delete the user profile with the valid token
-//   const response = await axios.delete(`${USERS_SERVICE_HOST}/profile`, {
-//     headers: {
-//       Authorization: token,
-//     },
-//   });
-//   console.log(token)
-//   expect(response.status).toBe(200);
-// });
+  // Make a request to delete the user profile with the valid token
+  const response = await axios.delete(`${USERS_SERVICE_HOST}/profile`, {
+    headers: {
+      Authorization: token,
+    },
+  });
+  console.log(token)
+  expect(response.status).toBe(200);
+});
