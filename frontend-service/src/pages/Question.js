@@ -3,7 +3,7 @@ import * as DOMPurify from "dompurify";
 import * as marked from "marked";
 import Editor from "@monaco-editor/react";
 import { useEffect, useState, useRef } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 
 
 import { useUser } from "../contexts/UserContext";
@@ -42,13 +42,17 @@ const getDifficultyChipColor = (difficulty) => {
 
 const Question = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const historyCode = location.state ? location.state.code : null;
+  const historyLanguage = location.state ? location.state.language : null;
+
   const { id } = useParams();
   const user = useUser();
   const editorRef = useRef(null);
 
   const [isLoading, setIsLoading] = useState(true);
   const [question, setQuestion] = useState(null);
-  const [editorLanguage, setEditorLanguage] = useState("javascript");
+  const [editorLanguage, setEditorLanguage] = useState(historyLanguage? historyLanguage : "javascript");
  
   useEffect(() => {
     const getQuestion = async () => {
@@ -176,7 +180,7 @@ const Question = () => {
               </Stack>
               <Editor
                 language={editorLanguage}
-                value={editorLanguage === "python" ? "# Insert your code here\n" : "// Insert your code here\n" }
+                value={historyCode? historyCode : ""}
                 theme="vs-dark"
                 onMount={(editor) => {
                   editorRef.current = editor;

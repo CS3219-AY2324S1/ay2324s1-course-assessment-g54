@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import Avatar from "@mui/material/Avatar";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useEffect, useState } from 'react';
+import { useEffect, useState, } from 'react';
 
 const formatDatetime = (params) => {
   const isoDateString = params.value;
@@ -21,19 +21,6 @@ const formatDatetime = (params) => {
 
   const formattedDate = `${day} ${month} ${year}, ${shortHours}:${minutes} ${ampm}`;
   return formattedDate;
-}
-
-const renderPartnerInfo = (params) => {
-  // if (!params.value) {
-  //   return "None";
-  // }
- // get partner uuid. if partner uuid is deleted/does not exist, just return "none"
-  return (
-    <Stack alignItems="center">
-      <img src="javascript.svg" width={36} style={{borderRadius:"50%"}}/>
-      <Typography display="block" noWrap width="100px" >fasaaaaaaaaaaa</Typography>
-    </Stack>
-  )
 }
 
 const QuestionTitleCell = ({ questionId }) => {
@@ -142,7 +129,7 @@ const QuickSearchToolbar = () => {
 const HistoryTable = ({ rows }) => {
   const navigate = useNavigate();
   const handleRowClick = (params) => {
-    navigate(`/questions/${params.row.question_id}`);
+    navigate(`/questions/${params.row.question_id}`, {state: {code: params.row.attempt, language: params.row.language}}); 
   }
 
   return (
