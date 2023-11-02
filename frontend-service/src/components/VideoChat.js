@@ -3,11 +3,11 @@ import { Peer } from "peerjs";
 import { io } from "socket.io-client";
 import { useSearchParams } from "react-router-dom";
 
- const addVideoStream = (video, stream) => {
-    video.srcObject = stream;
-    video.onloadedmetadata = () => {
-      video.play();
-  };
+const addVideoStream = (video, stream) => {
+  video.srcObject = stream;
+  video.addEventListener('loadedmetadata', () => {
+    video.play();
+  });
 }
 
 const VideoChat = () => {
@@ -16,27 +16,25 @@ const VideoChat = () => {
   const [peer, setPeer] = useState(null);
   const [peerId, setPeerId] = useState(null);
   const [socket, setSocket] = useState(null);
-  const [roomId, setRoomId] = useState(null);
+  const [roomId, setRoomId] = useState(searchParams.get("roomId"));
   const [videoElements, setVideoElements] = useState([]);
 
   const videoGridRef = useRef(null);
 
-
   useEffect(() => {
-    setRoomId(searchParams.get("roomId"));
+   
 
     const peer = new Peer();
     peer.on("open", (id) => {
       console.log('My peer ID is: ' + id);
-      setPeerId(id);
+      setPeerId(id);  
     });
     setPeer(peer);
     setSocket(io(`${process.env.REACT_APP_VIDEO_SERVICE_HOST}`))
   }, []);
 
   useEffect(() => {
-    if (!socket) return;
-    if (!peer || !peerId) return;
+    if (!socket || !peer || !peerId ) return;
 
     const userVideo = document.createElement("video");
     userVideo.muted = true;
@@ -51,9 +49,10 @@ const VideoChat = () => {
         peer.on('call', (call) => {
           call.answer(stream);
 
-          call.once('stream', (matchedUserVideoStream) => {
+          call.on('stream', (matchedUserVideoStream) => {
+            
             addVideoStream(matchedUserVideo, matchedUserVideoStream);
-            setVideoElements([matchedUserVideo]);
+            setVideoElements([userVideo, matchedUserVideo]);
           });
 
           call.on('close', () => {
@@ -62,20 +61,32 @@ const VideoChat = () => {
           })
         });
 
-        socket.on("call-user", (userId) => {
-          
+        socket.on("user-connected", (userId) => {
+          console.log(`[${userId}] User ${userId} has joined the room ${roomId}.`);
           const call = peer.call(userId, stream);
-          call.once('stream', (matchedUserVideoStream) => {
+          
+          call.on('stream', (matchedUserVideoStream) => {
             addVideoStream(matchedUserVideo, matchedUserVideoStream);
             setVideoElements([userVideo, matchedUserVideo]);
           });
-
+          
           call.on('close', () => {
-            userVideo.remove();
+            matchedUserVideo.remove();
+            setVideoElements([userVideo]);
+
           })
         });
 
-        socket.emit("video-call", peerId);
+        // socket.on("user-disconnected", (userId) => {
+          
+        // })
+
+
+        socket.emit("join-server", {
+          peerId: peerId,
+          roomId: roomId
+        });
+        console.log(`User ${peerId} is attemping to join video-server.`);
 
       } catch (error) {
         console.error('Error accessing media devices.', error);
@@ -84,27 +95,26 @@ const VideoChat = () => {
 
     startMediaDevices();
 
+    
+
     // socket.on('user-disconnected', (userId) => {
     //   if (peers[userId]) {
     //     peers[userId].close();
     //   }
     // });
 
-    // myPeer.on('open', (id) => {
-    //   socket.emit('join-room', ROOM_ID, id);
-    // });
-  }, [socket, peer, peerId]);
+
+  }, [socket, peer, peerId, roomId]);
 
   useEffect(() => {
     if (videoGridRef.current == null) return;
-    videoGridRef.current.innerHtml = "";
     for (let videoElem of videoElements) {
       videoElem.style.width = '250px'
       videoElem.style.height = '250px'
       videoElem.style.margin = '10px'
       videoGridRef.current.appendChild(videoElem);
     }
-  }, [videoElements, videoGridRef]);
+  }, [videoElements]);
 
   return <div id="videos" ref={videoGridRef}></div>;
 };

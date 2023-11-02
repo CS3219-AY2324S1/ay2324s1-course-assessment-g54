@@ -24,9 +24,12 @@ const io = new Server(httpServer, {
 app.get('/', (req, res) => res.status(200).json({status: "OK"}));
 
 io.on("connection", (socket) => {
-    socket.on("video-call", (userId, roomId) => {
+    socket.on("join-server", (userRoomId) => {
+        const {peerId, roomId} = userRoomId
+        console.log(`User ${peerId} has joined video-server.`);
         socket.join(roomId)
-        socket.broadcast.to(roomId).emit("call-user", userId)
+        socket.broadcast.to(roomId).emit("user-connected", peerId)
+        //console.log(`User ${userId} has joined the room ${roomId}.`);
     })
 });
 

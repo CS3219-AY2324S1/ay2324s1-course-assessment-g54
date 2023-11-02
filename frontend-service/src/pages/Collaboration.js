@@ -194,7 +194,7 @@ const Collaboration = () => {
               {collaboratingUser && (
                 <Tooltip title={"Start video call"} placement="top-end" arrow>
                   <Fab sx={{ marginLeft: 2 }} color="primary">
-                    <VideocamIcon fontSize="large" onClick={() => { setIsVideoCalling(true)}}/>
+                    <VideocamIcon fontSize="large" onClick={() => { setIsVideoCalling(!isVideoCalling)}}/>
                   </Fab>
                 </Tooltip>
               )}
