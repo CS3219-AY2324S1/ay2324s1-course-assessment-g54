@@ -4,11 +4,12 @@ const USERS_SERVICE_HOST = "http://peerpreptest.bryanlohxz.com/api/users-service
 const INCORRECT_PASSWORD_MSG = "The password entered is incorrect.";
 const INVALID_JWT_ERROR_MSG = "JWT is either missing, invalid or has expired.";
 const INVALID_REQUEST_BODY_ERROR_MESSAGE = "Please check your request body.";
-const SERVER_ERROR_MSG = "Sorry, something went wrong with the server.";
 const USER_NOT_FOUND_MSG = "Sorry, the user cannot be found.";
+const USER_WITH_SAME_EMAIL_FOUND_MSG = "Another user with this email already exists."
+
 let token
 
-test('Sign up for new user profile', async () => {
+test('Sign up for new user profile successfully', async () => {
   const response = await axios.post(`${USERS_SERVICE_HOST}/signup`, {
     name: 'Test User',
     email: 'testuser@example.com',
@@ -16,6 +17,55 @@ test('Sign up for new user profile', async () => {
   });
 
   expect(response.status).toBe(200)
+});
+
+test('Sign up for new user profile with existing email', async () => {
+  try {
+    const response = await axios.post(`${USERS_SERVICE_HOST}/signup`, {
+      name: 'Test User With Same Email',
+      email: 'testuser@example.com',
+      password: 'testuser123',
+    });
+  } catch (error) {
+    expect(error.response.status).toBe(400);
+    expect(error.response.data).toBe(USER_WITH_SAME_EMAIL_FOUND_MSG);
+  }
+});
+
+test('Sign up for new user profile without name in request body', async () => {
+  try {
+    const response = await axios.post(`${USERS_SERVICE_HOST}/signup`, {
+      email: 'test@example.com',
+      password: 'test',
+    });
+  } catch (error) {
+    expect(error.response.status).toBe(400);
+    expect(error.response.data).toBe(INVALID_REQUEST_BODY_ERROR_MESSAGE);
+  }
+});
+
+test('Sign up for new user profile without email in request body', async () => {
+  try {
+    const response = await axios.post(`${USERS_SERVICE_HOST}/signup`, {
+      name: 'Test User',
+      password: 'test',
+    });
+  } catch (error) {
+    expect(error.response.status).toBe(400);
+    expect(error.response.data).toBe(INVALID_REQUEST_BODY_ERROR_MESSAGE);
+  }
+});
+
+test('Sign up for new user profile without password in request body', async () => {
+  try {
+    const response = await axios.post(`${USERS_SERVICE_HOST}/signup`, {
+      name: 'Test User',
+      email: 'test@example.com',
+    });
+  } catch (error) {
+    expect(error.response.status).toBe(400);
+    expect(error.response.data).toBe(INVALID_REQUEST_BODY_ERROR_MESSAGE);
+  }
 });
 
 test('Login with Invalid Request Body', async () => {
