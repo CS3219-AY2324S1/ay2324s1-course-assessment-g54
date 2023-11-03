@@ -11,7 +11,7 @@ let token;
 
 beforeEach(async () => {
   try {
-    await axios.post(`${USERS_SERVICE_HOST}/signup`, {
+    await axios.post(`${process.env.REACT_APP_USERS_SERVICE_HOST}/signup`, {
       name: TEST_NAME,
       email: TEST_EMAIL,
       password: TEST_PWD,
@@ -19,7 +19,7 @@ beforeEach(async () => {
   } catch (error) {
   }
 
-  const response = await axios.post(`${USERS_SERVICE_HOST}/login`, {
+  const response = await axios.post(`${process.env.REACT_APP_USERS_SERVICE_HOST}/login`, {
     email: TEST_EMAIL,
     password: TEST_PWD,
   });
@@ -28,36 +28,16 @@ beforeEach(async () => {
 });
 
 afterEach(async () => {
-  await axios.delete(`${USERS_SERVICE_HOST}/profile`, {
+  await axios.delete(`${process.env.REACT_APP_USERS_SERVICE_HOST}/profile`, {
     headers: {
       Authorization: token,
     },
   });
 });
 
-test('Login into PeerPrepTest', async () => {
-  const response = await axios.post(`${USERS_SERVICE_HOST}/login`, {
-    email: TEST_EMAIL,
-    password: TEST_PWD,
-  });
-  expect(response.status).toBe(200);
-  expect(response.data.token).not.toBeNull();
-  token = response.data.token
-});
-
-test('Login into PeerPrepTest', async () => {
-  const response = await axios.post(`${USERS_SERVICE_HOST}/login`, {
-    email: TEST_EMAIL,
-    password: TEST_PWD,
-  });
-  expect(response.status).toBe(200);
-  expect(response.data.token).not.toBeNull();
-  token = response.data.token
-});
-
 test('Get all questions', async () => {
   const response = await axios.get(
-    `${QUESTIOS_SERVICE_HOST}/questions`, 
+    `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions`, 
     { headers: { Authorization: token }}
   );
   expect(response.status).toBe(200)
