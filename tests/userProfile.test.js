@@ -9,7 +9,7 @@ const USER_WITH_SAME_EMAIL_FOUND_MSG = "Another user with this email already exi
 
 const TEST_NAME = "John Doe";
 const TEST_EMAIL = "johndoe@example.com";
-const TEST_PWD = "john123"
+const TEST_PWD = "john123";
 
 let token
 
