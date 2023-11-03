@@ -31,6 +31,19 @@ io.on("connection", (socket) => {
         socket.broadcast.to(roomId).emit("user-connected", peerId)
         //console.log(`User ${userId} has joined the room ${roomId}.`);
     })
+
+    socket.on("open-video", (roomId) => {
+        socket.broadcast.to(roomId).emit("able-to-join-server-now")
+    })
+    socket.on("close-video", (roomId) => {
+        socket.broadcast.to(roomId).emit("able-to-leave-server-now")
+    })
+
+    socket.on("user-disconnected", (userId, roomId) => {
+        console.log(`User ${userId} has left room ${roomId}.`);
+        
+        socket.leave(roomId);
+      });
 });
 
 httpServer.listen(PORT, () => {

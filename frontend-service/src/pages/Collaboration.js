@@ -64,10 +64,14 @@ const Collaboration = () => {
       ? "# Insert your code here\n"
       : "// Insert your code here\n"
   );
-  const [isVideoCalling, setIsVideoCalling] = useState(false); 
+  const [isVideoCalling, setIsVideoCalling] = useState(false);
+  //const [roomId, setRoomId] = useState(null);
+
+
 
   useEffect(() => {
     const roomId = searchParams.get("roomId");
+    // setRoomId(roomId);
     const difficulty = searchParams.get("difficulty");
     if (!roomId) return navigate("/matchmaking");
     const token = window.localStorage.getItem("token");
@@ -121,6 +125,17 @@ const Collaboration = () => {
       socket.disconnect();
     };
   }, [navigate, searchParams]);
+
+  // useEffect(() => {
+  //   const videoSocket = io(`${process.env.REACT_APP_VIDEO_SERVICE_HOST}`);
+  //   if (isVideoCalling) {
+  //     videoSocket.emit("open-video", roomId);
+  //     console.log("open-video");
+  //   } else {
+  //     videoSocket.emit("close-video", roomId);
+  //     console.log("close-video")
+  //   }
+  // }, [isVideoCalling]);
 
   useEffect(() => {
     editorRef.current?.focus();
@@ -194,7 +209,10 @@ const Collaboration = () => {
               {collaboratingUser && (
                 <Tooltip title={"Start video call"} placement="top-end" arrow>
                   <Fab sx={{ marginLeft: 2 }} color="primary">
-                    <VideocamIcon fontSize="large" onClick={() => { setIsVideoCalling(!isVideoCalling)}}/>
+                    <VideocamIcon fontSize="large"
+                      onClick={() => {
+                        setIsVideoCalling(!isVideoCalling)
+                      }} />
                   </Fab>
                 </Tooltip>
               )}
@@ -285,7 +303,7 @@ const Collaboration = () => {
               </Paper>
             </Box> */}
             <Box>
-              {isVideoCalling && <VideoChat/>}
+               {isVideoCalling && <VideoChat/>}
             </Box>
           </Box>
         )}
