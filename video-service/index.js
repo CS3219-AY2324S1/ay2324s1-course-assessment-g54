@@ -58,7 +58,7 @@ io.on("connection", async (socket) => {
   socket.join(roomId);
   console.log(`[${socket.id}] User ${user.id} has joined room ${roomId}.`);
 
-  socket.on(serverEvents.BROADCAST_PEER_ID, ({ peerId, roomId }) => {
+  socket.on(serverEvents.BROADCAST_PEER_ID, (peerId) => {
     console.log(`[${socket.id}] Broadcast peer id event received.`);
     socket.broadcast.to(roomId).emit(clientEvents.CALL_PEER, peerId);
   });

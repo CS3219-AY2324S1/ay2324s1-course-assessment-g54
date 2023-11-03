@@ -256,11 +256,22 @@ const Collaboration = () => {
             </Box>
             <Box
               width="50%"
-              height={isVideoCalling ? "70%" : "100%"}
+              height={"100%"}
+              display="flex"
+              flexDirection="column"
               padding={1}
             >
+              <Box border="1px solid pink">
+                {isVideoCalling && (
+                  <VideoChat roomId={searchParams.get("roomId") || ""} />
+                )}
+              </Box>
               <Paper
-                sx={{ height: "100%", width: "100%", overflow: "hidden" }}
+                sx={{
+                  height: isVideoCalling ? "80%" : "100%",
+                  width: "100%",
+                  overflow: "hidden",
+                }}
                 elevation={2}
               >
                 <Stack direction="row" justifyContent="end" alignItems="center">
@@ -289,11 +300,6 @@ const Collaboration = () => {
                   }}
                 />
               </Paper>
-            </Box>
-            <Box>
-              {isVideoCalling && (
-                <VideoChat roomId={searchParams.get("roomId") || ""} />
-              )}
             </Box>
           </Box>
         )}
