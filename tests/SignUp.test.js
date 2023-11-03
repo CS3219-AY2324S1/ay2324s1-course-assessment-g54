@@ -7,15 +7,18 @@ const INVALID_REQUEST_BODY_ERROR_MESSAGE = "Please check your request body.";
 const USER_NOT_FOUND_MSG = "Sorry, the user cannot be found.";
 const USER_WITH_SAME_EMAIL_FOUND_MSG = "Another user with this email already exists."
 
+const TEST_NAME = "John Doe";
+const TEST_EMAIL = "johndoe@example.com";
+const TEST_PWD = "john123"
+
 let token
 
 test('Sign up for new user profile successfully', async () => {
   const response = await axios.post(`${USERS_SERVICE_HOST}/signup`, {
-    name: 'Test User',
-    email: 'testuser@example.com',
-    password: 'testuser',
+    name: TEST_NAME,
+    email: TEST_EMAIL,
+    password: TEST_PWD,
   });
-
   expect(response.status).toBe(200)
 });
 
@@ -23,7 +26,7 @@ test('Sign up for new user profile with existing email', async () => {
   try {
     const response = await axios.post(`${USERS_SERVICE_HOST}/signup`, {
       name: 'Test User With Same Email',
-      email: 'testuser@example.com',
+      email: TEST_EMAIL,
       password: 'testuser123',
     });
   } catch (error) {
@@ -71,7 +74,7 @@ test('Sign up for new user profile without password in request body', async () =
 test('Login with Invalid Request Body', async () => {
   try {
     const response = await axios.post(`${USERS_SERVICE_HOST}/login`, {
-      email: 'sample@email.com',
+      email: TEST_EMAIL,
     });
   } catch (error) {
     expect(error.response.status).toBe(400);
@@ -79,7 +82,7 @@ test('Login with Invalid Request Body', async () => {
   }
 });
 
-test('Login with User Not Found', async () => {
+test('Login with non-existant user email', async () => {
   try {
     const response = await axios.post(`${USERS_SERVICE_HOST}/login`, {
       email: 'nonexistent@example.com',
@@ -94,7 +97,7 @@ test('Login with User Not Found', async () => {
 test('Login with Incorrect Password', async () => {
   try {
     const response = await axios.post(`${USERS_SERVICE_HOST}/login`, {
-      email: 'testuser@example.com',
+      email: TEST_EMAIL,
       password: 'incorrectpassword',
     });
   } catch (error) {
@@ -103,15 +106,40 @@ test('Login with Incorrect Password', async () => {
   }
 });
 
-
 test('Login into PeerPrepTest', async () => {
   const response = await axios.post(`${USERS_SERVICE_HOST}/login`, {
-    email: 'testuser@example.com',
-    password: 'testuser',
+    email: TEST_EMAIL,
+    password: TEST_PWD,
   });
   expect(response.status).toBe(200);
   expect(response.data.token).not.toBeNull();
   token = response.data.token
+});
+
+test('Get own profile with valid token', async () => {
+  const response = await axios.get(
+    `${USERS_SERVICE_HOST}/profile`,
+    { headers: { Authorization: token }
+  });
+  expect(response.status).toBe(200);
+  expect(response.data).not.toBeNull()
+
+  const user = response.data;
+  expect(user.name).toBe(TEST_NAME)
+  expect(user.email).toBe(TEST_EMAIL)
+  expect(user.isMaintainer).toBeFalsy()
+});
+
+test('Get own profile with invalid token', async () => {
+  try {
+    const response = await axios.get(
+      `${USERS_SERVICE_HOST}/profile`,
+      { headers: { Authorization: "invalid-token" }
+    });
+  } catch (error) {
+    expect(error.response.status).toBe(401);
+    expect(error.response.data).toBe(INVALID_JWT_ERROR_MSG)
+  }
 });
 
 test('Delete user profile with unauthorized token', async () => {
