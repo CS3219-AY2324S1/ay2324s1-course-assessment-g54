@@ -12,7 +12,7 @@ services:
   users-service:
     command: yarn start:production
 
-  collab-service:
+  collaboration-service:
     command: yarn start:production
 
   matchmaking-service:

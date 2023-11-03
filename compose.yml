@@ -11,8 +11,10 @@ services:
     environment:
       REACT_APP_QUESTIONS_SERVICE_HOST: http://localhost:3001
       REACT_APP_USERS_SERVICE_HOST: http://localhost:3002
-      REACT_APP_MATCHMAKING_SERVICE_HOST: ws://localhost:3003
+      REACT_APP_MATCHMAKING_SERVICE_HOST: http://localhost:3003
+      REACT_APP_COLLABORATION_SERVICE_HOST: http://localhost:3004
       REACT_APP_HISTORY_SERVICE_HOST: http://localhost:3005
+      REACT_APP_VIDEO_SERVICE_HOST: http://localhost:3006
     volumes:
       - ./frontend-service:/app
     command: yarn start
@@ -93,10 +95,10 @@ services:
       - ./matchmaking-service:/app
     command: yarn start
 
-  collab-service:
+  collaboration-service:
     build:
-      context: ./collab-service
-    container_name: collab-service
+      context: ./collaboration-service
+    container_name: collaboration-service
     ports:
       - 3004:3004
     depends_on:
@@ -110,7 +112,21 @@ services:
       USERS_SERVICE_HOST: http://users-service:3002
       QUESTION_SERVICE_HOST: http://question-service:3001
     volumes:
-      - ./collab-service:/app
+      - ./collaboration-service:/app
+    command: yarn start
+
+  video-service:
+    build:
+      context: ./video-service
+    container_name: video-service
+    ports:
+      - 3006:3006
+    environment:
+      PORT: 3006
+      USERS_SERVICE_HOST: http://users-service:3002
+      QUESTION_SERVICE_HOST: http://question-service:3001
+    volumes:
+      - ./video-service:/app
     command: yarn start
 
   postgresql:
