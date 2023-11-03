@@ -65,6 +65,7 @@ services:
     environment:
       PORT: 3005
       USERS_SERVICE_HOST: http://users-service:3002
+      QUESTION_SERVICE_HOST: http://question-service:3001
       DB_HOST: postgresql
       DB_PORT: 5432
       DB_USER: postgres

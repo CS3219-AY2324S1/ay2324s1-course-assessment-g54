@@ -18,6 +18,10 @@ app.get("/ownHistory", handlers.handleGetOwnHistoryRecords);
 
 app.post("/addHistory", handlers.handleCreateHistoryRecord);
 
+app.delete("/deleteRecordsForDeletedUser/:userId", handlers.handleDeletedUser);
+
+app.delete("/deleteRecordsForDeletedQuestion/:questionId", handlers.handleDeletedQuestion);
+
 app.listen(PORT, () => {
   console.log(`Users app listening on port ${PORT}`);
 });

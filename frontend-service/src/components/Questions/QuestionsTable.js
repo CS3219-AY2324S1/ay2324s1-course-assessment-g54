@@ -154,6 +154,9 @@ const QuestionsTable = ({ filteredQuestions, setFilteredQuestions }) => {
       setFilteredQuestions(filtered);
       handleCancelDelete();
 
+      const historyUrl = `${process.env.REACT_APP_HISTORY_SERVICE_HOST}/deleteRecordsForDeletedQuestion/${questionIdToDelete}`;
+      await axios.delete(historyUrl, header);
+
       showToast("Question deleted successfully!", "success");
     } catch (err) {
       showToast("Question deletion unsuccessful. Please try again!", "error");

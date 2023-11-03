@@ -54,3 +54,46 @@ export const handleGetOwnHistoryRecords = async (request, response) => {
     return response.status(400).send(INVALID_CREATE_HISTORY_RECORD_BODY_MESSAGE);
   }
 };
+
+export const handleDeletedUser = async (request, response) => {
+  try {
+    const userServiceUrl = `${process.env.USERS_SERVICE_HOST}/profile`;
+    const token = request.headers.authorization;
+    const config = {
+      headers: { Authorization: token },
+    };
+    await axios.get(userServiceUrl, config);
+  } catch (error) {
+    return response.status(400).send("invalid token")
+  }
+
+  const {userId : user_id} = request.params;
+  try {
+    await database.delete().from("history").where({ user_id });
+    return response.status(200).send();
+  } catch (error) {
+    return response.status(400).send("cannot delete records with user from history table");
+  }
+};
+
+export const handleDeletedQuestion = async (request, response) => {
+  try {
+    const userServiceUrl = `${process.env.USERS_SERVICE_HOST}/profile`;
+    const token = request.headers.authorization;
+    const config = {
+      headers: { Authorization: token },
+    };
+    await axios.get(userServiceUrl, config);
+  } catch (error) {
+    return response.status(400).send("invalid token")
+  }
+
+  const {questionId : question_id} = request.params;
+  
+  try {
+    await database.delete().from("history").where({ question_id });
+    return response.status(200).send();
+  } catch (error) {
+    return response.status(400).send("cannot delete records with question from history table");
+  }
+};
