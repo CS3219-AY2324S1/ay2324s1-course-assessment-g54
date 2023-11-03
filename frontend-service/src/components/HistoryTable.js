@@ -2,6 +2,7 @@ import { DataGrid, GridToolbarQuickFilter } from '@mui/x-data-grid';
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useEffect, useState, } from 'react';
@@ -130,6 +131,15 @@ const QuickSearchToolbar = () => {
   );
 }
 
+const CustomNoRowsOverlay = () => {
+  return (
+    <Stack alignItems="center" justifyContent="center" height="100%" >
+      <img src="NoSubmissions.svg" height="60%" width="60%"/>
+      <Typography variant="h3">No submissions</Typography>
+    </Stack>
+  )
+}
+
 const HistoryTable = ({ rows }) => {
   const navigate = useNavigate();
   const handleRowClick = (params) => {
@@ -138,6 +148,7 @@ const HistoryTable = ({ rows }) => {
 
   return (
       <DataGrid
+        autoHeight
         onRowClick={handleRowClick}
         rows={rows}
         columns={columns}
@@ -172,11 +183,16 @@ const HistoryTable = ({ rows }) => {
           '& .MuiInputBase-root': {
             height: "45px",
           },
+          '--DataGrid-overlayHeight': '670px',
           border: "none",
           mt:8,
           maxWidth:"80%",
         }}
-        slots={{ toolbar: QuickSearchToolbar}}
+        slots={{ 
+          toolbar: QuickSearchToolbar,
+          noRowsOverlay: CustomNoRowsOverlay,
+          
+        }}
         density='comfortable'
         disableColumnMenu
         rowSelection={false}

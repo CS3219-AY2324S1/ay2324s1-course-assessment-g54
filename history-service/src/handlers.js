@@ -1,7 +1,7 @@
 import axios from "axios";
 import database from "./database.js";
 import * as schema from "./schema.js";
-import { INVALID_CREATE_HISTORY_RECORD_BODY_MESSAGE, INVALID_JWT_ERROR_MSG } from "./errors.js";
+import { INVALID_CREATE_HISTORY_RECORD_BODY_MESSAGE, INVALID_JWT_ERROR_MSG, INVALID_REQUEST_BODY_ERROR_MESSAGE } from "./errors.js";
 
 /**
  * @param { import("express").Request } request
@@ -37,11 +37,9 @@ export const handleGetOwnHistoryRecords = async (request, response) => {
   try{
     const userServiceUrl = `${process.env.USERS_SERVICE_HOST}/profile`;
     const token = request.headers.authorization;
-    console.log(token);
     const config = {headers: { Authorization: token }};
     const userServiceResponse = await axios.get(userServiceUrl, config);
     const user_id = userServiceResponse.data.id;
-    console.log(user_id);
 
     const historyRecords = await database.select().from("history").where({ user_id });
     return response.status(200).send(historyRecords);
@@ -60,14 +58,14 @@ export const handleDeletedUser = async (request, response) => {
     const userServiceResponse = await axios.get(userServiceUrl, config);
     user_id = userServiceResponse.data.id;
   } catch (error) {
-    return response.status(400).send("invalid token")
+    return response.status(400).send(INVALID_JWT_ERROR_MSG)
   }
 
   try {
     await database.delete().from("history").where({ user_id });
     return response.status(200).send();
   } catch (error) {
-    return response.status(400).send("cannot delete records with user from history table");
+    return response.status(400).send(INVALID_REQUEST_BODY_ERROR_MESSAGE);
   }
 };
 
@@ -78,7 +76,7 @@ export const handleDeletedQuestion = async (request, response) => {
     const config = {headers: { Authorization: token }};
     await axios.get(userServiceUrl, config);
   } catch (error) {
-    return response.status(400).send("invalid token")
+    return response.status(400).send(INVALID_JWT_ERROR_MSG)
   }
 
   const {questionId : question_id} = request.params;
@@ -87,6 +85,6 @@ export const handleDeletedQuestion = async (request, response) => {
     await database.delete().from("history").where({ question_id });
     return response.status(200).send();
   } catch (error) {
-    return response.status(400).send("cannot delete records with question from history table");
+    return response.status(400).send(INVALID_REQUEST_BODY_ERROR_MESSAGE);
   }
 };
