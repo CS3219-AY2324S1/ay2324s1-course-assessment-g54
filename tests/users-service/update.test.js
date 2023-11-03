@@ -4,6 +4,7 @@ const {
   INVALID_JWT_ERROR_MSG,
   INVALID_REQUEST_BODY_ERROR_MESSAGE
 } = require("./errors.js");
+const { UNEXPECTED_SUCCESS_MSG } = require("../errors.js");
 
 const TEST_NAME = "Frank Bell";
 const TEST_EMAIL = "frankbell@example.com";
@@ -56,10 +57,11 @@ describe('View user profile', () => {
 
   test('Get profile with invalid token', async () => {
     try {
-      const response = await axios.get(
+      await axios.get(
         `${process.env.REACT_APP_USERS_SERVICE_HOST}/profile`,
         { headers: { Authorization: "invalid-token" }
       });
+      throw new Error(UNEXPECTED_SUCCESS_MSG);
     } catch (error) {
       expect(error.response.status).toBe(401);
       expect(error.response.data).toBe(INVALID_JWT_ERROR_MSG)
@@ -81,11 +83,12 @@ describe('Update user profile successfully', () => {
 describe('Update user profile with invalid token', () => {
   test('Update profile with invalid token', async () => {
     try {
-      const response = await axios.put(
+      await axios.put(
         `${process.env.REACT_APP_USERS_SERVICE_HOST}/profile`,
         { name: UPDATED_NAME, profileImageUrl: IMAGE_URL },
         { headers: { Authorization: "invalid-token" } }
       );
+      throw new Error(UNEXPECTED_SUCCESS_MSG);
     } catch (error) {
       expect(error.response.status).toBe(401);
       expect(error.response.data).toBe(INVALID_JWT_ERROR_MSG)
@@ -96,11 +99,12 @@ describe('Update user profile with invalid token', () => {
 describe('Update user profile invalid request body', () => {
   test('Update profile without name', async () => {
     try {
-      const response = await axios.put(
+      await axios.put(
         `${process.env.REACT_APP_USERS_SERVICE_HOST}/profile`,
         { profileImageUrl: IMAGE_URL },
         { headers: { Authorization: token } }
       );
+      throw new Error(UNEXPECTED_SUCCESS_MSG);
     } catch (error) {
       expect(error.response.status).toBe(400);
       expect(error.response.data).toBe(INVALID_REQUEST_BODY_ERROR_MESSAGE)
@@ -109,11 +113,12 @@ describe('Update user profile invalid request body', () => {
 
   test('Update profile with empty request body', async () => {
     try {
-      const response = await axios.put(
+      await axios.put(
         `${process.env.REACT_APP_USERS_SERVICE_HOST}/profile`,
         {},
         { headers: { Authorization: token } }
       );
+      throw new Error(UNEXPECTED_SUCCESS_MSG);
     } catch (error) {
       expect(error.response.status).toBe(400);
       expect(error.response.data).toBe(INVALID_REQUEST_BODY_ERROR_MESSAGE)

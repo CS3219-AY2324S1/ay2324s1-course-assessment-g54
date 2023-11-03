@@ -36,6 +36,7 @@ test('Delete user profile with unauthorized token', async () => {
         Authorization: unauthorizedToken,
       },
     });
+    throw new Error(UNEXPECTED_SUCCESS_MSG);
   } catch (error) {
     expect(error.response.status).toBe(401);
     expect(error.response.data).toBe(INVALID_JWT_ERROR_MSG)

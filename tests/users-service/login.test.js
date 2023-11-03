@@ -5,6 +5,7 @@ const {
   INVALID_REQUEST_BODY_ERROR_MESSAGE,
   USER_NOT_FOUND_MSG
 } = require("./errors.js");
+const { UNEXPECTED_SUCCESS_MSG } = require("../errors.js");
 
 const TEST_NAME = "Adam Smith";
 const TEST_EMAIL = "adamsmith@example.com";
@@ -27,6 +28,7 @@ describe('Login with invalid request body', () => {
       await axios.post(`${process.env.REACT_APP_USERS_SERVICE_HOST}/login`, {
         email: TEST_EMAIL,
       });
+      throw new Error(UNEXPECTED_SUCCESS_MSG);
     } catch (error) {
       expect(error.response.status).toBe(400);
       expect(error.response.data).toBe(INVALID_REQUEST_BODY_ERROR_MESSAGE);
@@ -38,6 +40,7 @@ describe('Login with invalid request body', () => {
       await axios.post(`${process.env.REACT_APP_USERS_SERVICE_HOST}/login`, {
         password: TEST_PWD,
       });
+      throw new Error(UNEXPECTED_SUCCESS_MSG);
     } catch (error) {
       expect(error.response.status).toBe(400);
       expect(error.response.data).toBe(INVALID_REQUEST_BODY_ERROR_MESSAGE);
@@ -52,6 +55,7 @@ describe('Login with invalid credentials', () => {
         email: 'nonexistent@example.com',
         password: TEST_PWD,
       });
+      throw new Error(UNEXPECTED_SUCCESS_MSG);
     } catch (error) {
       expect(error.response.status).toBe(400);
       expect(error.response.data).toBe(USER_NOT_FOUND_MSG);
@@ -64,6 +68,7 @@ describe('Login with invalid credentials', () => {
         email: TEST_EMAIL,
         password: 'incorrectpassword',
       });
+      throw new Error(UNEXPECTED_SUCCESS_MSG);
     } catch (error) {
       expect(error.response.status).toBe(400);
       expect(error.response.data).toBe(INCORRECT_PASSWORD_MSG);
