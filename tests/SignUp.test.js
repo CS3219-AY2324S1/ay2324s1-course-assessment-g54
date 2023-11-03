@@ -142,6 +142,49 @@ test('Get own profile with invalid token', async () => {
   }
 });
 
+test('Update profile successfully', async () => {
+  const response = await axios.put(
+    `${USERS_SERVICE_HOST}/profile`,
+    {
+      name: "John",
+      profileImageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/User_icon-cp.svg/828px-User_icon-cp.svg.png"
+    },
+    { headers: { Authorization: token } }
+  );
+  expect(response.status).toBe(200);
+});
+
+test('Update profile with invalid token', async () => {
+  try {
+    const response = await axios.put(
+      `${USERS_SERVICE_HOST}/profile`,
+      {
+        name: "John",
+        profileImageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/User_icon-cp.svg/828px-User_icon-cp.svg.png"
+      },
+      { headers: { Authorization: "invalid-token" } }
+    );
+  } catch (error) {
+    expect(error.response.status).toBe(401);
+    expect(error.response.data).toBe(INVALID_JWT_ERROR_MSG)
+  }
+});
+
+test('Update profile with invalid request body', async () => {
+  try {
+    const response = await axios.put(
+      `${USERS_SERVICE_HOST}/profile`,
+      {
+        profileImageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/User_icon-cp.svg/828px-User_icon-cp.svg.png"
+      },
+      { headers: { Authorization: token } }
+    );
+  } catch (error) {
+    expect(error.response.status).toBe(400);
+    expect(error.response.data).toBe(INVALID_REQUEST_BODY_ERROR_MESSAGE)
+  }
+});
+
 test('Delete user profile with unauthorized token', async () => {
   try {
     const unauthorizedToken = 'invalid-token';
