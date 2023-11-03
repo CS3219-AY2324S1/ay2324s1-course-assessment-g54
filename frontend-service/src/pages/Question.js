@@ -24,6 +24,7 @@ import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import Button from '@mui/material/Button';
+import AcknowledgementToast from "../components/AcknowledgementToast";
 
 marked.use({ breaks: true, gfm: true, silent: true });
 
@@ -53,6 +54,8 @@ const Question = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [question, setQuestion] = useState(null);
   const [editorLanguage, setEditorLanguage] = useState(historyLanguage? historyLanguage : "javascript");
+  const [toastMessage, setToastMessage] = useState("");
+  const [isToastOpen, setIsToastOpen] = useState(false);
  
   useEffect(() => {
     const getQuestion = async () => {
@@ -74,26 +77,28 @@ const Question = () => {
   useEffect(() => {
     editorRef.current?.focus();
   }, [editorLanguage]);
-
   const handleEditorLanguageChange = (event) => setEditorLanguage(event.target.value);
+  
   const handleSubmitClick = async () => {
     try {
       const token = window.localStorage.getItem("token");
-      const config = {
-        headers: { Authorization: token },
-      };
+      const config = {headers: { Authorization: token }};
       const {question_id} = question;
       const attempt = editorRef.current.getValue();
 
       // if doing with partner, put partner's user id
-      // is doing solo, put null
+      // if doing solo, put null
       const partner_id = "84834d46-76dd-4224-ac08-57e146244f61";
 
       const language = editorLanguage;
+
+      // execution result here
       const status = "accepted";
 
       const history_url = `${process.env.REACT_APP_HISTORY_SERVICE_HOST}/addHistory`; 
       await axios.post(history_url, {question_id, attempt, language, partner_id, status}, config);
+      setToastMessage("Submitted succesfully!");
+      setIsToastOpen(true);
     } catch (error) {
       console.error(error);
     }
@@ -103,6 +108,12 @@ const Question = () => {
 
   return (
     <Page title="Question">
+      <AcknowledgementToast
+        message={toastMessage}
+        open={isToastOpen}
+        onClose={() => setIsToastOpen(false)}
+        severity="success"
+      />
       <Box height="calc(100vh - 64px)" width="100vw" >
         <Box height="100%" display="flex">
           <Box width="50%" height="100%" padding={1}>
@@ -183,7 +194,13 @@ const Question = () => {
               </Stack>
               <Editor
                 language={editorLanguage}
-                value={historyCode? historyCode : ""}
+                value={    
+                  historyCode && editorLanguage == historyLanguage
+                  ? historyCode
+                  : editorLanguage == "python"
+                  ? "# Insert your code here\n"
+                  : "// Insert your code here\n"
+                }
                 theme="vs-dark"
                 onMount={(editor) => {
                   editorRef.current = editor;
