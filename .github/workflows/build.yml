@@ -9,7 +9,7 @@ on:
 permissions: write-all
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -63,10 +63,10 @@ jobs:
 
       - name: Build frontend for production
         run: |
-          export REACT_APP_QUESTIONS_SERVICE_HOST=http://peerprep.bryanlohxz.com/api/questions-service
-          export REACT_APP_USERS_SERVICE_HOST=http://peerprep.bryanlohxz.com/api/users-service
-          export REACT_APP_MATCHMAKING_SERVICE_HOST=http://peerprep.bryanlohxz.com
-          export REACT_APP_COLLABORATION_SERVICE_HOST=http://peerprep.bryanlohxz.com
+          export REACT_APP_QUESTIONS_SERVICE_HOST=https://peerprep.bryanlohxz.com/api/questions-service
+          export REACT_APP_USERS_SERVICE_HOST=https://peerprep.bryanlohxz.com/api/users-service
+          export REACT_APP_MATCHMAKING_SERVICE_HOST=https://peerprep.bryanlohxz.com
+          export REACT_APP_COLLABORATION_SERVICE_HOST=https://peerprep.bryanlohxz.com
           export CI=false
           yarn build
         
