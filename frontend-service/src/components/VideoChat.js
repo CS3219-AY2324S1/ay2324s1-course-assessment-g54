@@ -31,7 +31,9 @@ const VideoChat = () => {
       setPeerId(id);
     });
     setPeer(peer);
-    setSocket(io(`${process.env.REACT_APP_VIDEO_SERVICE_HOST}`))
+    setSocket(io(`${process.env.REACT_APP_VIDEO_SERVICE_HOST}`), {
+      path: "/api/video-service",
+    })
   }, []);
 
   // useEffect(() => {

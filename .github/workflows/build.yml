@@ -41,6 +41,7 @@ jobs:
           export REACT_APP_USERS_SERVICE_HOST=http://peerpreptest.bryanlohxz.com/api/users-service
           export REACT_APP_MATCHMAKING_SERVICE_HOST=http://peerpreptest.bryanlohxz.com
           export REACT_APP_COLLABORATION_SERVICE_HOST=http://peerpreptest.bryanlohxz.com
+          export REACT_APP_VIDEO_SERVICE_HOST=http://peerpreptest.bryanlohxz.com
           export CI=false
           yarn build
           
@@ -67,6 +68,7 @@ jobs:
           export REACT_APP_USERS_SERVICE_HOST=https://peerprep.bryanlohxz.com/api/users-service
           export REACT_APP_MATCHMAKING_SERVICE_HOST=https://peerprep.bryanlohxz.com
           export REACT_APP_COLLABORATION_SERVICE_HOST=https://peerprep.bryanlohxz.com
+          export REACT_APP_VIDEO_SERVICE_HOST=https://peerprep.bryanlohxz.com
           export CI=false
           yarn build
         

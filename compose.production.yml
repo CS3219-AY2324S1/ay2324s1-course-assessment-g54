@@ -17,3 +17,6 @@ services:
 
   matchmaking-service:
     command: yarn start:production
+
+  video-service:
+    command: yarn start:production
