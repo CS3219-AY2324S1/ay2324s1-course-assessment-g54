@@ -7,12 +7,13 @@ import { UserProvider } from "./contexts/UserContext";
 import AuthGuard from "./components/AuthGuard";
 import Collaboration from "./pages/Collaboration";
 import EditQuestion from "./pages/EditQuestion";
+import Error from "./pages/Error";
 import Login from "./pages/Login";
 import NewQuestion from "./pages/NewQuestion";
 import Question from "./pages/Question";
 import Questions from "./pages/Questions";
 import Signup from "./pages/Signup";
-import Error from "./pages/Error";
+
 import Matchmaking from "./pages/Matchmaking";
 import MatchmakingFind from "./pages/MatchmakingFind";
 import NavBar from "./components/NavBar";
