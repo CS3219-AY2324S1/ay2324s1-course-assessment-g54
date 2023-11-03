@@ -18,7 +18,7 @@ const httpServer = createServer(app);
 
 const io = new Server(httpServer, {
     cors: { origin: "*" },
-    methods: ["GET", "POST"],
+    path: "/api/video-service",
 });
 
 app.get('/', (req, res) => res.status(200).json({status: "OK"}));
@@ -32,18 +32,18 @@ io.on("connection", (socket) => {
         //console.log(`User ${userId} has joined the room ${roomId}.`);
     })
 
-    socket.on("open-video", (roomId) => {
-        socket.broadcast.to(roomId).emit("able-to-join-server-now")
-    })
-    socket.on("close-video", (roomId) => {
-        socket.broadcast.to(roomId).emit("able-to-leave-server-now")
-    })
+    // socket.on("open-video", (roomId) => {
+    //     socket.broadcast.to(roomId).emit("able-to-join-server-now")
+    // })
+    // socket.on("close-video", (roomId) => {
+    //     socket.broadcast.to(roomId).emit("able-to-leave-server-now")
+    // })
 
-    socket.on("user-disconnected", (userId, roomId) => {
-        console.log(`User ${userId} has left room ${roomId}.`);
+    // socket.on("user-disconnected", (userId, roomId) => {
+    //     console.log(`User ${userId} has left room ${roomId}.`);
         
-        socket.leave(roomId);
-      });
+    //     socket.leave(roomId);
+    //   });
 });
 
 httpServer.listen(PORT, () => {
