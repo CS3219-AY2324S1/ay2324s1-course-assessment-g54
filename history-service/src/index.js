@@ -18,7 +18,7 @@ app.get("/ownHistory", handlers.handleGetOwnHistoryRecords);
 
 app.post("/addHistory", handlers.handleCreateHistoryRecord);
 
-app.delete("/deleteRecordsForDeletedUser/:userId", handlers.handleDeletedUser);
+app.delete("/deleteRecordsForCurrentUser", handlers.handleDeletedUser);
 
 app.delete("/deleteRecordsForDeletedQuestion/:questionId", handlers.handleDeletedQuestion);
 

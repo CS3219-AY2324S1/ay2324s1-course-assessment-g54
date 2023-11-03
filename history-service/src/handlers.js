@@ -14,9 +14,7 @@ export const handleCreateHistoryRecord = async (request, response) => {
   try {
     const userServiceUrl = `${process.env.USERS_SERVICE_HOST}/profile`;
     const token = request.headers.authorization;
-    const config = {
-      headers: { Authorization: token },
-    };
+    const config = {headers: { Authorization: token }};
     const userServiceResponse = await axios.get(userServiceUrl, config);
     const user_id = userServiceResponse.data.id;
 
@@ -40,9 +38,7 @@ export const handleGetOwnHistoryRecords = async (request, response) => {
     const userServiceUrl = `${process.env.USERS_SERVICE_HOST}/profile`;
     const token = request.headers.authorization;
     console.log(token);
-    const config = {
-      headers: { Authorization: token },
-    };
+    const config = {headers: { Authorization: token }};
     const userServiceResponse = await axios.get(userServiceUrl, config);
     const user_id = userServiceResponse.data.id;
     console.log(user_id);
@@ -56,18 +52,17 @@ export const handleGetOwnHistoryRecords = async (request, response) => {
 };
 
 export const handleDeletedUser = async (request, response) => {
+  let user_id;
   try {
     const userServiceUrl = `${process.env.USERS_SERVICE_HOST}/profile`;
     const token = request.headers.authorization;
-    const config = {
-      headers: { Authorization: token },
-    };
-    await axios.get(userServiceUrl, config);
+    const config = {headers: { Authorization: token }};
+    const userServiceResponse = await axios.get(userServiceUrl, config);
+    user_id = userServiceResponse.data.id;
   } catch (error) {
     return response.status(400).send("invalid token")
   }
 
-  const {userId : user_id} = request.params;
   try {
     await database.delete().from("history").where({ user_id });
     return response.status(200).send();
@@ -80,9 +75,7 @@ export const handleDeletedQuestion = async (request, response) => {
   try {
     const userServiceUrl = `${process.env.USERS_SERVICE_HOST}/profile`;
     const token = request.headers.authorization;
-    const config = {
-      headers: { Authorization: token },
-    };
+    const config = {headers: { Authorization: token }};
     await axios.get(userServiceUrl, config);
   } catch (error) {
     return response.status(400).send("invalid token")

@@ -84,8 +84,11 @@ const Question = () => {
       };
       const {question_id} = question;
       const attempt = editorRef.current.getValue();
-      // const partner_id = null;
+
+      // if doing with partner, put partner's user id
+      // is doing solo, put null
       const partner_id = "84834d46-76dd-4224-ac08-57e146244f61";
+
       const language = editorLanguage;
       const status = "accepted";
 
