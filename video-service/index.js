@@ -1,11 +1,16 @@
+import axios from "axios";
 import cors from "cors";
-import dotenv from "dotenv";
 import express from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
 
-
-dotenv.config();
+const clientEvents = {
+  CALL_PEER: "call-peer",
+};
+const serverEvents = {
+  BROADCAST_PEER_ID: "broadcast-peer-id",
+  SOCKET_DISCONNECTED: "disconnect",
+};
 
 const PORT = process.env.PORT;
 
@@ -17,35 +22,53 @@ app.use(express.json());
 const httpServer = createServer(app);
 
 const io = new Server(httpServer, {
-    cors: { origin: "*" },
-    path: "/api/video-service",
+  cors: { origin: "*" },
+  path: "/api/video-service",
 });
 
-app.get('/', (req, res) => res.status(200).json({status: "OK"}));
+app.get("/", (req, res) => res.status(200).json({ status: "OK" }));
 
-io.on("connection", (socket) => {
-    socket.on("join-server", (userRoomId) => {
-        const {peerId, roomId} = userRoomId
-        console.log(`User ${peerId} has joined video-server.`);
-        socket.join(roomId)
-        socket.broadcast.to(roomId).emit("user-connected", peerId)
-        //console.log(`User ${userId} has joined the room ${roomId}.`);
-    })
+io.on("connection", async (socket) => {
+  const { id, handshake } = socket;
+  const { token, roomId } = handshake.query;
+  if (!token || !roomId) {
+    if (!token)
+      console.error(`[${id}] Token cannot be found in handshake query.`);
+    if (!roomId)
+      console.error(`[${id}] RoomId cannot be found in handshake query.`);
+    return socket.disconnect();
+  }
 
-    // socket.on("open-video", (roomId) => {
-    //     socket.broadcast.to(roomId).emit("able-to-join-server-now")
-    // })
-    // socket.on("close-video", (roomId) => {
-    //     socket.broadcast.to(roomId).emit("able-to-leave-server-now")
-    // })
+  let user;
+  try {
+    const url = `${process.env.USERS_SERVICE_HOST}/profile`;
+    const response = await axios.get(url, {
+      headers: { Authorization: token },
+    });
+    if (response.status !== 200) {
+      console.error(response.data);
+      return socket.disconnect();
+    }
+    user = response.data;
+  } catch (error) {
+    console.error(error);
+    return socket.disconnect();
+  }
+  console.log(`[${socket.id}] User ${user.id} has connected to the socket.`);
+  socket.join(roomId);
+  console.log(`[${socket.id}] User ${user.id} has joined room ${roomId}.`);
 
-    // socket.on("user-disconnected", (userId, roomId) => {
-    //     console.log(`User ${userId} has left room ${roomId}.`);
-        
-    //     socket.leave(roomId);
-    //   });
+  socket.on(serverEvents.BROADCAST_PEER_ID, ({ peerId, roomId }) => {
+    console.log(`[${socket.id}] Broadcast peer id event received.`);
+    socket.broadcast.to(roomId).emit(clientEvents.CALL_PEER, peerId);
+  });
+
+  socket.on(serverEvents.SOCKET_DISCONNECTED, () => {
+    socket.leave(roomId);
+    console.log(`[${socket.id}] Socket has been disconnected.`);
+  });
 });
 
 httpServer.listen(PORT, () => {
-    console.log(`Video service listening on port ${PORT}`);
+  console.log(`Video service listening on port ${PORT}`);
 });
