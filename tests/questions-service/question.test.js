@@ -1,8 +1,8 @@
 const axios = require('axios');
 
-const TEST_NAME = "Mary Allan";
-const TEST_EMAIL = "maryallan@example.com";
-const TEST_PWD = "mary123";
+const TEST_NAME = "Blake Boris";
+const TEST_EMAIL = "blake@example.com";
+const TEST_PWD = "blake123";
 
 let token;
 
@@ -32,10 +32,11 @@ afterEach(async () => {
   });
 });
 
-test('Get all questions', async () => {
+test('Get one questions', async () => {
   const response = await axios.get(
-    `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions`, 
+    `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions/1`, 
     { headers: { Authorization: token }}
   );
-  expect(response.status).toBe(200)
+  expect(response.status).toBe(200);
+  expect(response.data.question_id).toBe(1);
 });
