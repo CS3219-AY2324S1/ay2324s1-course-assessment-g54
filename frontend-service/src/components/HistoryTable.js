@@ -63,6 +63,7 @@ const Status = ({status}) => {
       fontWeight="bold"
       color={status == "accepted" ? "lightgreen" : "error"}
       textTransform="capitalize"
+      noWrap
     >
       {status}
     </Typography>
@@ -77,15 +78,19 @@ const PartnerInfo = ({partnerId}) => {
     if (!partnerId) return;
 
     const getPartnerNameAndProfileImageUrl = async () => {
-      const url = `${process.env.REACT_APP_USERS_SERVICE_HOST}/profile/${partnerId}`;
-      const token = window.localStorage.getItem("token");
-      const config = {
-        headers: { Authorization: token },
-      };
-      const response = await axios.get(url, config);
-      const { name, profileImageUrl } = response.data;
-      setPartnerName(name);
-      setPartnerProfileImageUrl(profileImageUrl);
+      try {
+        const url = `${process.env.REACT_APP_USERS_SERVICE_HOST}/profile/${partnerId}`;
+        const token = window.localStorage.getItem("token");
+        const config = {
+          headers: { Authorization: token },
+        };
+        const response = await axios.get(url, config);
+        const { name, profileImageUrl } = response.data;
+        setPartnerName(name);
+        setPartnerProfileImageUrl(profileImageUrl);
+      } catch (error) {
+        setPartnerName("Deleted User");
+      }
     };
 
     getPartnerNameAndProfileImageUrl();
@@ -105,10 +110,9 @@ const PartnerInfo = ({partnerId}) => {
 const columns = [
   { field: 'attempt_datetime', headerName: 'Date submitted', flex: 3, valueFormatter: formatDatetime },
   { field: 'question_id', headerName: 'Question Title', renderCell: (params) => <QuestionTitleCell questionId={params.value}/>, flex: 3, },
-  { field: 'status', headerName: 'Status', flex: 1, renderCell: (params) => <Status status={params.value}/>, headerAlign: "center", align: "center" },
+  { field: 'status', headerName: 'Status', flex: 2, renderCell: (params) => <Status status={params.value}/>, headerAlign: "center", align: "center" },
   { field: 'language', headerName: 'Language', flex: 1, renderCell: (params) => <LanguageLogo language={params.value}/>, headerAlign: "center", align: "center" },
   { field: 'partner_id', headerName: 'Partner', flex: 1, minWidth: 100, renderCell: (params) => <PartnerInfo partnerId={params.value}/>, headerAlign: "center", align: "center" },
-  // { field: 'attempt', headerName: 'Attempt'},
 ];
 
 const QuickSearchToolbar = () => {
