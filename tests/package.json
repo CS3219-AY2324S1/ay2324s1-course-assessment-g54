@@ -3,6 +3,11 @@
     "axios": "^1.6.0",
     "jest": "^29.7.0"
   },
+  "scripts": {
+    "test": "yarn test:users-service && yarn test:questions-service",
+    "test:users-service": "jest users-service --runInBand",
+    "test:questions-service": "jest questions-service --runInBand"
+  },
   "jest": {
     "setupFiles": [
       "<rootDir>/setEnvVars.js"

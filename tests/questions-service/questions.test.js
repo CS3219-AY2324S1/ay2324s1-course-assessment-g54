@@ -1,8 +1,5 @@
 const axios = require('axios');
 
-const USERS_SERVICE_HOST = "http://peerpreptest.bryanlohxz.com/api/users-service";
-const QUESTIOS_SERVICE_HOST = "http://peerpreptest.bryanlohxz.com/api/questions-service"
-
 const TEST_NAME = "Mary Allan";
 const TEST_EMAIL = "maryallan@example.com";
 const TEST_PWD = "mary123";
