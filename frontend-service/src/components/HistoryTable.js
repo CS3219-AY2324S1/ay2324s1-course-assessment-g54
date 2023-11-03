@@ -32,9 +32,7 @@ const QuestionTitleCell = ({ questionId }) => {
       const url = `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions/${questionId}`;
 
       const token = window.localStorage.getItem("token");
-      const config = {
-        headers: { Authorization: token },
-      };
+      const config = {headers: { Authorization: token }};
       const response = await axios.get(url, config);
       const { title } = response.data;
       setQuestionTitle(title);
@@ -82,9 +80,7 @@ const PartnerInfo = ({partnerId}) => {
       try {
         const url = `${process.env.REACT_APP_USERS_SERVICE_HOST}/profile/${partnerId}`;
         const token = window.localStorage.getItem("token");
-        const config = {
-          headers: { Authorization: token },
-        };
+        const config = {headers: { Authorization: token }};
         const response = await axios.get(url, config);
         const { name, profileImageUrl } = response.data;
         setPartnerName(name);
