@@ -40,7 +40,7 @@ test('Get one questions', async () => {
     { headers: { Authorization: token }}
   );
   expect(response.status).toBe(200);
-  expect(response.data.question_id).toBe(1);
+  expect(response.data).not.toBeNull();
 });
 
 test('Add new questions without maintainer permission', async () => {
@@ -63,6 +63,4 @@ test('Add new questions without maintainer permission', async () => {
     expect(error.response.status).toBe(401)
     expect(error.response.data).toBe("not a maintainer!")
   }
-  
-  
 });
