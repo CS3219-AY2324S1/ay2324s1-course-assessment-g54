@@ -88,15 +88,13 @@ const Question = () => {
 
       // if doing with partner, put partner's user id
       // if doing solo, put null
-      const partner_id = null;
+      // const partner_id = null;
+      const partner_id = "84834d46-76dd-4224-ac08-57e146244f68";
 
       const language = editorLanguage;
 
-      // execution result here
-      const status = "accepted";
-
       const history_url = `${process.env.REACT_APP_HISTORY_SERVICE_HOST}/addHistory`; 
-      await axios.post(history_url, {question_id, attempt, language, partner_id, status}, config);
+      await axios.post(history_url, { question_id, attempt, language, partner_id }, config);
       setToastMessage("Submitted succesfully!");
       setIsToastOpen(true);
     } catch (error) {

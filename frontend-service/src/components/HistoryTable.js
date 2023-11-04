@@ -3,6 +3,7 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
+import Tooltip from "@mui/material/Tooltip";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useEffect, useState, } from 'react';
@@ -44,21 +45,23 @@ const QuestionTitleCell = ({ questionId }) => {
 };
 
 const LanguageLogo = ({language}) => {
-  switch (language) {
-    case "java":
-      return <img src="java.svg" width={60} alt="Java" />;
-    case "javascript":
-      return <img src="javascript.svg" width={40} alt="JavaScript" />;
-    case "python":
-      return <img src="python.svg" width={40} alt="Python" />;
-    default:
-      return null;
-  }
+  return (
+    <Tooltip title={language[0].toUpperCase() + language.slice(1)} placement="left" arrow>
+      { language == "java"
+        ? <img src="java.png" width={54} alt="Java" style={{ display: "inline-block", backgroundColor: "white", borderRadius: "50%" }}/>
+        : language == "javascript"
+        ? <img src="javascript.svg" width={50} alt="JavaScript" />
+        : language == "python"
+        ? <img src="python.png" width={50} alt="Python" />
+        : null
+      }
+    </Tooltip>
+  )
 }
 
 const PartnerInfo = ({partnerId}) => {
   const [partnerName, setPartnerName] = useState("...");
-  const [partnerProfileImageUrl, setPartnerProfileImageUrl] = useState("...");
+  const [partnerProfileImageUrl, setPartnerProfileImageUrl] = useState("");
   
   useEffect(() => {
     if (!partnerId) return;
@@ -80,20 +83,19 @@ const PartnerInfo = ({partnerId}) => {
     getPartnerNameAndProfileImageUrl();
   },[partnerId]);
 
-  if (!partnerId) return "None";
+  if (!partnerId) return "";
   
   return (
-    <Stack alignItems="center">
-      <Avatar alt={partnerName} src={partnerProfileImageUrl}/>
-      <Typography fontSize={12} textAlign="center" noWrap width="100px">{partnerName}</Typography>
-    </Stack>
+    <Tooltip title={partnerName} placement="left" arrow>
+      <Avatar alt={partnerName != "Deleted User" && partnerName} src={partnerProfileImageUrl} sx={{width: "50px", height: "50px"}}/>
+    </Tooltip>
   )
   
 }
 
 const columns = [
   { field: 'attempt_datetime', headerName: 'Date submitted', flex: 3, valueFormatter: formatDatetime },
-  { field: 'question_id', headerName: 'Question Title', renderCell: (params) => <QuestionTitleCell questionId={params.value}/>, flex: 3, },
+  { field: 'question_id', headerName: 'Question Title', flex: 3, renderCell: (params) => <QuestionTitleCell questionId={params.value}/>, },
   { field: 'language', headerName: 'Language', flex: 1, renderCell: (params) => <LanguageLogo language={params.value}/>, headerAlign: "center", align: "center" },
   { field: 'partner_id', headerName: 'Partner', flex: 1, minWidth: 100, renderCell: (params) => <PartnerInfo partnerId={params.value}/>, headerAlign: "center", align: "center" },
 ];

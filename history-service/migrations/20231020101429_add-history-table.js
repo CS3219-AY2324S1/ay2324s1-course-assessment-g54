@@ -10,7 +10,6 @@ export function up(knex) {
     table.text("attempt").notNullable();
     table.datetime("attempt_datetime").notNullable().defaultTo(knex.fn.now());
     table.text("language").notNullable();
-    table.text("status").notNullable();
   });
 }
 
