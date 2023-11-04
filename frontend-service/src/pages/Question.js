@@ -88,7 +88,7 @@ const Question = () => {
 
       // if doing with partner, put partner's user id
       // if doing solo, put null
-      const partner_id = "84834d46-76dd-4224-ac08-57e146244f61";
+      const partner_id = null;
 
       const language = editorLanguage;
 

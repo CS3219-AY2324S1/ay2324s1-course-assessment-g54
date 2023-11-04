@@ -56,19 +56,6 @@ const LanguageLogo = ({language}) => {
   }
 }
 
-const Status = ({status}) => {
-  return (
-    <Typography
-      fontWeight="bold"
-      color={status == "accepted" ? "lightgreen" : "error"}
-      textTransform="capitalize"
-      noWrap
-    >
-      {status}
-    </Typography>
-  )
-}
-
 const PartnerInfo = ({partnerId}) => {
   const [partnerName, setPartnerName] = useState("...");
   const [partnerProfileImageUrl, setPartnerProfileImageUrl] = useState("...");
@@ -107,7 +94,6 @@ const PartnerInfo = ({partnerId}) => {
 const columns = [
   { field: 'attempt_datetime', headerName: 'Date submitted', flex: 3, valueFormatter: formatDatetime },
   { field: 'question_id', headerName: 'Question Title', renderCell: (params) => <QuestionTitleCell questionId={params.value}/>, flex: 3, },
-  { field: 'status', headerName: 'Status', flex: 2, renderCell: (params) => <Status status={params.value}/>, headerAlign: "center", align: "center" },
   { field: 'language', headerName: 'Language', flex: 1, renderCell: (params) => <LanguageLogo language={params.value}/>, headerAlign: "center", align: "center" },
   { field: 'partner_id', headerName: 'Partner', flex: 1, minWidth: 100, renderCell: (params) => <PartnerInfo partnerId={params.value}/>, headerAlign: "center", align: "center" },
 ];
