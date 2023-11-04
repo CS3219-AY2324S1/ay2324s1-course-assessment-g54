@@ -177,11 +177,10 @@ const Question = () => {
             >
               <Stack direction="row" alignItems="center" justifyContent="space-between" px={1}>
                 <Stack direction="row" alignItems="center">
-                  <Typography>Editor Language:</Typography>
                   <Select
                     value={editorLanguage}
                     onChange={handleEditorLanguageChange}
-                    sx={{height: 20, width: 130,m: 1}}
+                    sx={{height: 30, width: 130}}
                   >
                     <MenuItem value="javascript">Javascript</MenuItem>
                     <MenuItem value="python">Python</MenuItem>
