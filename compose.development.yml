@@ -8,8 +8,8 @@ services:
     depends_on:
       - mongodb
     environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: testpw
-      ME_CONFIG_MONGODB_ADMINPASSWORD: test
+      ME_CONFIG_BASICAUTH_USERNAME:
+      ME_CONFIG_BASICAUTH_PASSWORD: 
       ME_CONFIG_MONGODB_URL: mongodb://test:testpw@mongodb:27017/
 
   postgresql-ui:
@@ -21,7 +21,7 @@ services:
     depends_on:
       - postgresql
     environment:
-      PGADMIN_DEFAULT_EMAIL: test@gmail.com
+      PGADMIN_DEFAULT_EMAIL: test@example.com
       PGADMIN_DEFAULT_PASSWORD: test
       PGADMIN_LISTEN_PORT: 80
 
