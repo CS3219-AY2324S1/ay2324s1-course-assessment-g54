@@ -3,10 +3,7 @@ const axios = require('axios');
 const {
   INVALID_JWT_ERROR_MSG
 } = require("./errors.js");
-
-const TEST_NAME = "Sophie Baker";
-const TEST_EMAIL = "sophiebaker@example.com";
-const TEST_PWD = "sophieBaker";
+const { TEST_NAME, TEST_EMAIL, TEST_PWD } = require("../credentials.js");
 
 let token;
 

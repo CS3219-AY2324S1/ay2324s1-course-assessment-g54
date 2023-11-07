@@ -5,10 +5,7 @@ const {
   USER_WITH_SAME_EMAIL_FOUND_MSG
 } = require("./errors.js");
 const { UNEXPECTED_SUCCESS_MSG } = require("../errors.js");
-
-const TEST_NAME = "John Doe";
-const TEST_EMAIL = "johndoe@example.com";
-const TEST_PWD = "john123";
+const { TEST_NAME, TEST_EMAIL, TEST_PWD } = require("../credentials.js");
 
 describe('Sign-up Successfully', () => {
   test('Sign up for new user profile successfully', async () => {

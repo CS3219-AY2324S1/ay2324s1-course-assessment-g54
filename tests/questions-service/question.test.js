@@ -1,10 +1,7 @@
 const axios = require('axios');
 
 const { UNEXPECTED_SUCCESS_MSG } = require("../errors.js");
-
-const TEST_NAME = "Blake Boris";
-const TEST_EMAIL = "blake@example.com";
-const TEST_PWD = "blake123";
+const { TEST_NAME, TEST_EMAIL, TEST_PWD } = require("../credentials.js");
 
 let token;
 

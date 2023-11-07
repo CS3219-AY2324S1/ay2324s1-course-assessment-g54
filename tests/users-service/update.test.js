@@ -5,10 +5,8 @@ const {
   INVALID_REQUEST_BODY_ERROR_MESSAGE
 } = require("./errors.js");
 const { UNEXPECTED_SUCCESS_MSG } = require("../errors.js");
+const { TEST_NAME, TEST_EMAIL, TEST_PWD } = require("../credentials.js");
 
-const TEST_NAME = "Frank Bell";
-const TEST_EMAIL = "frankbell@example.com";
-const TEST_PWD = "frank#!";
 const UPDATED_NAME = "Frankie";
 const IMAGE_URL = "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/User_icon-cp.svg/828px-User_icon-cp.svg.png";
 

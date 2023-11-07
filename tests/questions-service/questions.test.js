@@ -1,8 +1,6 @@
 const axios = require('axios');
 
-const TEST_NAME = "Mary Allan";
-const TEST_EMAIL = "maryallan@example.com";
-const TEST_PWD = "mary123";
+const { TEST_NAME, TEST_EMAIL, TEST_PWD } = require("../credentials.js");
 
 let token;
 
