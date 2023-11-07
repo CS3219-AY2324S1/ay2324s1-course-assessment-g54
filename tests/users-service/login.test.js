@@ -7,11 +7,13 @@ const {
 } = require("./errors.js");
 const { UNEXPECTED_SUCCESS_MSG } = require("../errors.js");
 
-const TEST_NAME = "Adam Smith";
-const TEST_EMAIL = "adamsmith@example.com";
-const TEST_PWD = "adamSmith";
+const TEST_NAME = "John Doe";
+const TEST_EMAIL = "johndoe@example.com";
+const TEST_PWD = "john123";
 
-beforeAll(async () => {
+let token;
+
+beforeEach(async () => {
   try {
     await axios.post(`${process.env.REACT_APP_USERS_SERVICE_HOST}/signup`, {
       name: TEST_NAME,
@@ -20,6 +22,14 @@ beforeAll(async () => {
     });
   } catch (error) {
   }
+});
+
+afterAll(async () => {
+  await axios.delete(`${process.env.REACT_APP_USERS_SERVICE_HOST}/profile`, {
+    headers: {
+      Authorization: token,
+    },
+  });
 });
 
 describe('Login with invalid request body', () => {
@@ -84,5 +94,6 @@ describe('Login successfully', () => {
     });
     expect(response.status).toBe(200);
     expect(response.data.token).not.toBeNull();
+    token = response.data.token
   });
 });

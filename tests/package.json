@@ -8,7 +8,7 @@
     "test": "NODE_ENV=test yarn test:all-services",
     "test:dev": "NODE_ENV=dev yarn test:all-services",
     "test:all-services": "yarn test:users-service && yarn test:questions-service",
-    "test:users-service": "jest users-service --runInBand",
+    "test:users-service": "bash test-users-service.sh",
     "test:questions-service": "jest questions-service --runInBand"
   },
   "jest": {
