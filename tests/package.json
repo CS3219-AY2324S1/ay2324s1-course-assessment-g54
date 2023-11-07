@@ -1,19 +1,17 @@
 {
+  "type": "module",
   "dependencies": {
     "axios": "^1.6.0",
     "jest": "^29.7.0",
-    "socket.io-client": "^4.7.2"
+    "socket.io-client": "^4.7.2",
+    "uuid": "^9.0.1"
   },
   "scripts": {
     "test": "NODE_ENV=test yarn test:all-services",
+    "test:watch": "yarn test --watch",
     "test:dev": "NODE_ENV=dev yarn test:all-services",
     "test:all-services": "yarn test:users-service && yarn test:questions-service",
     "test:users-service": "bash test-users-service.sh",
     "test:questions-service": "jest questions-service --runInBand"
-  },
-  "jest": {
-    "setupFiles": [
-      "<rootDir>/setEnvVars.js"
-    ]
   }
 }

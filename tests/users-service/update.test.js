@@ -1,42 +1,19 @@
 const axios = require('axios');
+const { signUpAndLogin, deleteUserWithToken } = require("../utils.js");
 
 const {
   INVALID_JWT_ERROR_MSG,
   INVALID_REQUEST_BODY_ERROR_MESSAGE
 } = require("./errors.js");
 const { UNEXPECTED_SUCCESS_MSG } = require("../errors.js");
-const { TEST_NAME, TEST_EMAIL, TEST_PWD } = require("../credentials.js");
+const { TEST_USER } = require("../credentials.js");
 
 const UPDATED_NAME = "Frankie";
 const IMAGE_URL = "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/User_icon-cp.svg/828px-User_icon-cp.svg.png";
 
 let token;
-
-beforeEach(async () => {
-  try {
-    await axios.post(`${process.env.REACT_APP_USERS_SERVICE_HOST}/signup`, {
-      name: TEST_NAME,
-      email: TEST_EMAIL,
-      password: TEST_PWD,
-    });
-  } catch (error) {
-  }
-
-  const response = await axios.post(`${process.env.REACT_APP_USERS_SERVICE_HOST}/login`, {
-    email: TEST_EMAIL,
-    password: TEST_PWD,
-  });
-  
-  token = response.data.token
-});
-
-afterEach(async () => {
-  await axios.delete(`${process.env.REACT_APP_USERS_SERVICE_HOST}/profile`, {
-    headers: {
-      Authorization: token,
-    },
-  });
-});
+beforeEach(() => signUpAndLogin().then((t) => { token = t }));
+afterEach(() => deleteUserWithToken(token));
 
 describe('View user profile', () => {
   test('Get profile with valid token', async () => {
@@ -48,8 +25,8 @@ describe('View user profile', () => {
     expect(response.data).not.toBeNull()
   
     const user = response.data;
-    expect(user.name).toBe(TEST_NAME)
-    expect(user.email).toBe(TEST_EMAIL)
+    expect(user.name).toBe(TEST_USER.name)
+    expect(user.email).toBe(TEST_USER.email)
     expect(user.isMaintainer).toBeFalsy()
   });
 

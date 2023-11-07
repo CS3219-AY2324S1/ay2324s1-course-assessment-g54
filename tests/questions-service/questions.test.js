@@ -1,34 +1,9 @@
-const axios = require('axios');
-
-const { TEST_NAME, TEST_EMAIL, TEST_PWD } = require("../credentials.js");
+const axios = require("axios");
+const { signUpAndLogin, deleteUserWithToken } = require("../utils.js");
 
 let token;
-
-beforeEach(async () => {
-  try {
-    await axios.post(`${process.env.REACT_APP_USERS_SERVICE_HOST}/signup`, {
-      name: TEST_NAME,
-      email: TEST_EMAIL,
-      password: TEST_PWD,
-    });
-  } catch (error) {
-  }
-
-  const response = await axios.post(`${process.env.REACT_APP_USERS_SERVICE_HOST}/login`, {
-    email: TEST_EMAIL,
-    password: TEST_PWD,
-  });
-  
-  token = response.data.token
-});
-
-afterEach(async () => {
-  await axios.delete(`${process.env.REACT_APP_USERS_SERVICE_HOST}/profile`, {
-    headers: {
-      Authorization: token,
-    },
-  });
-});
+beforeEach(() => signUpAndLogin().then((t) => { token = t }));
+afterEach(() => deleteUserWithToken(token));
 
 test('Get all questions', async () => {
   const response = await axios.get(

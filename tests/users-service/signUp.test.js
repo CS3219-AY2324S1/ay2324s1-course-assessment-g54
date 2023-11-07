@@ -5,14 +5,14 @@ const {
   USER_WITH_SAME_EMAIL_FOUND_MSG
 } = require("./errors.js");
 const { UNEXPECTED_SUCCESS_MSG } = require("../errors.js");
-const { TEST_NAME, TEST_EMAIL, TEST_PWD } = require("../credentials.js");
+const { TEST_USER } = require("../credentials.js");
 
 describe('Sign-up Successfully', () => {
   test('Sign up for new user profile successfully', async () => {
     const response = await axios.post(`${process.env.REACT_APP_USERS_SERVICE_HOST}/signup`, {
-      name: TEST_NAME,
-      email: TEST_EMAIL,
-      password: TEST_PWD,
+      name: TEST_USER.name,
+      email: TEST_USER.email,
+      password: TEST_USER.password,
     });
     expect(response.status).toBe(200)
   });
@@ -23,7 +23,7 @@ describe('Sign-up with existing email', () => {
     try {
       await axios.post(`${process.env.REACT_APP_USERS_SERVICE_HOST}/signup`, {
         name: 'Test User With Same Email',
-        email: TEST_EMAIL,
+        email: TEST_USER.email,
         password: 'testuser123',
       });
       throw new Error(UNEXPECTED_SUCCESS_MSG);
@@ -51,7 +51,7 @@ describe('Sign-up with invalid request body', () => {
   test('Sign up without email in request body', async () => {
     try {
       await axios.post(`${process.env.REACT_APP_USERS_SERVICE_HOST}/signup`, {
-        name: TEST_NAME,
+        name: TEST_USER.name,
         password: 'test',
       });
       throw new Error(UNEXPECTED_SUCCESS_MSG);
@@ -64,7 +64,7 @@ describe('Sign-up with invalid request body', () => {
   test('Sign up without password in request body', async () => {
     try {
       await axios.post(`${process.env.REACT_APP_USERS_SERVICE_HOST}/signup`, {
-        name: TEST_NAME,
+        name: TEST_USER.namep,
         email: 'test@example.com',
       });
       throw new Error(UNEXPECTED_SUCCESS_MSG);
