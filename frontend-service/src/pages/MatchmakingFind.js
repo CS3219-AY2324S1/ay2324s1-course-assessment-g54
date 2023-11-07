@@ -182,7 +182,7 @@ const MatchmakingFind = () => {
                     )
                   }
                 >
-                  Go To Question
+                  ENTER ROOM
                 </Button>
               )}
             </Stack>
@@ -286,10 +286,17 @@ const MatchmakingFind = () => {
               </CardContent>
             </Card>
           </Stack>
-          <Typography textAlign="center">
-            Please hold on for a moment while we are searching for your
-            partner...
+          {!isMatchError && isMatchFinding && (
+            <Typography textAlign="center">
+              Please hold on for a moment while we are searching for your
+              partner...
+            </Typography>
+          )}
+          {!isMatchError && isMatchPassed && (
+            <Typography textAlign="center">
+            Match found! Head over to the collaboration room and have fun coding :D
           </Typography>
+          )}
         </Stack>
       </Box>
     </Page>
