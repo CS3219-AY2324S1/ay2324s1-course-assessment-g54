@@ -6,14 +6,14 @@ const {
   INVALID_REQUEST_BODY_ERROR_MESSAGE
 } = require("./errors.js");
 const { UNEXPECTED_SUCCESS_MSG } = require("../errors.js");
-const { TEST_USER } = require("../credentials.js");
 
 const UPDATED_NAME = "Frankie";
 const IMAGE_URL = "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/User_icon-cp.svg/828px-User_icon-cp.svg.png";
 
+let test_user;
 let token;
-beforeEach(() => signUpAndLogin().then((t) => { token = t }));
-afterEach(() => deleteUserWithToken(token));
+beforeAll(async () => signUpAndLogin().then((x) => { token = x.token, test_user  = x.user }));
+afterAll(() => deleteUserWithToken(token));
 
 describe('View user profile', () => {
   test('Get profile with valid token', async () => {
@@ -25,8 +25,8 @@ describe('View user profile', () => {
     expect(response.data).not.toBeNull()
   
     const user = response.data;
-    expect(user.name).toBe(TEST_USER.name)
-    expect(user.email).toBe(TEST_USER.email)
+    expect(user.name).toBe(test_user.name)
+    expect(user.email).toBe(test_user.email)
     expect(user.isMaintainer).toBeFalsy()
   });
 

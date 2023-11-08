@@ -1,37 +1,11 @@
 const axios = require('axios');
 const { io } = require("socket.io-client");
+const { signUpAndLogin, deleteUserWithToken } = require("../utils.js");
 
-const TEST_NAME = "Carl Colin";
-const TEST_EMAIL = "carl@example.com";
-const TEST_PWD = "carl123";
-
+let test_user;
 let token;
-
-beforeEach(async () => {
-  try {
-    await axios.post(`${process.env.REACT_APP_USERS_SERVICE_HOST}/signup`, {
-      name: TEST_NAME,
-      email: TEST_EMAIL,
-      password: TEST_PWD,
-    });
-  } catch (error) {
-  }
-
-  const response = await axios.post(`${process.env.REACT_APP_USERS_SERVICE_HOST}/login`, {
-    email: TEST_EMAIL,
-    password: TEST_PWD,
-  });
-  
-  token = response.data.token
-});
-
-afterEach(async () => {
-  await axios.delete(`${process.env.REACT_APP_USERS_SERVICE_HOST}/profile`, {
-    headers: {
-      Authorization: token,
-    },
-  });
-});
+beforeAll(async () => signUpAndLogin().then((x) => { token = x.token, test_user  = x.user }));
+afterAll(() => deleteUserWithToken(token));
 
 test('Send matchmaking request for easy question', async () => {
   try {
@@ -39,7 +13,6 @@ test('Send matchmaking request for easy question', async () => {
       query: { difficulty: "asy", token },
       path: "/api/matchmaking-service",
     });
-    console.log(socket);
   } catch (err) {
     console.log(err);
   }

@@ -3,25 +3,10 @@ const axios = require('axios');
 const {
   INVALID_JWT_ERROR_MSG
 } = require("./errors.js");
-const { TEST_NAME, TEST_EMAIL, TEST_PWD } = require("../credentials.js");
-
-const signUpAndLogin = async () => {
-  try {
-    await axios.post(`${process.env.REACT_APP_USERS_SERVICE_HOST}/signup`, {
-      name: TEST_NAME,
-      email: TEST_EMAIL,
-      password: TEST_PWD,
-    });
-  } catch (error) { /* Ignore the error */ }
-  const response = await axios.post(`${process.env.REACT_APP_USERS_SERVICE_HOST}/login`, {
-    email: TEST_EMAIL,
-    password: TEST_PWD,
-  });
-  return response.data.token;
-}
+const { signUpAndLogin } = require("../utils.js")
 
 let token;
-beforeAll(() => signUpAndLogin().then((t) => token = t));
+beforeAll(() => signUpAndLogin().then((x) => token = x.token));
 
 test('Delete user profile with unauthorized token', async () => {
   try {

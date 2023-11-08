@@ -2,8 +2,8 @@ const axios = require("axios");
 const { signUpAndLogin, deleteUserWithToken } = require("../utils.js");
 
 let token;
-beforeEach(() => signUpAndLogin().then((t) => { token = t }));
-afterEach(() => deleteUserWithToken(token));
+beforeAll(() => signUpAndLogin().then((x) => { token = x.token }));
+afterAll(() => deleteUserWithToken(token));
 
 test('Get all questions', async () => {
   const response = await axios.get(
