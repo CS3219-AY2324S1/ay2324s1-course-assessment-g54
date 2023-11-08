@@ -2,11 +2,8 @@ import { DataGrid, GridToolbarQuickFilter } from '@mui/x-data-grid';
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import Avatar from "@mui/material/Avatar";
-import Box from "@mui/material/Box";
 import Tooltip from "@mui/material/Tooltip";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { useEffect, useState, } from 'react';
 
 const formatDatetime = (params) => {
   const isoDateString = params.value;
@@ -25,25 +22,6 @@ const formatDatetime = (params) => {
   return formattedDate;
 }
 
-const QuestionTitleCell = ({ questionId }) => {
-  const [questionTitle, setQuestionTitle] = useState("...");
-
-  useEffect(() => {
-    const getQuestionTitle = async () => {
-      const url = `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions/${questionId}`;
-
-      const token = window.localStorage.getItem("token");
-      const config = {headers: { Authorization: token }};
-      const response = await axios.get(url, config);
-      const { title } = response.data;
-      setQuestionTitle(title);
-    };
-    getQuestionTitle();
-  },[questionId]);
-
-  return questionTitle;
-};
-
 const LanguageLogo = ({language}) => {
   return (
     <Tooltip title={language[0].toUpperCase() + language.slice(1)} placement="left" arrow>
@@ -59,45 +37,20 @@ const LanguageLogo = ({language}) => {
   )
 }
 
-const PartnerInfo = ({partnerId}) => {
-  const [partnerName, setPartnerName] = useState("...");
-  const [partnerProfileImageUrl, setPartnerProfileImageUrl] = useState("");
-  
-  useEffect(() => {
-    if (!partnerId) return;
-
-    const getPartnerNameAndProfileImageUrl = async () => {
-      try {
-        const url = `${process.env.REACT_APP_USERS_SERVICE_HOST}/profile/${partnerId}`;
-        const token = window.localStorage.getItem("token");
-        const config = {headers: { Authorization: token }};
-        const response = await axios.get(url, config);
-        const { name, profileImageUrl } = response.data;
-        setPartnerName(name);
-        setPartnerProfileImageUrl(profileImageUrl);
-      } catch (error) {
-        setPartnerName("Deleted User");
-      }
-    };
-
-    getPartnerNameAndProfileImageUrl();
-  },[partnerId]);
-
-  if (!partnerId) return "";
-  
+const PartnerInfo = ({partnerName, partnerProfileImageUrl}) => {
+  if (!partnerName) return "";
   return (
     <Tooltip title={partnerName} placement="left" arrow>
-      <Avatar alt={partnerName != "Deleted User" && partnerName} src={partnerProfileImageUrl} sx={{width: "50px", height: "50px"}}/>
+      <Avatar alt={partnerName} src={partnerProfileImageUrl} sx={{width: "50px", height: "50px"}}/>
     </Tooltip>
   )
-  
 }
 
 const columns = [
   { field: 'attempt_datetime', headerName: 'Date submitted', flex: 3, valueFormatter: formatDatetime },
-  { field: 'question_id', headerName: 'Question Title', flex: 3, renderCell: (params) => <QuestionTitleCell questionId={params.value}/>, },
+  { field: 'question_title', headerName: 'Question Title', flex: 3 },
   { field: 'language', headerName: 'Language', flex: 1, renderCell: (params) => <LanguageLogo language={params.value}/>, headerAlign: "center", align: "center" },
-  { field: 'partner_id', headerName: 'Partner', flex: 1, minWidth: 100, renderCell: (params) => <PartnerInfo partnerId={params.value}/>, headerAlign: "center", align: "center" },
+  { field: 'partner', headerName: 'Partner', flex: 1, minWidth: 100, valueGetter: (params) => params.row.partner_name, renderCell: (params) => <PartnerInfo partnerName={params.row.partner_name} partnerProfileImageUrl={params.row.partner_profile_image_url}/>, headerAlign: "center", align: "center" },
 ];
 
 const QuickSearchToolbar = () => {
