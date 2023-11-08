@@ -1,214 +1,96 @@
-import React, { useEffect, useRef, useState } from "react";
 import { Peer } from "peerjs";
+import { useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
-import { useSearchParams } from "react-router-dom";
 
-
-const addVideoStream = (video, stream) => {
-  video.srcObject = stream;
-  video.addEventListener('loadedmetadata', () => {
-    video.play();
-  });
-}
-
-const VideoChat = () => {
-
-  const [searchParams] = useSearchParams();
-
-  const [peer, setPeer] = useState(null);
-  const [peerId, setPeerId] = useState(null);
-  const [socket, setSocket] = useState(null);
-  const [roomId, setRoomId] = useState(searchParams.get("roomId"));
-  const [videos, setVideos] = useState([]);
-
+const VideoChat = ({ roomId }) => {
+  const navigate = useNavigate();
   const videoGridRef = useRef(null);
 
   useEffect(() => {
-
+    if (!roomId) return navigate("/matchmaking");
     const peer = new Peer();
-    peer.on("open", (id) => {
-      console.log('My peer ID is: ' + id);
-      setPeerId(id);
-    });
-    setPeer(peer);
-    setSocket(io(`${process.env.REACT_APP_VIDEO_SERVICE_HOST}`), {
+    const token = window.localStorage.getItem("token");
+    const socket = io(`${process.env.REACT_APP_VIDEO_SERVICE_HOST}`, {
+      query: { roomId, token },
       path: "/api/video-service",
-    })
-  }, []);
+    });
 
-  // useEffect(() => {
-  //   if (!socket) return;
-  //   socket.on("able-to-join-server-now", () => {
-  //     socket.emit("join-server", {
-  //       peerId: peerId,
-  //       roomId: roomId
-  //     });
-  //     console.log(`User ${peerId} is attemping to join video-server.`);
-  //     // if (!socket || !peer || !peerId) return;
-
-  //     const userVideo = document.createElement("video");
-  //     userVideo.muted = true;
-  //     const matchedUserVideo = document.createElement("video");
-
-  //     const startMediaDevices = async () => {
-  //       try {
-  //         const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-  //         console.log("hi")
-  //         addVideoStream(userVideo, stream);
-  //         setVideos([userVideo]);
-
-  //         peer.on('call', (call) => {
-  //           call.answer(stream);
-
-  //           call.on('stream', (matchedUserVideoStream) => {
-
-  //             addVideoStream(matchedUserVideo, matchedUserVideoStream);
-  //             setVideos([userVideo, matchedUserVideo]);
-  //           });
-
-  //           call.on('close', () => {
-  //             matchedUserVideo.remove();
-  //             setVideos([userVideo]);
-  //           })
-  //         });
-
-  //         socket.on("user-connected", (userId) => {
-  //           console.log(`User ${userId} has joined the room ${roomId}.`);
-  //           const call = peer.call(userId, stream);
-
-  //           call.on('stream', (matchedUserVideoStream) => {
-  //             addVideoStream(matchedUserVideo, matchedUserVideoStream);
-  //             setVideos([userVideo, matchedUserVideo]);
-  //           });
-
-  //           call.on('close', () => {
-  //             matchedUserVideo.remove();
-  //             setVideos([userVideo]);
-
-  //           })
-  //         });
-
-
-  //         socket.on("able-to-leave-server-now", () => {
-  //           if (!peer) return;
-  //           peer.close();
-  //           setVideos([]);
-  //           console.log(`User ${peerId} is attemping to leave video-server.`)
-  //           socket.emit("user-disconnected", peerId, roomId);
-  //         })
-  //         // socket.on("user-disconnected", (userId) => {
-
-  //         // })
-
-
-
-
-  //       } catch (error) {
-  //         console.error('Error accessing media devices.', error);
-  //       }
-  //     };
-
-  //     startMediaDevices();
-
-  //   })
-  // }, []);
-
-  useEffect(() => {
-    if (!socket || !peer || !peerId) return;
-
+    videoGridRef.current.innerHTML = "";
     const userVideo = document.createElement("video");
-    userVideo.muted = true;
     const matchedUserVideo = document.createElement("video");
+    userVideo.muted = true;
+    userVideo.style.width = "50%";
+    userVideo.style.height = "200px";
+    videoGridRef.current.appendChild(userVideo);
 
     const startMediaDevices = async () => {
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-        addVideoStream(userVideo, stream);
-        setVideos([userVideo]);
-        console.log("user video has been set up");
-        peer.on('call', (call) => {
-          call.answer(stream);
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: true,
+        });
+        userVideo.srcObject = stream;
+        userVideo.addEventListener("loadedmetadata", () => {
+          userVideo.play();
+        });
 
-          call.on('stream', (matchedUserVideoStream) => {
-
-            addVideoStream(matchedUserVideo, matchedUserVideoStream);
-            setVideos([userVideo, matchedUserVideo]);
-            console.log("matchedUser video has been set up");
+        const attachCallListeners = (call) => {
+          call.on("stream", (matchedUserVideoStream) => {
+            matchedUserVideo.srcObject = matchedUserVideoStream;
+            matchedUserVideo.addEventListener("loadedmetadata", () => {
+              matchedUserVideo.play();
+            });
+            matchedUserVideo.style.width = "50%";
+            matchedUserVideo.style.height = "200px";
+            videoGridRef.current.appendChild(matchedUserVideo);
           });
 
-          call.on('close', () => {
+          call.on("close", () => {
             matchedUserVideo.remove();
-            setVideos([userVideo]);
-          })
+            const stream = matchedUserVideo.srcObject;
+            const tracks = stream.getTracks();
+            for (var i = 0; i < tracks.length; i++) {
+              var track = tracks[i];
+              track.stop();
+            }
+            matchedUserVideo.srcObject = null;
+          });
+        };
+
+        peer.on("call", (call) => {
+          call.answer(stream);
+          attachCallListeners(call);
         });
 
-        socket.on("user-connected", (userId) => {
-          console.log(`User ${userId} has joined the room ${roomId}.`);
-          const call = peer.call(userId, stream);
-
-          call.on('stream', (matchedUserVideoStream) => {
-            addVideoStream(matchedUserVideo, matchedUserVideoStream);
-            setVideos([userVideo, matchedUserVideo]);
-            console.log(`User and matched user videos are up`);
-          });  
-
-          call.on('close', () => {
-            matchedUserVideo.remove();
-            setVideos([userVideo]);
-            
-          })
-           
+        socket.on("call-peer", (peerId) => {
+          const call = peer.call(peerId, stream);
+          attachCallListeners(call);
         });
 
-
-        // socket.on("able-to-leave-server-now", () => {
-        //   if (!peer) return;
-        //   peer.close();
-        //   setVideos([]);
-        //   console.log(`User ${peerId} is attemping to leave video-server.`)
-        //   socket.emit("user-disconnected", peerId, roomId);
-        // })
-        
-  
-        socket.emit("join-server", {
-          peerId: peerId,
-          roomId: roomId
-        });
-        console.log(`User ${peerId} is attemping to join video-server.`);
-
-
+        socket.emit("broadcast-peer-id", peer.id);
       } catch (error) {
-        console.error('Error accessing media devices.', error);
+        console.error(error);
       }
     };
 
     startMediaDevices();
 
+    return async () => {
+      peer.disconnect();
+      socket.disconnect();
 
-
-    // socket.on('user-disconnected', (userId) => {
-    //   if (peers[userId]) {
-    //     peers[userId].close();
-    //   }
-    // }); 
-
- 
-  }, [socket, peer ]); 
-
-  useEffect(() => { 
-    if (videoGridRef.current == null) return; 
-
-    videos.map((video) => {
-      video.style.width = '300px'
-      video.style.height = '300px'
-      video.style.margin = '10px'
-      videoGridRef.current.appendChild(video);
-      return video;
-    });
-  }, [videos]);
+      const stream = userVideo.srcObject;
+      const tracks = stream.getTracks();
+      for (var i = 0; i < tracks.length; i++) {
+        var track = tracks[i];
+        track.stop();
+      }
+      userVideo.srcObject = null;
+    };
+  }, [navigate, roomId]);
 
   return <div id="videos" ref={videoGridRef}></div>;
-
 };
 
 export default VideoChat;

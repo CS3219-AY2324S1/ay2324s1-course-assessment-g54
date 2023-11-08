@@ -31,7 +31,6 @@ import AcknowledgementToast from "../components/AcknowledgementToast";
 
 import VideocamIcon from "@mui/icons-material/Videocam";
 
-
 marked.use({ breaks: true, gfm: true, silent: true });
 
 const getDifficultyChipColor = (difficulty) => {
@@ -65,13 +64,9 @@ const Collaboration = () => {
       : "// Insert your code here\n"
   );
   const [isVideoCalling, setIsVideoCalling] = useState(false);
-  //const [roomId, setRoomId] = useState(null);
-
-
 
   useEffect(() => {
     const roomId = searchParams.get("roomId");
-    // setRoomId(roomId);
     const difficulty = searchParams.get("difficulty");
     if (!roomId) return navigate("/matchmaking");
     const token = window.localStorage.getItem("token");
@@ -119,23 +114,10 @@ const Collaboration = () => {
       return navigate("/matchmaking");
     });
 
-
-
     return async () => {
       socket.disconnect();
     };
   }, [navigate, searchParams]);
-
-  // useEffect(() => {
-  //   const videoSocket = io(`${process.env.REACT_APP_VIDEO_SERVICE_HOST}`);
-  //   if (isVideoCalling) {
-  //     videoSocket.emit("open-video", roomId);
-  //     console.log("open-video");
-  //   } else {
-  //     videoSocket.emit("close-video", roomId);
-  //     console.log("close-video")
-  //   }
-  // }, [isVideoCalling]);
 
   useEffect(() => {
     editorRef.current?.focus();
@@ -209,15 +191,17 @@ const Collaboration = () => {
               {collaboratingUser && (
                 <Tooltip title={"Start video call"} placement="top-end" arrow>
                   <Fab sx={{ marginLeft: 2 }} color="primary">
-                    <VideocamIcon fontSize="large"
+                    <VideocamIcon
+                      fontSize="large"
                       onClick={() => {
-                        setIsVideoCalling(!isVideoCalling)
-                      }} />
+                        setIsVideoCalling(!isVideoCalling);
+                      }}
+                    />
                   </Fab>
                 </Tooltip>
               )}
             </Box>
-            {/* <Box width="50%" height="100%" padding={1}>
+            <Box width="50%" height="100%" padding={1}>
               <Stack height="100%" spacing={1}>
                 <Stack direction="row" spacing={2} alignItems="center">
                   <Tooltip title="Back to questions" placement="top" arrow>
@@ -269,10 +253,25 @@ const Collaboration = () => {
                   />
                 </Card>
               </Stack>
-            </Box> */}
-            {/* <Box width="50%" height= {isVideoCalling ?"70%" :"100%"} padding={1}>
+            </Box>
+            <Box
+              width="50%"
+              height={"100%"}
+              display="flex"
+              flexDirection="column"
+              padding={1}
+            >
+              <Box border="1px solid pink">
+                {isVideoCalling && (
+                  <VideoChat roomId={searchParams.get("roomId") || ""} />
+                )}
+              </Box>
               <Paper
-                sx={{ height: "100%", width: "100%", overflow: "hidden" }}
+                sx={{
+                  height: isVideoCalling ? "80%" : "100%",
+                  width: "100%",
+                  overflow: "hidden",
+                }}
                 elevation={2}
               >
                 <Stack direction="row" justifyContent="end" alignItems="center">
@@ -300,9 +299,6 @@ const Collaboration = () => {
                   }}
                 />
               </Paper>
-            </Box> */}
-            <Box>
-               {isVideoCalling && <VideoChat/>}
             </Box>
           </Box>
         )}

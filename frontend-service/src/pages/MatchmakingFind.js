@@ -60,11 +60,14 @@ const MatchmakingFind = () => {
       path: "/api/matchmaking-service",
     });
 
+    let isFindingStoppedByFrontend = false;
     const clock = setInterval(() => {
       setSearchTimeElapsed((prevState) => {
         if (prevState > 0) return prevState - 1;
         setIsMatchFinding(false);
         clearInterval(clock);
+        isFindingStoppedByFrontend = true;
+        socket.disconnect();
         return 30;
       });
     }, 1000);
@@ -83,7 +86,7 @@ const MatchmakingFind = () => {
     });
 
     socket.on("disconnect", () => {
-      if (!isUserMatched) setIsMatchError(true);
+      if (!isUserMatched && !isFindingStoppedByFrontend) setIsMatchError(true);
     });
 
     return async () => {
