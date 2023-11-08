@@ -25,6 +25,8 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import Button from '@mui/material/Button';
 import AcknowledgementToast from "../components/AcknowledgementToast";
+import Divider from '@mui/material/Divider';
+import SaveIcon from '@mui/icons-material/Save';
 
 marked.use({ breaks: true, gfm: true, silent: true });
 
@@ -79,23 +81,20 @@ const Question = () => {
   }, [editorLanguage]);
   const handleEditorLanguageChange = (event) => setEditorLanguage(event.target.value);
   
-  const handleSubmitClick = async () => {
+  const handleSaveClick = async () => {
     try {
       const token = window.localStorage.getItem("token");
       const config = {headers: { Authorization: token }};
       const {question_id} = question;
       const attempt = editorRef.current.getValue();
 
-      // if doing with partner, put partner's user id
-      // if doing solo, put null
-      // const partner_id = "0369ad33-c998-4e4b-b1bc-11ad74f472a5";
-      const partner_id = "84834d46-76dd-4224-ac08-57e146244f68";
+      const partner_id = null;
 
       const language = editorLanguage;
 
       const history_url = `${process.env.REACT_APP_HISTORY_SERVICE_HOST}/addHistory`; 
       await axios.post(history_url, { question_id, attempt, language, partner_id }, config);
-      setToastMessage("Submitted succesfully!");
+      setToastMessage("Saved succesfully!");
       setIsToastOpen(true);
     } catch (error) {
       console.error(error);
@@ -175,20 +174,32 @@ const Question = () => {
               sx={{ height: "100%", width: "100%", overflow: "hidden" }}
               elevation={2}
             >
-              <Stack direction="row" alignItems="center" justifyContent="space-between" px={1}>
+              <Stack direction="row" alignItems="center" justifyContent="space-between" px={0.5}>
                 <Stack direction="row" alignItems="center">
                   <Select
                     value={editorLanguage}
                     onChange={handleEditorLanguageChange}
-                    sx={{height: 30, width: 130}}
+                    transitionDuration={0}
+                    sx={{
+                      height: 20,
+                      boxShadow: 'none', 
+                      color: "grey",
+                      transition: "none",
+                      '&:hover':{ color: "white !important"},
+                      '.MuiOutlinedInput-notchedOutline': { border: 0 },
+                      '&.Mui-focused .MuiOutlinedInput-notchedOutline': { border: 0 },
+                      '.MuiSvgIcon-root':{ fill: "grey", transition: "none !important"},
+                      '&:hover .MuiSvgIcon-root':{ fill: "white !important"},
+                    }}
                   >
                     <MenuItem value="javascript">Javascript</MenuItem>
                     <MenuItem value="python">Python</MenuItem>
                     <MenuItem value="java">Java</MenuItem>
                   </Select>
                 </Stack>
-                <Button variant="contained" onClick={handleSubmitClick}>Submit</Button>
+                <Button variant="contained" color="success" sx={{ textTransform: "None", height: "22px", my: "4px", color:"white" }} onClick={handleSaveClick}>Save</Button>
               </Stack>
+              <Divider />
               <Editor
                 language={editorLanguage}
                 value={    

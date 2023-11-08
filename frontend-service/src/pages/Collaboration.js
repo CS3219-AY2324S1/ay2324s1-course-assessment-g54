@@ -15,9 +15,11 @@ import Avatar from "@mui/material/Avatar";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Badge from "@mui/material/Badge";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CircularProgress from "@mui/material/CircularProgress";
 import Chip from "@mui/material/Chip";
+import Divider from "@mui/material/Divider";
 import Fab from "@mui/material/Fab";
 import IconButton from "@mui/material/IconButton";
 import LinearProgress from "@mui/material/LinearProgress";
@@ -125,6 +127,28 @@ const Collaboration = () => {
 
   const handleEditorLanguageChange = (event) =>
     setEditorLanguage(event.target.value);
+
+  const handleSaveClick = async () => {
+    try {
+      const token = window.localStorage.getItem("token");
+      const config = {headers: { Authorization: token }};
+      const {question_id} = question;
+      const attempt = editorRef.current.getValue();
+
+      // if doing with partner, put partner's user id
+      // if doing solo, put null
+      const partner_id = collaboratingUser? collaboratingUser.id : null;
+
+      const language = editorLanguage;
+
+      const history_url = `${process.env.REACT_APP_HISTORY_SERVICE_HOST}/addHistory`; 
+      await axios.post(history_url, { question_id, attempt, language, partner_id }, config);
+      setToastMessage("Saved succesfully!");
+      setIsToastOpen(true);
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   return (
     <Page title="Collab">
@@ -274,17 +298,32 @@ const Collaboration = () => {
                 }}
                 elevation={2}
               >
-                <Stack direction="row" justifyContent="end" alignItems="center">
+              <Stack direction="row" alignItems="center" justifyContent="space-between" px={0.5}>
+                <Stack direction="row" alignItems="center">
                   <Select
                     value={editorLanguage}
                     onChange={handleEditorLanguageChange}
-                    sx={{ height: 30, width: 130 }}
+                    transitionDuration={0}
+                    sx={{
+                      height: 20,
+                      boxShadow: 'none', 
+                      color: "grey",
+                      transition: "none",
+                      '&:hover':{ color: "white !important"},
+                      '.MuiOutlinedInput-notchedOutline': { border: 0 },
+                      '&.Mui-focused .MuiOutlinedInput-notchedOutline': { border: 0 },
+                      '.MuiSvgIcon-root':{ fill: "grey", transition: "none !important"},
+                      '&:hover .MuiSvgIcon-root':{ fill: "white !important"},
+                    }}
                   >
                     <MenuItem value="javascript">Javascript</MenuItem>
                     <MenuItem value="python">Python</MenuItem>
                     <MenuItem value="java">Java</MenuItem>
                   </Select>
                 </Stack>
+                <Button variant="contained" color="success" sx={{ textTransform: "None", height: "22px", my: "4px", color:"white" }} onClick={handleSaveClick}>Save</Button>
+              </Stack>
+              <Divider />
                 <Editor
                   language={editorLanguage}
                   value={code}
