@@ -37,11 +37,11 @@ jobs:
 
       - name: Build frontend for testing
         run: |
-          export REACT_APP_QUESTIONS_SERVICE_HOST=http://peerpreptest.bryanlohxz.com/api/questions-service
-          export REACT_APP_USERS_SERVICE_HOST=http://peerpreptest.bryanlohxz.com/api/users-service
-          export REACT_APP_MATCHMAKING_SERVICE_HOST=http://peerpreptest.bryanlohxz.com
-          export REACT_APP_COLLABORATION_SERVICE_HOST=http://peerpreptest.bryanlohxz.com
-          export REACT_APP_VIDEO_SERVICE_HOST=http://peerpreptest.bryanlohxz.com
+          export REACT_APP_QUESTIONS_SERVICE_HOST=https://peerpreptest.bryanlohxz.com/api/questions-service
+          export REACT_APP_USERS_SERVICE_HOST=https://peerpreptest.bryanlohxz.com/api/users-service
+          export REACT_APP_MATCHMAKING_SERVICE_HOST=https://peerpreptest.bryanlohxz.com
+          export REACT_APP_COLLABORATION_SERVICE_HOST=https://peerpreptest.bryanlohxz.com
+          export REACT_APP_VIDEO_SERVICE_HOST=https://peerpreptest.bryanlohxz.com
           export CI=false
           yarn build
           
