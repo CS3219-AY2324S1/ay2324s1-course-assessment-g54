@@ -55,8 +55,9 @@ const VideoChat = ({ roomId }) => {
               track.stop();
             }
             matchedUserVideo.srcObject = null;
-          });
             videoGridRef.current.removeChild(matchedUserVideo);
+          });
+            
 
         };
 
@@ -70,6 +71,18 @@ const VideoChat = ({ roomId }) => {
           attachCallListeners(call);
         });
 
+        socket.on("disconnect-peer", () => {
+          matchedUserVideo.remove();
+          const stream = matchedUserVideo.srcObject;
+          const tracks = stream.getTracks();
+          for (var i = 0; i < tracks.length; i++) {
+            var track = tracks[i];
+            track.stop();
+          }
+          matchedUserVideo.srcObject = null;
+          videoGridRef.current.removeChild(matchedUserVideo);
+        })
+
         socket.emit("broadcast-peer-id", peer.id);
       } catch (error) {
         console.error(error);
@@ -80,8 +93,7 @@ const VideoChat = ({ roomId }) => {
 
     return async () => {
       peer.disconnect();
-      socket.disconnect();
-      videoGridRef.current.innerHTML = '';
+      socket.disconnect();      
 
       const stream = userVideo.srcObject;
       const tracks = stream.getTracks();
