@@ -6,6 +6,7 @@ import { Server } from "socket.io";
 
 const clientEvents = {
   CALL_PEER: "call-peer",
+  DISCONNECT_PEER: "disconnect-peer"
 };
 const serverEvents = {
   BROADCAST_PEER_ID: "broadcast-peer-id",
@@ -64,6 +65,7 @@ io.on("connection", async (socket) => {
   });
 
   socket.on(serverEvents.SOCKET_DISCONNECTED, () => {
+    socket.broadcast.to(roomId).emit(clientEvents.DISCONNECT_PEER);
     socket.leave(roomId);
     console.log(`[${socket.id}] Socket has been disconnected.`);
   });
