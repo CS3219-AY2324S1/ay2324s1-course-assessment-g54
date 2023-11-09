@@ -56,6 +56,8 @@ const VideoChat = ({ roomId }) => {
             }
             matchedUserVideo.srcObject = null;
           });
+            videoGridRef.current.removeChild(matchedUserVideo);
+
         };
 
         peer.on("call", (call) => {
@@ -79,6 +81,7 @@ const VideoChat = ({ roomId }) => {
     return async () => {
       peer.disconnect();
       socket.disconnect();
+      videoGridRef.current.innerHTML = '';
 
       const stream = userVideo.srcObject;
       const tracks = stream.getTracks();
