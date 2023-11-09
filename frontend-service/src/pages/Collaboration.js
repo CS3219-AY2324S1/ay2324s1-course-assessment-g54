@@ -270,7 +270,7 @@ const Collaboration = () => {
               flexDirection="column"
               padding={1}
             >
-              <Box border="1px solid pink">
+              <Box>
                 {isVideoCalling && (
                   <VideoChat roomId={searchParams.get("roomId") || ""} />
                 )}
