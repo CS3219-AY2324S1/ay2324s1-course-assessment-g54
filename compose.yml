@@ -15,6 +15,7 @@ services:
       REACT_APP_COLLABORATION_SERVICE_HOST: http://localhost:3004
       REACT_APP_HISTORY_SERVICE_HOST: http://localhost:3005
       REACT_APP_VIDEO_SERVICE_HOST: http://localhost:3006
+      REACT_APP_PYTHON_FORMATTER_SERVICE_HOST: http://localhost:5000
     volumes:
       - ./frontend-service:/app
     command: yarn start
@@ -164,14 +165,14 @@ services:
     ports:
       - 6379:6379
   
-  format-python-code-service:
+  python-formatter-service:
     build:
-      context: ./format-python-code-service
-    container_name: format-python-code-service
+      context: ./python-formatter-service
+    container_name: python-formatter-service
     ports:
       - "5000:5000"
     volumes:
-      - ./format-python-code-service:/app
+      - ./python-formatter-service:/app
 
 volumes:
   postgres:

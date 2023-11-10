@@ -83,7 +83,6 @@ const Question = () => {
   const handleEditorLanguageChange = (event) => setEditorLanguage(event.target.value);
 
   const handleFormatCode = async () => { 
-    console.log(editorLanguage)
     const editor = editorRef.current;
     if (editorLanguage=="javascript") {
       editor?.trigger("anyString", 'editor.action.formatDocument');
@@ -92,7 +91,7 @@ const Question = () => {
     const currentCode = editor.getValue();
     if (editorLanguage=="python") {
       try {
-        const response = await axios.post('http://localhost:5000/format', { code: currentCode })
+        const response = await axios.post(`${process.env.REACT_APP_PYTHON_FORMATTER_SERVICE_HOST}/format`, { code: currentCode })
         const formattedCode = response.data.formatted_code;
         editor.setValue(formattedCode)
       } catch (error) {
@@ -226,8 +225,10 @@ const Question = () => {
                     <MenuItem value="java">Java</MenuItem>
                   </Select>
                 </Stack>
-                <Button variant="contained" color="success" sx={{ textTransform: "None", height: "22px", my: "4px", color:"white" }} onClick={handleSaveClick}>Save</Button>
-                <Button variant="contained" color="success" sx={{ textTransform: "None", height: "22px", my: "4px", color:"white" }} onClick={handleFormatCode}>Format</Button>
+                <Stack direction="row" spacing={1} my={0.5}>
+                  <Button variant="contained" color="primary" sx={{ textTransform: "None", height: "24px", width: "20px", my: "4px", color:"white" }} onClick={handleFormatCode}>Format</Button>
+                  <Button variant="contained" color="success" sx={{ textTransform: "None", height: "24px", my: "4px", color:"white" }} onClick={handleSaveClick}>Save</Button>
+                </Stack>
               </Stack>
               <Divider />
               <Editor
