@@ -12,8 +12,8 @@ const getUser = (isMaintainer) => {
 
 const MAINTAINER_USER  = {
   name: "Maintainer",
-  email: "maintainer@example.com",
-  password: "john123",
+  email: "maintainer@email.com",
+  password: "maintainer",
 }
 
 module.exports = {
