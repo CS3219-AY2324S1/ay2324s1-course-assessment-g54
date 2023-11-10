@@ -90,7 +90,7 @@ const Question = () => {
       try {
         const response = await axios.post('http://localhost:5000/format', { code: currentCode })
         const formattedCode = response.data.formatted_code;
-        editor.setValue(response.data.formatted_code)
+        editor.setValue(formattedCode)
       } catch (error) {
         setToastMessage("Unable to format invalid python code. Please check your indentation.");
         setIsToastOpen(true);

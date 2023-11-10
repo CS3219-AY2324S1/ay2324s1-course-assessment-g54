@@ -7,8 +7,7 @@ CORS(app)  # Enable CORS for all routes
 
 @app.route('/format', methods=['POST'])
 def format_code():
-    # data = request.get_json()
-    data = { "code": "def hello_world(): print     ('Hello, World!')"}
+    data = request.get_json()
     code = data.get('code', '')
 
     formatted_code = black.format_str(code, mode=black.Mode())
