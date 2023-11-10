@@ -4,6 +4,8 @@ import * as marked from "marked";
 import Editor from "@monaco-editor/react";
 import { useEffect, useState, useRef } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
+import prettier from 'prettier/standalone';
+import prettierJavaPlugin from 'prettier-plugin-java';
 
 import { useUser } from "../contexts/UserContext";
 
@@ -25,8 +27,6 @@ import Typography from "@mui/material/Typography";
 import Button from '@mui/material/Button';
 import AcknowledgementToast from "../components/AcknowledgementToast";
 import Divider from '@mui/material/Divider';
-import prettier from 'prettier/standalone';
-import prettierJavaPlugin from 'prettier-plugin-java';
 
 marked.use({ breaks: true, gfm: true, silent: true });
 
@@ -95,16 +95,23 @@ const Question = () => {
         const formattedCode = response.data.formatted_code;
         editor.setValue(formattedCode)
       } catch (error) {
-        setToastMessage("Unable to format invalid python code. Please check your indentation.");
-        setIsToastOpen(true);
         setToastSeverity("error");
+        setToastMessage("Unable to format invalid Python code. Please check your indentation.");
+        setIsToastOpen(true);
         console.error(error);
       }
     }
 
     if (editorLanguage=="java") {
-      const formattedCode = await prettier.format(currentCode, {parser: "java", plugins: [prettierJavaPlugin]})
-      editor.setValue(formattedCode);
+      try {
+        const formattedCode = await prettier.format(currentCode, {parser: "java", plugins: [prettierJavaPlugin]})
+        editor.setValue(formattedCode);
+      } catch (error) {
+        setToastSeverity("error");
+        setToastMessage("Unable to format invalid Java code.");
+        setIsToastOpen(true);
+        console.error(error);
+      }
     }
   }
 

@@ -5,6 +5,8 @@ import Editor from "@monaco-editor/react";
 import { useEffect, useState, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { io } from "socket.io-client";
+import prettier from 'prettier/standalone';
+import prettierJavaPlugin from 'prettier-plugin-java';
 
 import Page from "../components/Page";
 import VideoChat from "../components/VideoChat";
@@ -56,6 +58,7 @@ const Collaboration = () => {
   const [socket, setSocket] = useState(null);
   const [toastMessage, setToastMessage] = useState("");
   const [isToastOpen, setIsToastOpen] = useState(false);
+  const [toastSeverity, setToastSeverity] = useState("success");
   const [isLoading, setIsLoading] = useState(true);
   const [question, setQuestion] = useState(null);
   const [collaboratingUser, setCollaboratingUser] = useState(null);
@@ -135,8 +138,6 @@ const Collaboration = () => {
       const {question_id} = question;
       const attempt = editorRef.current.getValue();
 
-      // if doing with partner, put partner's user id
-      // if doing solo, put null
       const partner_id = collaboratingUser? collaboratingUser.id : null;
 
       const language = editorLanguage;
@@ -150,13 +151,46 @@ const Collaboration = () => {
     }
   }
 
+  const handleFormatCode = async () => { 
+    const editor = editorRef.current;
+    if (editorLanguage=="javascript") {
+      editor?.trigger("anyString", 'editor.action.formatDocument');
+    } 
+    
+    const currentCode = editor.getValue();
+    if (editorLanguage=="python") {
+      try {
+        const response = await axios.post(`${process.env.REACT_APP_PYTHON_FORMATTER_SERVICE_HOST}/format`, { code: currentCode })
+        const formattedCode = response.data.formatted_code;
+        editor.setValue(formattedCode)
+      } catch (error) {
+        setToastSeverity("error");
+        setToastMessage("Unable to format invalid Python code. Please check your indentation.");
+        setIsToastOpen(true);
+        console.error(error);
+      }
+    }
+
+    if (editorLanguage=="java") {
+      try {
+        const formattedCode = await prettier.format(currentCode, {parser: "java", plugins: [prettierJavaPlugin]})
+        editor.setValue(formattedCode);
+      } catch (error) {
+        setToastSeverity("error");
+        setToastMessage("Unable to format invalid Java code.");
+        setIsToastOpen(true);
+        console.error(error);
+      }
+    }
+  }
+
   return (
     <Page title="Collab">
       <AcknowledgementToast
         message={toastMessage}
         open={isToastOpen}
         onClose={() => setIsToastOpen(false)}
-        severity="success"
+        severity={toastSeverity}
       />
       <Box height="calc(100vh - 64px)" width="100vw">
         {isLoading && <LinearProgress variant="indeterminate" />}
@@ -321,7 +355,10 @@ const Collaboration = () => {
                     <MenuItem value="java">Java</MenuItem>
                   </Select>
                 </Stack>
-                <Button variant="contained" color="success" sx={{ textTransform: "None", height: "22px", my: "4px", color:"white" }} onClick={handleSaveClick}>Save</Button>
+                <Stack direction="row" spacing={1} my={0.5}>
+                  <Button variant="contained" color="primary" sx={{ textTransform: "None", height: "24px", width: "20px", my: "4px", color:"white" }} onClick={handleFormatCode}>Format</Button>
+                  <Button variant="contained" color="success" sx={{ textTransform: "None", height: "24px", my: "4px", color:"white" }} onClick={handleSaveClick}>Save</Button>
+                </Stack>
               </Stack>
               <Divider />
                 <Editor
