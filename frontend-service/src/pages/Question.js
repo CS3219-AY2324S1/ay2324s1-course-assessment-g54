@@ -25,7 +25,8 @@ import Typography from "@mui/material/Typography";
 import Button from '@mui/material/Button';
 import AcknowledgementToast from "../components/AcknowledgementToast";
 import Divider from '@mui/material/Divider';
-import FormatIndentDecreaseIcon from '@mui/icons-material/FormatIndentDecrease';
+import prettier from 'prettier/standalone';
+import prettierJavaPlugin from 'prettier-plugin-java';
 
 marked.use({ breaks: true, gfm: true, silent: true });
 
@@ -82,11 +83,14 @@ const Question = () => {
   const handleEditorLanguageChange = (event) => setEditorLanguage(event.target.value);
 
   const handleFormatCode = async () => { 
+    console.log(editorLanguage)
     const editor = editorRef.current;
     if (editorLanguage=="javascript") {
       editor?.trigger("anyString", 'editor.action.formatDocument');
-    } else if (editorLanguage=="python") {
-      const currentCode = editor.getValue();
+    } 
+    
+    const currentCode = editor.getValue();
+    if (editorLanguage=="python") {
       try {
         const response = await axios.post('http://localhost:5000/format', { code: currentCode })
         const formattedCode = response.data.formatted_code;
@@ -97,6 +101,11 @@ const Question = () => {
         setToastSeverity("error");
         console.error(error);
       }
+    }
+
+    if (editorLanguage=="java") {
+      const formattedCode = await prettier.format(currentCode, {parser: "java", plugins: [prettierJavaPlugin]})
+      editor.setValue(formattedCode);
     }
   }
 
