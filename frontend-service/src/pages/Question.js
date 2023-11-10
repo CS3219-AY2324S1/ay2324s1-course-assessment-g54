@@ -57,6 +57,7 @@ const Question = () => {
   const [editorLanguage, setEditorLanguage] = useState(historyLanguage? historyLanguage : "javascript");
   const [toastMessage, setToastMessage] = useState("");
   const [isToastOpen, setIsToastOpen] = useState(false);
+  const [toastSeverity, setToastSeverity] = useState("success");
  
   useEffect(() => {
     const getQuestion = async () => {
@@ -86,16 +87,16 @@ const Question = () => {
       editor?.trigger("anyString", 'editor.action.formatDocument');
     } else if (editorLanguage=="python") {
       const currentCode = editor.getValue();
-      const response = await axios.post('http://localhost:5000/format', { code: currentCode },
-{
-  headers: {
-    'Content-Type': 'application/json',
-  },
-}
-      )
-      const formattedCode = response.data.formatted_code;
-      editor.setValue(response.data.formatted_code)
-      // console.log(editor.getActions());
+      try {
+        const response = await axios.post('http://localhost:5000/format', { code: currentCode })
+        const formattedCode = response.data.formatted_code;
+        editor.setValue(response.data.formatted_code)
+      } catch (error) {
+        setToastMessage("Unable to format invalid python code. Please check your indentation.");
+        setIsToastOpen(true);
+        setToastSeverity("error");
+        console.error(error);
+      }
     }
   }
 
@@ -113,6 +114,7 @@ const Question = () => {
       const history_url = `${process.env.REACT_APP_HISTORY_SERVICE_HOST}/addHistory`; 
       await axios.post(history_url, { question_id, attempt, language, partner_id }, config);
       setToastMessage("Saved succesfully!");
+      setToastSeverity("success");
       setIsToastOpen(true);
     } catch (error) {
       console.error(error);
@@ -127,7 +129,7 @@ const Question = () => {
         message={toastMessage}
         open={isToastOpen}
         onClose={() => setIsToastOpen(false)}
-        severity="success"
+        severity={toastSeverity}
       />
       <Box height="calc(100vh - 64px)" width="100vw" >
         <Box height="100%" display="flex">
