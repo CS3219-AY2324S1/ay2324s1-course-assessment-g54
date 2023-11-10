@@ -34,6 +34,7 @@ import Typography from "@mui/material/Typography";
 import AcknowledgementToast from "../components/AcknowledgementToast";
 
 import VideocamIcon from "@mui/icons-material/Videocam";
+import VideocamOffIcon from '@mui/icons-material/VideocamOff';
 
 marked.use({ breaks: true, gfm: true, silent: true });
 
@@ -247,14 +248,22 @@ const Collaboration = () => {
                 )}
               </Card>
               {collaboratingUser && (
-                <Tooltip title={"Start video call"} placement="top-end" arrow>
+                <Tooltip title={isVideoCalling ? "Stop video call" : "Start video call"} placement="top-end" arrow>
                   <Fab sx={{ marginLeft: 2 }} color="primary">
-                    <VideocamIcon
+                    {isVideoCalling && <VideocamOffIcon fontSize="large"
+                      onClick={() => {
+                        setIsVideoCalling(!isVideoCalling);
+                      }}
+                    />
+                    }
+                    {!isVideoCalling && <VideocamIcon
                       fontSize="large"
                       onClick={() => {
                         setIsVideoCalling(!isVideoCalling);
                       }}
                     />
+                    }
+
                   </Fab>
                 </Tooltip>
               )}
@@ -319,7 +328,7 @@ const Collaboration = () => {
               flexDirection="column"
               padding={1}
             >
-              <Box border="1px solid pink">
+              <Box>
                 {isVideoCalling && (
                   <VideoChat roomId={searchParams.get("roomId") || ""} />
                 )}
