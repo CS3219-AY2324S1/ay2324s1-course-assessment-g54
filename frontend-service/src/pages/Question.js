@@ -5,7 +5,6 @@ import Editor from "@monaco-editor/react";
 import { useEffect, useState, useRef } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 
-
 import { useUser } from "../contexts/UserContext";
 
 import Page from "../components/Page";
@@ -26,7 +25,7 @@ import Typography from "@mui/material/Typography";
 import Button from '@mui/material/Button';
 import AcknowledgementToast from "../components/AcknowledgementToast";
 import Divider from '@mui/material/Divider';
-import SaveIcon from '@mui/icons-material/Save';
+import FormatIndentDecreaseIcon from '@mui/icons-material/FormatIndentDecrease';
 
 marked.use({ breaks: true, gfm: true, silent: true });
 
@@ -80,7 +79,26 @@ const Question = () => {
     editorRef.current?.focus();
   }, [editorLanguage]);
   const handleEditorLanguageChange = (event) => setEditorLanguage(event.target.value);
-  
+
+  const handleFormatCode = async () => { 
+    const editor = editorRef.current;
+    if (editorLanguage=="javascript") {
+      editor?.trigger("anyString", 'editor.action.formatDocument');
+    } else if (editorLanguage=="python") {
+      const currentCode = editor.getValue();
+      const response = await axios.post('http://localhost:5000/format', { code: currentCode },
+{
+  headers: {
+    'Content-Type': 'application/json',
+  },
+}
+      )
+      const formattedCode = response.data.formatted_code;
+      editor.setValue(response.data.formatted_code)
+      // console.log(editor.getActions());
+    }
+  }
+
   const handleSaveClick = async () => {
     try {
       const token = window.localStorage.getItem("token");
@@ -198,6 +216,7 @@ const Question = () => {
                   </Select>
                 </Stack>
                 <Button variant="contained" color="success" sx={{ textTransform: "None", height: "22px", my: "4px", color:"white" }} onClick={handleSaveClick}>Save</Button>
+                <Button variant="contained" color="success" sx={{ textTransform: "None", height: "22px", my: "4px", color:"white" }} onClick={handleFormatCode}>Format</Button>
               </Stack>
               <Divider />
               <Editor

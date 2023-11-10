@@ -163,6 +163,15 @@ services:
     command: redis-server --loglevel warning
     ports:
       - 6379:6379
+  
+  format-python-code-service:
+    build:
+      context: ./format-python-code-service
+    container_name: format-python-code-service
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./format-python-code-service:/app
 
 volumes:
   postgres:
