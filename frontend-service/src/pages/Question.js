@@ -261,6 +261,7 @@ const Question = () => {
                   editorRef.current = editor;
                   editorRef.current.focus();
                 }}
+
               />
             </Paper>
           </Box>
