@@ -16,9 +16,11 @@ Run the installation script for the development environment using the following 
 bash install-deps-dev.sh
 ```
 
-Migrate your database for users service to the latest update by running the following commands. 
+Migrate your database for users service and history service to the latest update by running the following commands. 
 ```
 cd users-service
+yarn knex migrate:latest
+cd ../history-service
 yarn knex migrate:latest
 cd ..
 ```
@@ -45,6 +47,7 @@ Services:
 - Collaboration Service: ws://localhost:3004
 - History Service: http://localhost:3005
 - Video Service: ws://localhost:3006
+- Python Formatter Service: http://localhost:5000
 
 Databases:
 - MongoDB: Port 27017
