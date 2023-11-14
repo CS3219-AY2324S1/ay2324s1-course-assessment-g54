@@ -1,9 +1,11 @@
 services:
   frontend-service:
     environment:
-      REACT_APP_QUESTIONS_SERVICE_HOST: http://peerprep.bryanlohxz.com/api/questions-service
-      REACT_APP_USERS_SERVICE_HOST: http://peerprep.bryanlohxz.com/api/users-service
-      REACT_APP_MATCHMAKING_SERVICE_HOST: http://peerprep.bryanlohxz.com/api/matchmaking-service
+      REACT_APP_QUESTIONS_SERVICE_HOST: https://peerprep.bryanlohxz.com/api/questions-service
+      REACT_APP_USERS_SERVICE_HOST: https://peerprep.bryanlohxz.com/api/users-service
+      REACT_APP_HISTORY_SERVICE_HOST: https://peerprep.bryanlohxz.com/api/history-service
+      REACT_APP_MATCHMAKING_SERVICE_HOST: https://peerprep.bryanlohxz.com/api/matchmaking-service
+      REACT_APP_PYTHON_FORMATTER_SERVICE_HOST: https://peerprep.bryanlohxz.com/api/python-formatter-service
     command: yarn start:production
 
   question-service:
@@ -19,4 +21,7 @@ services:
     command: yarn start:production
 
   video-service:
+    command: yarn start:production
+
+  history-service:
     command: yarn start:production

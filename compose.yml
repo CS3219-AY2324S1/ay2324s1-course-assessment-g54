@@ -13,7 +13,9 @@ services:
       REACT_APP_USERS_SERVICE_HOST: http://localhost:3002
       REACT_APP_MATCHMAKING_SERVICE_HOST: http://localhost:3003
       REACT_APP_COLLABORATION_SERVICE_HOST: http://localhost:3004
+      REACT_APP_HISTORY_SERVICE_HOST: http://localhost:3005
       REACT_APP_VIDEO_SERVICE_HOST: http://localhost:3006
+      REACT_APP_PYTHON_FORMATTER_SERVICE_HOST: http://localhost:5000
     volumes:
       - ./frontend-service:/app
     command: yarn start
@@ -49,9 +51,31 @@ services:
       DB_PORT: 5432
       DB_USER: postgres
       DB_PASSWORD: postgres
-      DB_NAME: postgres
+      DB_NAME: users
     volumes:
       - ./users-service:/app
+    command: yarn start
+
+  history-service:
+    build:
+      context: ./history-service
+    container_name: history-service
+    ports:
+      - 3005:3005
+    depends_on:
+      - postgresql
+      - mongodb
+    environment:
+      PORT: 3005
+      USERS_SERVICE_HOST: http://users-service:3002
+      QUESTION_SERVICE_HOST: http://question-service:3001
+      DB_HOST: postgresql
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: history
+    volumes:
+      - ./history-service:/app
     command: yarn start
 
   matchmaking-service:
@@ -110,12 +134,13 @@ services:
     image: postgres:15-alpine
     container_name: postgresql
     volumes:
+      - ./create-multiple-postgresql-databases.sh:/docker-entrypoint-initdb.d/create-multiple-postgresql-databases.sh
       - "postgres:/var/lib/postgresql/data"
     ports:
       - 5432:5432
     restart: always
     environment:
-      POSTGRES_DB: postgres
+      POSTGRES_MULTIPLE_DATABASES: users,history
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
 
@@ -139,6 +164,15 @@ services:
     command: redis-server --loglevel warning
     ports:
       - 6379:6379
+  
+  python-formatter-service:
+    build:
+      context: ./python-formatter-service
+    container_name: python-formatter-service
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./python-formatter-service:/app
 
 volumes:
   postgres:

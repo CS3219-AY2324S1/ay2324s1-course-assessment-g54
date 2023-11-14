@@ -19,6 +19,7 @@ import LogoutIcon from "@mui/icons-material/ExitToApp";
 import AvatarWithBadge from "./AvatarWithBadge";
 import MatchmakingIcon from "@mui/icons-material/PeopleOutline";
 import QuizIcon from "@mui/icons-material/Quiz";
+import HistoryIcon from '@mui/icons-material/History';
 
 const NavBar = () => {
   const navigate = useNavigate();
@@ -52,6 +53,7 @@ const NavBar = () => {
             py: "12px",
             px: 3,
             mx: 1,
+            minWidth: "160px",
             backgroundColor:
               location.pathname === "/questions"
                 ? (theme) => theme.palette.navbarButtonSelected
@@ -75,6 +77,7 @@ const NavBar = () => {
             boxShadow: "none",
             py: "12px",
             px: 3,
+            minWidth: "160px",
             backgroundColor:
               location.pathname === "/matchmaking"
                 ? (theme) => theme.palette.navbarButtonSelected
@@ -88,6 +91,31 @@ const NavBar = () => {
           startIcon={<MatchmakingIcon />}
         >
           Find Match
+        </Button>
+        <Button
+          onClick={() => {
+            navigate("/history");
+          }}
+          sx={{
+            borderRadius: 2,
+            boxShadow: "none",
+            py: "12px",
+            px: 3,
+            mx: 1,
+            minWidth: "160px",
+            backgroundColor:
+              location.pathname === "/history"
+                ? (theme) => theme.palette.navbarButtonSelected
+                : "transparent",
+            color: "white",
+            "&:hover": {
+              backgroundColor: (theme) => theme.palette.navbarButtonHover,
+            },
+          }}
+          variant="contained"
+          startIcon={<HistoryIcon />}
+        >
+          History
         </Button>
         <Box sx={{ flexGrow: 1 }} />
         <Box sx={{ flexGrow: 0 }}>

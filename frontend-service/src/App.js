@@ -16,6 +16,7 @@ import Signup from "./pages/Signup";
 
 import Matchmaking from "./pages/Matchmaking";
 import MatchmakingFind from "./pages/MatchmakingFind";
+import History from "./pages/History";
 import NavBar from "./components/NavBar";
 
 import "@fontsource/roboto/300.css";
@@ -35,7 +36,8 @@ const darkTheme = createTheme({
     navbarButtonHover: "rgba(66, 165, 245, 0.7)",
     questionRowHover: "rgba(66, 165, 245, 0.7)",
     questionTableHead: "rgba(28, 38, 62, 1)",
-    questionRowEven: "rgba(28, 38, 62, 0.8)",
+    questionTableHeadFont: "#CBD5E0",
+    questionRowEven: "rgba(28, 38, 62, 0.7)",
     questionRowOdd: "rgba(28, 38, 62, 1)",
   },
 });
@@ -55,6 +57,7 @@ const protectedRoutes = [
   { path: "/questions/:id/edit", element: <EditQuestion /> },
   { path: "/matchmaking", element: <Matchmaking /> },
   { path: "/matchmaking/find", element: <MatchmakingFind /> },
+  { path: "/history", element: <History /> },
 ];
 
 function App() {

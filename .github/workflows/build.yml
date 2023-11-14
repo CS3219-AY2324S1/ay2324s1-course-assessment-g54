@@ -42,6 +42,8 @@ jobs:
           export REACT_APP_MATCHMAKING_SERVICE_HOST=https://peerpreptest.bryanlohxz.com
           export REACT_APP_COLLABORATION_SERVICE_HOST=https://peerpreptest.bryanlohxz.com
           export REACT_APP_VIDEO_SERVICE_HOST=https://peerpreptest.bryanlohxz.com
+          export REACT_APP_HISTORY_SERVICE_HOST=https://peerpreptest.bryanlohxz.com/api/history-service
+          export REACT_APP_PYTHON_FORMATTER_SERVICE_HOST=https://peerpreptest.bryanlohxz.com/api/python-formatter-service
           export CI=false
           yarn build
           
@@ -69,6 +71,8 @@ jobs:
           export REACT_APP_MATCHMAKING_SERVICE_HOST=https://peerprep.bryanlohxz.com
           export REACT_APP_COLLABORATION_SERVICE_HOST=https://peerprep.bryanlohxz.com
           export REACT_APP_VIDEO_SERVICE_HOST=https://peerprep.bryanlohxz.com
+          export REACT_APP_HISTORY_SERVICE_HOST=https://peerprep.bryanlohxz.com/api/history-service
+          export REACT_APP_PYTHON_FORMATTER_SERVICE_HOST=https://peerprep.bryanlohxz.com/api/python-formatter-service
           export CI=false
           yarn build
         

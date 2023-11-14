@@ -5,6 +5,8 @@ import Editor from "@monaco-editor/react";
 import { useEffect, useState, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { io } from "socket.io-client";
+import prettier from 'prettier/standalone';
+import prettierJavaPlugin from 'prettier-plugin-java';
 
 import Page from "../components/Page";
 import VideoChat from "../components/VideoChat";
@@ -15,9 +17,11 @@ import Avatar from "@mui/material/Avatar";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Badge from "@mui/material/Badge";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CircularProgress from "@mui/material/CircularProgress";
 import Chip from "@mui/material/Chip";
+import Divider from "@mui/material/Divider";
 import Fab from "@mui/material/Fab";
 import IconButton from "@mui/material/IconButton";
 import LinearProgress from "@mui/material/LinearProgress";
@@ -55,6 +59,7 @@ const Collaboration = () => {
   const [socket, setSocket] = useState(null);
   const [toastMessage, setToastMessage] = useState("");
   const [isToastOpen, setIsToastOpen] = useState(false);
+  const [toastSeverity, setToastSeverity] = useState("success");
   const [isLoading, setIsLoading] = useState(true);
   const [question, setQuestion] = useState(null);
   const [collaboratingUser, setCollaboratingUser] = useState(null);
@@ -127,13 +132,67 @@ const Collaboration = () => {
   const handleEditorLanguageChange = (event) =>
     setEditorLanguage(event.target.value);
 
+  const handleSaveClick = async () => {
+    try {
+      const token = window.localStorage.getItem("token");
+      const config = {headers: { Authorization: token }};
+      const {question_id} = question;
+      const attempt = editorRef.current.getValue();
+
+      const partner_id = collaboratingUser? collaboratingUser.id : null;
+
+      const language = editorLanguage;
+
+      const history_url = `${process.env.REACT_APP_HISTORY_SERVICE_HOST}/addHistory`; 
+      await axios.post(history_url, { question_id, attempt, language, partner_id }, config);
+      setToastMessage("Saved succesfully!");
+      setToastSeverity("success");
+      setIsToastOpen(true);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  const handleFormatCode = async () => { 
+    const editor = editorRef.current;
+    if (editorLanguage=="javascript") {
+      editor?.trigger("anyString", 'editor.action.formatDocument');
+    } 
+    
+    const currentCode = editor.getValue();
+    if (editorLanguage=="python") {
+      try {
+        const response = await axios.post(`${process.env.REACT_APP_PYTHON_FORMATTER_SERVICE_HOST}/format`, { code: currentCode })
+        const formattedCode = response.data.formatted_code;
+        editor.setValue(formattedCode)
+      } catch (error) {
+        setToastSeverity("error");
+        setToastMessage("Unable to format invalid Python code. Please check your indentation.");
+        setIsToastOpen(true);
+        console.error(error);
+      }
+    }
+
+    if (editorLanguage=="java") {
+      try {
+        const formattedCode = await prettier.format(currentCode, {parser: "java", plugins: [prettierJavaPlugin]})
+        editor.setValue(formattedCode);
+      } catch (error) {
+        setToastSeverity("error");
+        setToastMessage("Unable to format invalid Java code.");
+        setIsToastOpen(true);
+        console.error(error);
+      }
+    }
+  }
+
   return (
     <Page title="Collab">
       <AcknowledgementToast
         message={toastMessage}
         open={isToastOpen}
         onClose={() => setIsToastOpen(false)}
-        severity="success"
+        severity={toastSeverity}
       />
       <Box height="calc(100vh - 64px)" width="100vw">
         {isLoading && <LinearProgress variant="indeterminate" />}
@@ -283,21 +342,38 @@ const Collaboration = () => {
                 }}
                 elevation={2}
               >
-                <Stack direction="row" justifyContent="end" alignItems="center">
-                  <Typography>Editor Language:</Typography>
+              <Stack direction="row" alignItems="center" justifyContent="space-between" px={0.5}>
+                <Stack direction="row" alignItems="center">
                   <Select
                     value={editorLanguage}
                     onChange={handleEditorLanguageChange}
-                    sx={{ height: 20, width: 130, m: 1 }}
+                    transitionDuration={0}
+                    sx={{
+                      height: 20,
+                      boxShadow: 'none', 
+                      color: "grey",
+                      transition: "none",
+                      '&:hover':{ color: "white !important"},
+                      '.MuiOutlinedInput-notchedOutline': { border: 0 },
+                      '&.Mui-focused .MuiOutlinedInput-notchedOutline': { border: 0 },
+                      '.MuiSvgIcon-root':{ fill: "grey", transition: "none !important"},
+                      '&:hover .MuiSvgIcon-root':{ fill: "white !important"},
+                    }}
                   >
                     <MenuItem value="javascript">Javascript</MenuItem>
                     <MenuItem value="python">Python</MenuItem>
                     <MenuItem value="java">Java</MenuItem>
                   </Select>
                 </Stack>
+                <Stack direction="row" spacing={1} my={0.5}>
+                  <Button variant="contained" color="primary" sx={{ textTransform: "None", height: "24px", width: "20px", my: "4px", color:"white" }} onClick={handleFormatCode}>Format</Button>
+                  <Button variant="contained" color="success" sx={{ textTransform: "None", height: "24px", my: "4px", color:"white" }} onClick={handleSaveClick}>Save</Button>
+                </Stack>
+              </Stack>
+              <Divider />
                 <Editor
                   language={editorLanguage}
-                  value={editorLanguage === "python" ? "# Insert your code here\n" : "// Insert your code here\n"}
+                  value={code}
                   theme={editorLanguage === "python" ? "python-theme" : "java-theme"}
                   beforeMount={(monaco) => {
                     monaco.languages.setMonarchTokensProvider('python', pythonMonarchTokensProvider);
@@ -408,8 +484,6 @@ const pythonTheme = {
   colors: {
     'editor.background': '#1E1E1E',
     'editor.foreground': '#D4D4D4',
-    'editorLineNumber.foreground': '#008800',
-    'editor.selectionBackground': '#DDF0FF22',
   },
 };
 
@@ -466,7 +540,5 @@ const javaTheme = {
   colors: {
     'editor.background': '#1E1E1E',
     'editor.foreground': '#D4D4D4',
-    'editorLineNumber.foreground': '#008800',
-    'editor.selectionBackground': '#DDF0FF22',
   },
 };

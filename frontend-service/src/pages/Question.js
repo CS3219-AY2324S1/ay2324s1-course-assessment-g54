@@ -3,8 +3,9 @@ import * as DOMPurify from "dompurify";
 import * as marked from "marked";
 import Editor from "@monaco-editor/react";
 import { useEffect, useState, useRef } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-
+import { useNavigate, useParams, useLocation } from "react-router-dom";
+import prettier from 'prettier/standalone';
+import prettierJavaPlugin from 'prettier-plugin-java';
 
 import { useUser } from "../contexts/UserContext";
 
@@ -23,6 +24,9 @@ import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
+import Button from '@mui/material/Button';
+import AcknowledgementToast from "../components/AcknowledgementToast";
+import Divider from '@mui/material/Divider';
 
 marked.use({ breaks: true, gfm: true, silent: true });
 
@@ -41,14 +45,21 @@ const getDifficultyChipColor = (difficulty) => {
 
 const Question = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const historyCode = location.state ? location.state.code : null;
+  const historyLanguage = location.state ? location.state.language : null;
+
   const { id } = useParams();
   const user = useUser();
   const editorRef = useRef(null);
 
   const [isLoading, setIsLoading] = useState(true);
   const [question, setQuestion] = useState(null);
-  const [editorLanguage, setEditorLanguage] = useState("javascript");
-
+  const [editorLanguage, setEditorLanguage] = useState(historyLanguage? historyLanguage : "javascript");
+  const [toastMessage, setToastMessage] = useState("");
+  const [isToastOpen, setIsToastOpen] = useState(false);
+  const [toastSeverity, setToastSeverity] = useState("success");
+ 
   useEffect(() => {
     const getQuestion = async () => {
       const url = `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions/${id}`;
@@ -70,13 +81,72 @@ const Question = () => {
     editorRef.current?.focus();
 
   }, [editorLanguage]);
-
   const handleEditorLanguageChange = (event) => setEditorLanguage(event.target.value);
+
+  const handleFormatCode = async () => { 
+    const editor = editorRef.current;
+    if (editorLanguage=="javascript") {
+      editor?.trigger("anyString", 'editor.action.formatDocument');
+    } 
+    
+    const currentCode = editor.getValue();
+    if (editorLanguage=="python") {
+      try {
+        const response = await axios.post(`${process.env.REACT_APP_PYTHON_FORMATTER_SERVICE_HOST}/format`, { code: currentCode })
+        const formattedCode = response.data.formatted_code;
+        editor.setValue(formattedCode)
+      } catch (error) {
+        setToastSeverity("error");
+        setToastMessage("Unable to format invalid Python code. Please check your indentation.");
+        setIsToastOpen(true);
+        console.error(error);
+      }
+    }
+
+    if (editorLanguage=="java") {
+      try {
+        const formattedCode = await prettier.format(currentCode, {parser: "java", plugins: [prettierJavaPlugin]})
+        editor.setValue(formattedCode);
+      } catch (error) {
+        setToastSeverity("error");
+        setToastMessage("Unable to format invalid Java code.");
+        setIsToastOpen(true);
+        console.error(error);
+      }
+    }
+  }
+
+  const handleSaveClick = async () => {
+    try {
+      const token = window.localStorage.getItem("token");
+      const config = {headers: { Authorization: token }};
+      const {question_id} = question;
+      const attempt = editorRef.current.getValue();
+
+      const partner_id = null;
+
+      const language = editorLanguage;
+
+      const history_url = `${process.env.REACT_APP_HISTORY_SERVICE_HOST}/addHistory`; 
+      await axios.post(history_url, { question_id, attempt, language, partner_id }, config);
+      setToastMessage("Saved succesfully!");
+      setToastSeverity("success");
+      setIsToastOpen(true);
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   if (isLoading) return <LinearProgress variant="indeterminate" />;
 
   return (
     <Page title="Question">
+      <AcknowledgementToast
+        message={toastMessage}
+        open={isToastOpen}
+        onClose={() => setIsToastOpen(false)}
+        severity={toastSeverity}
+      />
       <Box height="calc(100vh - 64px)" width="100vw" >
         <Box height="100%" display="flex">
           <Box width="50%" height="100%" padding={1}>
@@ -140,21 +210,44 @@ const Question = () => {
               sx={{ height: "100%", width: "100%", overflow: "hidden" }}
               elevation={2}
             >
-              <Stack direction="row" justifyContent="end" alignItems="center">
-                <Typography>Editor Language:</Typography>
-                <Select
-                  value={editorLanguage}
-                  onChange={handleEditorLanguageChange}
-                  sx={{ height: 20, width: 130, m: 1 }}
-                >
-                  <MenuItem value="javascript">Javascript</MenuItem>
-                  <MenuItem value="python">Python</MenuItem>
-                  <MenuItem value="java">Java</MenuItem>
-                </Select>
+              <Stack direction="row" alignItems="center" justifyContent="space-between" px={0.5}>
+                <Stack direction="row" alignItems="center">
+                  <Select
+                    value={editorLanguage}
+                    onChange={handleEditorLanguageChange}
+                    transitionDuration={0}
+                    sx={{
+                      height: 20,
+                      boxShadow: 'none', 
+                      color: "grey",
+                      transition: "none",
+                      '&:hover':{ color: "white !important"},
+                      '.MuiOutlinedInput-notchedOutline': { border: 0 },
+                      '&.Mui-focused .MuiOutlinedInput-notchedOutline': { border: 0 },
+                      '.MuiSvgIcon-root':{ fill: "grey", transition: "none !important"},
+                      '&:hover .MuiSvgIcon-root':{ fill: "white !important"},
+                    }}
+                  >
+                    <MenuItem value="javascript">Javascript</MenuItem>
+                    <MenuItem value="python">Python</MenuItem>
+                    <MenuItem value="java">Java</MenuItem>
+                  </Select>
+                </Stack>
+                <Stack direction="row" spacing={1} my={0.5}>
+                  <Button variant="contained" color="primary" sx={{ textTransform: "None", height: "24px", width: "20px", my: "4px", color:"white" }} onClick={handleFormatCode}>Format</Button>
+                  <Button variant="contained" color="success" sx={{ textTransform: "None", height: "24px", my: "4px", color:"white" }} onClick={handleSaveClick}>Save</Button>
+                </Stack>
               </Stack>
+              <Divider />
               <Editor
                 language={editorLanguage}
-                value={editorLanguage === "python" ? "# Insert your code here\n" : "// Insert your code here\n"}
+                value={    
+                  historyCode && editorLanguage == historyLanguage
+                  ? historyCode
+                  : editorLanguage == "python"
+                  ? "# Insert your code here\n"
+                  : "// Insert your code here\n"
+                }
                 theme={editorLanguage === "python" ? "python-theme" : "java-theme"}
                 beforeMount={(monaco) => {
                   monaco.languages.setMonarchTokensProvider('python', pythonMonarchTokensProvider);
@@ -232,8 +325,6 @@ const pythonTheme = {
   colors: {
     'editor.background': '#1E1E1E',
     'editor.foreground': '#D4D4D4',
-    'editorLineNumber.foreground': '#008800',
-    'editor.selectionBackground': '#DDF0FF22',
   },
 };
 
@@ -290,7 +381,5 @@ const javaTheme = {
   colors: {
     'editor.background': '#1E1E1E',
     'editor.foreground': '#D4D4D4',
-    'editorLineNumber.foreground': '#008800',
-    'editor.selectionBackground': '#DDF0FF22',
   },
 };
