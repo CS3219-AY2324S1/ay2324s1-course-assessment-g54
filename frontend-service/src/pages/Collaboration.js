@@ -146,6 +146,7 @@ const Collaboration = () => {
       const history_url = `${process.env.REACT_APP_HISTORY_SERVICE_HOST}/addHistory`; 
       await axios.post(history_url, { question_id, attempt, language, partner_id }, config);
       setToastMessage("Saved succesfully!");
+      setToastSeverity("success");
       setIsToastOpen(true);
     } catch (error) {
       console.error(error);
