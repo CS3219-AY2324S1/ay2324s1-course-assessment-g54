@@ -50,8 +50,13 @@ jobs:
             echo "Step 6: Restarting docker containers..." &&
             bash start-prod.sh &&
 
-            echo "Step 7: Migrating database to match latest..." &&
+            echo "Step 7: Migrating users database to match latest..." &&
             cd users-service &&
+            yarn knex migrate:latest &&
+            cd ..
+
+            echo "Step 8: Migrating history database to match latest..." &&
+            cd history-service &&
             yarn knex migrate:latest &&
             cd ..
           '
