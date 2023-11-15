@@ -37,6 +37,22 @@ To start the containers in the development environment, run the following comman
 bash start-dev.sh
 ```
 
+When you start the containers for the first time, go into the PostgreSQL container and create 2 databases, users and history. 
+```
+docker exec -it postgresql sh
+psql -U postgres
+create database users;
+create database history;
+```
+
+Then, go into the users-service and history-service and run the database migrations.
+```
+cd users-service
+yarn knex migrate:latest
+cd history-service
+yarn knex migrate:latest
+```
+
 The following list shows the connection details for each of the microservice used in this application. 
 
 Services:
