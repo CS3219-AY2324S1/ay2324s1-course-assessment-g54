@@ -3,6 +3,7 @@ import {
   INCORRECT_PASSWORD_MSG,
   INVALID_JWT_ERROR_MSG,
   INVALID_REQUEST_BODY_ERROR_MESSAGE,
+  PASSWORD_TOO_SHORT,
   SERVER_ERROR_MSG,
   USER_NOT_FOUND_MSG,
 } from "./errors.js";
@@ -154,6 +155,8 @@ export const handleSignup = async (request, response) => {
 
   try {
     await schema.signupRequestBodySchema.validate(body);
+    if (body.password.length < 8)
+      return response.status(400).send(PASSWORD_TOO_SHORT);
   } catch (error) {
     console.error(error.message);
     return response.status(400).send(INVALID_REQUEST_BODY_ERROR_MESSAGE);

@@ -116,7 +116,7 @@ const Collaboration = () => {
       setCode(code);
     });
 
-    socket.on("disconnect", () => {
+    socket.on("disconnect-error", () => {
       return navigate("/matchmaking");
     });
 
