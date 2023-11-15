@@ -34,7 +34,8 @@ io.on("connection", async (socket) => {
       console.error(`[${id}] Token cannot be found in handshake query.`);
     if (!roomId)
       console.error(`[${id}] RoomId cannot be found in handshake query.`);
-    return socket.emit("disconnect-error");
+    socket.emit("disconnect-error");
+    return socket.disconnect()
   }
 
   let user;
