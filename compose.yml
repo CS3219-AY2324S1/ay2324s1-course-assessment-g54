@@ -170,8 +170,6 @@ services:
     container_name: python-formatter-service
     ports:
       - "5000:5000"
-    volumes:
-      - ./python-formatter-service:/app
 
 volumes:
   postgres:
