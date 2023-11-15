@@ -1,10 +1,11 @@
 name: Deploy to Testing EC2
 
 on:
+  workflow_run:
+    workflows: ["build.yml"]
+    types:
+      - completed
   workflow_dispatch: {}
-  push:
-    branches:
-      - testing
 
 jobs:
   deploy-testing:
