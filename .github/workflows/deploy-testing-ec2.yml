@@ -2,7 +2,7 @@ name: Deploy to Testing EC2
 
 on:
   workflow_run:
-    workflows: ["build.yml"]
+    workflows: ["Build for Testing and Production"]
     types:
       - completed
   workflow_dispatch: {}
