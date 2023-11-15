@@ -34,7 +34,7 @@ io.on("connection", async (socket) => {
       console.error(`[${id}] Token cannot be found in handshake query.`);
     if (!roomId)
       console.error(`[${id}] RoomId cannot be found in handshake query.`);
-    return socket.disconnect();
+    return socket.emit("disconnect-error");
   }
 
   let user;
@@ -45,6 +45,7 @@ io.on("connection", async (socket) => {
     });
     if (response.status !== 200) {
       console.error(response.data);
+      socket.emit("disconnect-error");
       return socket.disconnect();
     }
     user = response.data;
@@ -69,6 +70,7 @@ io.on("connection", async (socket) => {
     }
   } catch (error) {
     console.error(error);
+    socket.emit("disconnect-error");
     return socket.disconnect();
   }
 
@@ -76,6 +78,7 @@ io.on("connection", async (socket) => {
   if (!questionId) {
     if (!difficulties.includes(difficulty)) {
       console.error(`[${id}] Difficulty not found or not recgonized in query.`);
+      socket.emit("disconnect-error");
       return socket.disconnect();
     }
     try {
@@ -85,6 +88,7 @@ io.on("connection", async (socket) => {
       });
       if (response.status !== 200) {
         console.error(response.data);
+        socket.emit("disconnect-error");
         return socket.disconnect();
       }
       questionId = response.data.question_id;
@@ -92,6 +96,7 @@ io.on("connection", async (socket) => {
       console.log(`[${id}] Question ${questionId} set for room ${roomId}`);
     } catch (error) {
       console.error(error);
+      socket.emit("disconnect-error");
       return socket.disconnect();
     }
   }
