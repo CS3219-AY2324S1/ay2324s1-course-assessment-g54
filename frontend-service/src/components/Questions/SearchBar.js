@@ -147,11 +147,14 @@ const CategoryChips = ({ categoriesQuery, handleDeleteChip }) => {
 };
 
 const AddLeetcodeQuestionsButton = () => {
+  const user = useUser();
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isToastOpen, setIsToastOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastSeverity, setToastSeverity] = useState("success");
+
+  if (!user.isMaintainer) return null;
 
   return (
     <>
