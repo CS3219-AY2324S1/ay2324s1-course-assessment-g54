@@ -1,6 +1,10 @@
 name: Run tests on PeerPrepTest
 
 on:
+  workflow_run:
+    workflows: ["deploy-testing-ec2.yml"]
+    types:
+      - completed
   workflow_dispatch: {}
 
 jobs:
