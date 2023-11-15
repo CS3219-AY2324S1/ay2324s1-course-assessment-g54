@@ -1,0 +1,38 @@
+services:
+  mongo-ui:
+    image: mongo-express
+    container_name: mongo-ui
+    restart: always
+    ports:
+      - 8081:8081
+    depends_on:
+      - mongodb
+    environment:
+      ME_CONFIG_BASICAUTH_USERNAME:
+      ME_CONFIG_BASICAUTH_PASSWORD: 
+      ME_CONFIG_MONGODB_URL: mongodb://test:testpw@mongodb:27017/
+
+  postgresql-ui:
+    image: dpage/pgadmin4
+    container_name: pg-admin
+    restart: always
+    ports:
+      - 8082:80
+    depends_on:
+      - postgresql
+    environment:
+      PGADMIN_DEFAULT_EMAIL: test@example.com
+      PGADMIN_DEFAULT_PASSWORD: test
+      PGADMIN_LISTEN_PORT: 80
+
+  redis-ui:
+    image: redislabs/redisinsight:latest
+    ports:
+      - '8083:8001'
+    depends_on:
+      - redis
+    volumes:
+      - redis-ui:/db 
+
+volumes:
+  redis-ui:
