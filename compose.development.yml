@@ -24,15 +24,4 @@ services:
       PGADMIN_DEFAULT_EMAIL: test@example.com
       PGADMIN_DEFAULT_PASSWORD: test
       PGADMIN_LISTEN_PORT: 80
-
-  redis-ui:
-    image: redislabs/redisinsight:latest
-    ports:
-      - '8083:8001'
-    depends_on:
-      - redis
-    volumes:
-      - redis-ui:/db 
-
-volumes:
-  redis-ui:
+      
