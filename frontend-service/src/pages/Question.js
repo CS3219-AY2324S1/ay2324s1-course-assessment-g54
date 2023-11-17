@@ -7,8 +7,6 @@ import { useNavigate, useParams, useLocation } from "react-router-dom";
 import prettier from "prettier/standalone";
 import prettierJavaPlugin from "prettier-plugin-java";
 
-import { useUser } from "../contexts/UserContext";
-
 import Page from "../components/Page";
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -50,7 +48,6 @@ const Question = () => {
   const historyLanguage = location.state ? location.state.language : null;
 
   const { id } = useParams();
-  const user = useUser();
   const editorRef = useRef(null);
 
   const [isLoading, setIsLoading] = useState(true);
@@ -188,15 +185,11 @@ const Question = () => {
                   size="small"
                   sx={{ color: "white" }}
                 />
-                {user.isMaintainer && (
-                  <Tooltip title="Edit question" placement="top" arrow>
-                    <IconButton
-                      onClick={() => navigate(`/questions/${id}/edit`)}
-                    >
-                      <EditIcon />
-                    </IconButton>
-                  </Tooltip>
-                )}
+                <Tooltip title="Edit question" placement="top" arrow>
+                  <IconButton onClick={() => navigate(`/questions/${id}/edit`)}>
+                    <EditIcon />
+                  </IconButton>
+                </Tooltip>
               </Stack>
               <Box>
                 {question.categories.map((category) => (

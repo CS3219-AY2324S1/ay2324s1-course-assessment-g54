@@ -148,10 +148,7 @@ const CategoryChips = ({ categoriesQuery, handleDeleteChip }) => {
 
 const AddButton = () => {
   const navigate = useNavigate();
-  const user = useUser();
   const handleAddClick = () => navigate(`/questions/new`);
-
-  if (!user.isMaintainer) return null;
 
   return (
     <Button

@@ -1,12 +1,10 @@
 import axios, { AxiosError } from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import AcknowledgementToast from "../components/AcknowledgementToast";
 import Page from "../components/Page";
 import QuestionForm from "../components/QuestionForm";
-
-import { useUser } from "../contexts/UserContext";
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Box from "@mui/material/Box";
@@ -16,7 +14,6 @@ import Tooltip from "@mui/material/Tooltip";
 
 const NewQuestion = () => {
   const navigate = useNavigate();
-  const user = useUser();
 
   const [toastOpen, setToastOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
@@ -26,10 +23,6 @@ const NewQuestion = () => {
   const [complexity, setComplexity] = useState("easy");
   const [categories, setCategories] = useState([]);
   const [description, setDescription] = useState("");
-
-  useEffect(() => {
-    if (!user.isMaintainer) navigate("/questions");
-  }, [navigate, user.isMaintainer]);
 
   const showToast = (message, severity) => {
     setToastMessage(message);

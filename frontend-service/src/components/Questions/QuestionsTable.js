@@ -145,9 +145,6 @@ const QuestionsTable = ({ filteredQuestions, setFilteredQuestions }) => {
 
   const handleConfirmDelete = async () => {
     try {
-      const historyUrl = `${process.env.REACT_APP_HISTORY_SERVICE_HOST}/deleteRecordsForDeletedQuestion/${questionIdToDelete}`;
-      await axios.delete(historyUrl, header);
-
       const url = `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions/${questionIdToDelete}`;
       await axios.delete(url, header);
 
@@ -170,7 +167,6 @@ const QuestionsTable = ({ filteredQuestions, setFilteredQuestions }) => {
   };
 
   const renderActionsColumnIfMaintainer = (question) => {
-    if (!user.isMaintainer) return null;
     return (
       <StyledTableCell>
         <Stack direction="row" spacing={1}>
@@ -230,9 +226,7 @@ const QuestionsTable = ({ filteredQuestions, setFilteredQuestions }) => {
               >
                 Category
               </StyledTableCell>
-              {user.isMaintainer ? (
-                <StyledTableCell width="10%">Actions</StyledTableCell>
-              ) : null}
+              <StyledTableCell width="10%">Actions</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>

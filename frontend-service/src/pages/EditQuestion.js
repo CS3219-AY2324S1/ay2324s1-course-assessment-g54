@@ -4,7 +4,6 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import AcknowledgementToast from "../components/AcknowledgementToast";
 
-import { useUser } from "../contexts/UserContext";
 import Page from "../components/Page";
 import QuestionForm from "../components/QuestionForm";
 
@@ -18,7 +17,6 @@ import LinearProgress from "@mui/material/LinearProgress";
 const EditQuestion = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const user = useUser();
   const [isLoading, setIsLoading] = useState(true);
 
   const [toastOpen, setToastOpen] = useState(false);
@@ -37,8 +35,6 @@ const EditQuestion = () => {
   };
 
   useEffect(() => {
-    if (!user.isMaintainer) navigate("/questions");
-
     const getQuestion = async () => {
       const url = `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions/${id}`;
       const token = window.localStorage.getItem("token");
@@ -62,7 +58,7 @@ const EditQuestion = () => {
     };
 
     getQuestion();
-  }, [id, navigate, user.isMaintainer]);
+  }, [id, navigate]);
 
   const handleSave = async () => {
     try {
