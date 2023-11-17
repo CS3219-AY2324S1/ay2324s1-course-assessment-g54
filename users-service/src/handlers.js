@@ -82,19 +82,6 @@ export const handleGetOwnProfile = async (request, response) => {
  * @returns { Promise<void> }
  */
 export const handleGetProfile = async (request, response) => {
-  if (!request.headers.authorization)
-    return response.status(401).send(INVALID_JWT_ERROR_MSG);
-  const jsonWebToken = request.headers.authorization;
-  try {
-    const user = utils.verifyJsonWebToken(jsonWebToken);
-    if (!user.issuedAt) return response.status(401).send(INVALID_JWT_ERROR_MSG);
-    const timeDifference = new Date() - new Date(user.issuedAt);
-    if (timeDifference > process.env.JWT_EXPIRY_SECONDS)
-      return response.status(401).send(INVALID_JWT_ERROR_MSG);
-  } catch (error) {
-    return response.status(401).send(INVALID_JWT_ERROR_MSG);
-  }
-
   const id = request.params.id;
   const user = await database.select().from("users").where({ id }).first();
   if (!user) {

@@ -25,7 +25,6 @@ services:
       - mongodb
     environment:
       PORT: 3001
-      USERS_SERVICE_HOST: http://users-service:3002
       MONGO_LOCAL_URI: mongodb://test:testpw@localhost:27017/?retryWrites=true&w=majority&maxPoolSize=20
       MONGO_LOCAL_DOCKER_URI: mongodb://test:testpw@mongodb:27017/?retryWrites=true&w=majority&maxPoolSize=20
     volumes:
