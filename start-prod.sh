@@ -1,1 +1,0 @@
-docker compose -f compose.yml -f compose.production.yml up -d

@@ -1,6 +1,0 @@
-services=("frontend-service" "question-service" "users-service" "matchmaking-service" "collaboration-service" "history-service" "video-service")
-for service in "${services[@]}"; do
-  echo "Installing dependencies for $service..." &&
-  cd "$service" && yarn install --frozen-lockfile --production=true &&
-  cd ..
-done
