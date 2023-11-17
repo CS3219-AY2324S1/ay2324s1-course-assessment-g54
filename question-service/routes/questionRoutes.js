@@ -19,10 +19,6 @@ import {
   validateQuestionComplexity,
 } from "../middleware/validateQuestions.js";
 import express from "express";
-import {
-  validateIsMaintainer,
-  validateLogin,
-} from "../middleware/validateRoles.js";
 import { getCategories } from "../controllers/getCategories.js";
 
 const router = express.Router();
@@ -34,49 +30,33 @@ router.get("/", (req, res) => {
 });
 
 // '/getQuestions'
-router.get(
-  "/questions",
-  [validateLogin, validateQuestionQuery],
-  getQuestionsWithQuery
-);
+router.get("/questions", [validateQuestionQuery], getQuestionsWithQuery);
 
 // '/getCategories'
-router.get("/categories", [validateLogin], getCategories);
+router.get("/categories", [], getCategories);
 
 // '/getQuestion/:id'
-router.get(
-  "/questions/:id",
-  [validateLogin, validateQuestionId],
-  getSingleQuestion
-);
+router.get("/questions/:id", [validateQuestionId], getSingleQuestion);
 
 // '/getQuestion/:complexity'
 router.get(
   "/random-questions/:complexity",
-  [validateLogin, validateQuestionComplexity],
+  [validateQuestionComplexity],
   getRandomQuestionByComplexity
 );
 
 // '/createQuestion'
-router.post(
-  "/questions",
-  [validateIsMaintainer, validateCreateQuestion],
-  createQuestion
-);
+router.post("/questions", [validateCreateQuestion], createQuestion);
 
 // '/updateQuestion/:id'
 router.put(
   "/questions/:id",
-  [validateIsMaintainer, validateQuestionId, validateUpdateQuestion],
+  [validateQuestionId, validateUpdateQuestion],
   updateQuestion
 );
 
 // '/deleteQuestion/:id'
-router.delete(
-  "/questions/:id",
-  [validateIsMaintainer, validateQuestionId],
-  deleteQuestion
-);
+router.delete("/questions/:id", [validateQuestionId], deleteQuestion);
 
 router.get("/leetcode-id", getCurrentLeetcodeId);
 

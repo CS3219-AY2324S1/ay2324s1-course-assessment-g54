@@ -21,7 +21,6 @@ import Tooltip from "@mui/material/Tooltip";
 
 import ConfirmationModal from "../ConfirmationModal";
 import AcknowledgementToast from "../AcknowledgementToast";
-import { useUser } from "../../contexts/UserContext";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -54,12 +53,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 const QuestionsTable = ({ filteredQuestions, setFilteredQuestions }) => {
   const navigate = useNavigate();
-  const user = useUser();
-  const token = window.localStorage.getItem("token");
   const header = {
-    headers: {
-      Authorization: `${token}`,
-    },
+    headers: {},
   };
 
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -170,7 +165,6 @@ const QuestionsTable = ({ filteredQuestions, setFilteredQuestions }) => {
   };
 
   const renderActionsColumnIfMaintainer = (question) => {
-    if (!user.isMaintainer) return null;
     return (
       <StyledTableCell>
         <Stack direction="row" spacing={1}>
@@ -230,9 +224,7 @@ const QuestionsTable = ({ filteredQuestions, setFilteredQuestions }) => {
               >
                 Category
               </StyledTableCell>
-              {user.isMaintainer ? (
-                <StyledTableCell width="10%">Actions</StyledTableCell>
-              ) : null}
+              <StyledTableCell width="10%">Actions</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>

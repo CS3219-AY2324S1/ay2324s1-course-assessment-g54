@@ -7,7 +7,6 @@ services:
       - 3000:3000
     depends_on:
       - question-service
-      - users-service
     environment:
       REACT_APP_QUESTIONS_SERVICE_HOST: http://localhost:3001
     volumes:

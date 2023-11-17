@@ -20,8 +20,6 @@ import Modal from "@mui/material/Modal";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 
-import { useUser } from "../../contexts/UserContext";
-
 import AcknowledgementToast from "../AcknowledgementToast";
 import CategoryChipArray from "../CategoryChipArray";
 
@@ -147,14 +145,11 @@ const CategoryChips = ({ categoriesQuery, handleDeleteChip }) => {
 };
 
 const AddLeetcodeQuestionsButton = () => {
-  const user = useUser();
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isToastOpen, setIsToastOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastSeverity, setToastSeverity] = useState("success");
-
-  if (!user.isMaintainer) return null;
 
   return (
     <>
@@ -255,10 +250,7 @@ const AddLeetcodeQuestionsButton = () => {
 
 const AddButton = () => {
   const navigate = useNavigate();
-  const user = useUser();
   const handleAddClick = () => navigate(`/questions/new`);
-
-  if (!user.isMaintainer) return null;
 
   return (
     <Button
