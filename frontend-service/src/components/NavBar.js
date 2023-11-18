@@ -68,30 +68,6 @@ const NavBar = () => {
         >
           Questions
         </Button>
-        <Button
-          onClick={() => {
-            navigate("/matchmaking");
-          }}
-          sx={{
-            borderRadius: 2,
-            boxShadow: "none",
-            py: "12px",
-            px: 3,
-            minWidth: "160px",
-            backgroundColor:
-              location.pathname === "/matchmaking"
-                ? (theme) => theme.palette.navbarButtonSelected
-                : "transparent",
-            color: "white",
-            "&:hover": {
-              backgroundColor: (theme) => theme.palette.navbarButtonHover,
-            },
-          }}
-          variant="contained"
-          startIcon={<MatchmakingIcon />}
-        >
-          Find Match
-        </Button>
         <Box sx={{ flexGrow: 1 }} />
         <Box sx={{ flexGrow: 0 }}>
           <Tooltip title={user.name}>
