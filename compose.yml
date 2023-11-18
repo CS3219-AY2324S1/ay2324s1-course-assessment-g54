@@ -11,7 +11,6 @@ services:
     environment:
       REACT_APP_QUESTIONS_SERVICE_HOST: http://localhost:3001
       REACT_APP_USERS_SERVICE_HOST: http://localhost:3002
-      REACT_APP_MATCHMAKING_SERVICE_HOST: http://localhost:3003
     volumes:
       - ./frontend-service:/app
     command: yarn start
@@ -50,24 +49,6 @@ services:
       DB_NAME: users
     volumes:
       - ./users-service:/app
-    command: yarn start
-
-  matchmaking-service:
-    build:
-      context: ./matchmaking-service
-    container_name: matchmaking-service
-    ports:
-      - 3003:3003
-    depends_on:
-      - users-service
-      - redis
-    environment:
-      PORT: 3003
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-      USERS_SERVICE_HOST: http://users-service:3002
-    volumes:
-      - ./matchmaking-service:/app
     command: yarn start
 
   postgresql:
