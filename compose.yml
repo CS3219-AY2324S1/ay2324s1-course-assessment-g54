@@ -56,28 +56,6 @@ services:
       - ./users-service:/app
     command: yarn start
 
-  history-service:
-    build:
-      context: ./history-service
-    container_name: history-service
-    ports:
-      - 3005:3005
-    depends_on:
-      - postgresql
-      - mongodb
-    environment:
-      PORT: 3005
-      USERS_SERVICE_HOST: http://users-service:3002
-      QUESTION_SERVICE_HOST: http://question-service:3001
-      DB_HOST: postgresql
-      DB_PORT: 5432
-      DB_USER: postgres
-      DB_PASSWORD: postgres
-      DB_NAME: history
-    volumes:
-      - ./history-service:/app
-    command: yarn start
-
   matchmaking-service:
     build:
       context: ./matchmaking-service
@@ -94,40 +72,6 @@ services:
       USERS_SERVICE_HOST: http://users-service:3002
     volumes:
       - ./matchmaking-service:/app
-    command: yarn start
-
-  collaboration-service:
-    build:
-      context: ./collaboration-service
-    container_name: collaboration-service
-    ports:
-      - 3004:3004
-    depends_on:
-      - users-service
-      - redis
-    environment:
-      PORT: 3004
-      REDIS_PW: test
-      REDIS_NAME: redis
-      REDIS_PORT: 6379
-      USERS_SERVICE_HOST: http://users-service:3002
-      QUESTION_SERVICE_HOST: http://question-service:3001
-    volumes:
-      - ./collaboration-service:/app
-    command: yarn start
-
-  video-service:
-    build:
-      context: ./video-service
-    container_name: video-service
-    ports:
-      - 3006:3006
-    environment:
-      PORT: 3006
-      USERS_SERVICE_HOST: http://users-service:3002
-      QUESTION_SERVICE_HOST: http://question-service:3001
-    volumes:
-      - ./video-service:/app
     command: yarn start
 
   postgresql:
@@ -163,13 +107,6 @@ services:
     command: redis-server --loglevel warning
     ports:
       - 6379:6379
-  
-  python-formatter-service:
-    build:
-      context: ./python-formatter-service
-    container_name: python-formatter-service
-    ports:
-      - "5000:5000"
 
 volumes:
   postgres:
