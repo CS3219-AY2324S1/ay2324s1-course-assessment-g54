@@ -146,113 +146,6 @@ const CategoryChips = ({ categoriesQuery, handleDeleteChip }) => {
   );
 };
 
-const AddLeetcodeQuestionsButton = () => {
-  const user = useUser();
-  const navigate = useNavigate();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isToastOpen, setIsToastOpen] = useState(false);
-  const [toastMessage, setToastMessage] = useState("");
-  const [toastSeverity, setToastSeverity] = useState("success");
-
-  if (!user.isMaintainer) return null;
-
-  return (
-    <>
-      <Button
-        variant="contained"
-        startIcon={<CloudDownloadIcon />}
-        onClick={async () => {
-          setIsModalOpen(true);
-          const token = window.localStorage.getItem("token");
-          const getLeetcodeIdUrl = `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/leetcode-id`;
-          const leetcodeIdResponse = await axios.get(getLeetcodeIdUrl);
-          if (leetcodeIdResponse.status !== 200) {
-            console.error(leetcodeIdResponse);
-            setToastMessage(
-              "Error retrieving leetcode question id from questions service."
-            );
-            setToastSeverity("error");
-            setIsToastOpen(true);
-            return setIsModalOpen(false);
-          }
-          const leetcode_id_start = leetcodeIdResponse.data.seq || 0;
-          const serverlessUrl = `https://uvzu1c1dy5.execute-api.ap-southeast-1.amazonaws.com/prod/get-questions`;
-          const serverlessResponse = await axios.post(serverlessUrl, {
-            leetcode_id_start,
-            num_questions: 5,
-          });
-          if (serverlessResponse.status !== 200) {
-            console.error(serverlessResponse);
-            setToastMessage("Error retrieving leetcode questions.");
-            setToastSeverity("error");
-            setIsToastOpen(true);
-            return setIsModalOpen(false);
-          }
-          const questions = serverlessResponse.data.questions;
-          const createQuestionUrl = `${process.env.REACT_APP_QUESTIONS_SERVICE_HOST}/questions`;
-          try {
-            await Promise.all(
-              questions.map((question) =>
-                axios.post(
-                  createQuestionUrl,
-                  {
-                    title: question.title,
-                    complexity: question.complexity,
-                    categories: question.categories,
-                    description: question.description,
-                  },
-                  { headers: { Authorization: token } }
-                )
-              )
-            );
-          } catch (error) {
-            console.error(error);
-            setToastMessage("Error creating leetcode questions.");
-            setToastSeverity("error");
-            setIsToastOpen(true);
-            return setIsModalOpen(false);
-          }
-          const newLeetcodeQuestionId =
-            questions[questions.length - 1].frontend_question_id;
-          await axios.post(getLeetcodeIdUrl, {
-            id: newLeetcodeQuestionId,
-          });
-          setToastMessage("Retrieved leetcode questions.");
-          setToastSeverity("success");
-          setIsToastOpen(true);
-          navigate(0);
-        }}
-      >
-        Fetch Qns
-      </Button>
-      <Modal open={isModalOpen}>
-        <Card
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            minWidth: "500px",
-            padding: 3,
-          }}
-        >
-          <Typography>
-            Please wait while our serverless function scrapes some questions
-            from LeetCode.
-          </Typography>
-          <LinearProgress variant="indeterminate" sx={{ marginTop: 2 }} />
-        </Card>
-      </Modal>
-      <AcknowledgementToast
-        open={isToastOpen}
-        message={toastMessage}
-        severity={toastSeverity}
-        onClose={() => setIsToastOpen(false)}
-      />
-    </>
-  );
-};
-
 const AddButton = () => {
   const navigate = useNavigate();
   const user = useUser();
@@ -336,7 +229,6 @@ const SearchBar = ({
           />
         </Stack>
         <Stack direction="row" spacing={2}>
-          <AddLeetcodeQuestionsButton />
           <AddButton />
         </Stack>
       </Stack>
