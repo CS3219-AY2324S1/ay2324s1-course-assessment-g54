@@ -19,20 +19,17 @@ const DeleteAccountCard = () => {
     if (isConfirmed) {
       const token = window.localStorage.getItem("token");
       try {
-        const config = { headers: { Authorization: token } }
-
-        const historyUrl = `${process.env.REACT_APP_HISTORY_SERVICE_HOST}/deleteRecordsForCurrentUser`;
-        await axios.delete(historyUrl, config);
-
-        await axios.delete(`${process.env.REACT_APP_USERS_SERVICE_HOST}/profile`, config);
+        const config = { headers: { Authorization: token } };
+        await axios.delete(
+          `${process.env.REACT_APP_USERS_SERVICE_HOST}/profile`,
+          config
+        );
         window.localStorage.removeItem("token");
-        
+
         navigate("/login");
       } catch (error) {
         console.error(error.message);
       }
-
-
     }
   };
 

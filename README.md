@@ -16,15 +16,6 @@ Run the installation script for the development environment using the following 
 bash install-deps-dev.sh
 ```
 
-Migrate your database for users service and history service to the latest update by running the following commands. 
-```
-cd users-service
-yarn knex migrate:latest
-cd ../history-service
-yarn knex migrate:latest
-cd ..
-```
-
 Copy `.env.example` in `./users-service` into `.env` to set the environment variables for users service. Please remember to change your `JWT_SECRET`. 
 
 Ensure that you have docker installed in your system. The following command should show the version of Docker you have installed. 
@@ -42,16 +33,15 @@ When you start the containers for the first time, go into the PostgreSQL contain
 docker exec -it postgresql sh
 psql -U postgres
 create database users;
-create database history;
 ```
 
 Then, go into the users-service and history-service and run the database migrations.
 ```
 cd users-service
 yarn knex migrate:latest
-cd history-service
-yarn knex migrate:latest
 ```
+
+In order to change your account type to maintainer, after signing up, go into the `postgresql` docker container and update your account's row in the `users` table in the `users` database, setting the `isMaintainer` column to `TRUE`.
 
 The following list shows the connection details for each of the microservice used in this application. 
 
